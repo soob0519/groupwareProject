@@ -12,5 +12,7 @@ public class NoticeController {
 	private final NoticeService noticeService;
 	
 	// 컨트롤러 서비스 실행설정
-	public NoticeController(NoticeService noticeService) {this.noticeService = noticeService;}
+	public NoticeController(NoticeService noticeService) {
+		this.noticeService = noticeService;
+	}
 }
