@@ -1,0 +1,5 @@
+package com.groupware.repository;
+
+public interface EdsmRepository {
+
+}

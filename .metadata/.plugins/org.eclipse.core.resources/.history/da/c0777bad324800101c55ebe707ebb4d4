@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>게시판 목록 화면</title>
+	<link rel="stylesheet" href="/css/style.css" />
+	<link rel="stylesheet" href="/css/main.css" />
+	<link rel="stylesheet" href="/css/jquery-ui.css">
+  	<script src="/js/jquery-3.7.1.js"></script>
+  	<script src="/js/jquery-ui.js"></script>
+</head>
+
+<body>
+
+ <!-- Top menu S -->
+
+ <!-- Top menu E -->
+
+ <div class="div_title">
+    게시판 목록
+ </div>
+ 
+ <div>
+ 	Total : <span th:text="${ptotal}"></span>
+ </div>
+	<table class="table1">
+    	<colgroup>
+    		<col width="10%"/>
+    		<col width="*"/>
+    		<col width="15%"/>
+    		<col width="15%"/>
+    		<col width="15%"/>
+    	</colgroup>
+    	<tr>
+    		<th>번호</th>
+    		<th>제목</th>
+    		<th>글쓴이</th>
+    		<th>조회수</th>
+    		<th>등록일</th>
+    	</tr>
+
+    	<tr th:each="result, myState : ${plist}">
+    		<td th:text="${startPageRownum-myState.index}"> </td>
+	    	<td> <a th:href="@{|/board/1/${result.seqid}|}" th:text="${result.title}"></a> </td>
+	    	<td th:text="${result.name}"></td>
+	    	<td th:text="${result.hits}"></td>
+	    	<td th:text="${#strings.substring(result.rdate,0,10)}"></td>
+    	</tr>
+
+    </table>
+    
+    <div class="div_button_area">
+  		<span th:each="n:${#numbers.sequence(1,ptotalPage)}">
+  			<a th:href="@{|/board?indexpage=${n}|}"><span th:text="${n}"></span></a>
+  		</span>
+    </div>
+    
+     <div class="div_button_area">
+     	<button type="button" onClick="location='/board/write'">글쓰기</button>
+     </div>
+
+</body>
+</html> 
+
+
+
+
+
+
+	
+    	

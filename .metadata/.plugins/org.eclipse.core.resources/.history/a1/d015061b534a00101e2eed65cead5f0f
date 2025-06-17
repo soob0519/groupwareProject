@@ -1,0 +1,9 @@
+package snippet;
+
+public class Snippet {
+	코드테이블		
+	코드번호	코드유형	코드값
+	1	성별	M
+	2	성별	F
+}
+

@@ -1,0 +1,70 @@
+ body {
+ 	font-size:12px;
+ 	color:#333;
+ }
+ 
+ a {
+ 	text-decoration:none;
+ }
+ 
+ .table1 {
+ 	width:600px;
+ 	border-collapse:collapse;
+ }
+ .table1 th,td {
+ 	border:1px solid #ccc;
+ 	padding:3px;
+ 	font-size:12px;
+ 	color:#333;
+ 	text-align:center;
+ }
+ .div_button_area {
+ 	width:600px;
+ 	text-align:center;
+ 	margin-top:10px;
+ }
+ .input1 {
+ 	width:96%;
+ 	font-size:12px;
+ 	padding:3px;
+ }
+ .textarea1 {
+  	width:96%;
+  	height:100px;
+ 	font-size:12px;
+ 	padding:3px;
+ }
+ .div_title {
+ 	width:600px;
+ 	font-size:20px;
+ 	font-weight:bold;
+ 	text-align:center;
+ 	margin-bottom:10px;
+ }
+ .div_button_area {
+ 	width:600px;
+ 	text-align:center;
+ 	margin-top:20px;
+ }
+ 
+ .div_menu {
+ 	width:600px;
+ 	height:40px;
+ 	text-align:center;
+ 	background-color:yellow;
+ 	margin-bottom:10px;
+ }
+ .div_menu li {
+ 	float : left;      /* 좌측배치 - 가로정렬 */
+ 	font-size:12px;
+ 	color: #777777;
+ 	text-align:center;
+ 	width:100px;
+ 	list-style:none;   /* 도트(점)을 없애는 설정 */
+ 	margin-top:10px;
+ } 
+ 
+ 
+ 
+ 
+ 
