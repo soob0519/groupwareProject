@@ -1,7 +1,7 @@
 package com.groupware.service;
 
 import org.springframework.stereotype.Service;
-import com.jpaproject.repository.NoticeRepository;
+import com.groupware.repository.NoticeRepository;
 
 @Service
 public class NoticeService {

@@ -2,7 +2,7 @@ package com.groupware.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.jpaproject.service.NoticeService;
+import com.groupware.service.NoticeService;
 
 @RestController
 @RequestMapping("/notice")
