@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>최종 프로젝트</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+
+    <body>
+        <!-- header 시작 -->
+        <header th:insert="fragments/header"></header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <aside th:insert="fragments/nav"></aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+                작업은 여기에 해주세요~
+            </section>
+        </div>
+    </body>
+</html>
