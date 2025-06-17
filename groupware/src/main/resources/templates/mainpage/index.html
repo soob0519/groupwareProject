@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>최종 프로젝트</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="js/jquery-3.6.0.min.js"></script>
+        <script src="js/script.js"></script>
+    </head>
+
+    <body>
+        <!-- header 시작 -->
+        <header th:insert="fragments/header"></header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <aside th:insert="fragments/nav"></aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+                <div class="flex_between con_items">
+
+                    <div class="schedule con_item">
+                        <div class="flex_center">
+                            <div class="table_frame">
+                                <div class="btn_frame1 flex_start">
+                                    <button type="button" onclick="fn_next(1)" class="btn1">이전</button>
+                                    <span></span>년
+                                    <span></span>월
+                                    <button type="button" onclick="fn_next(2)"  class="btn1">다음</button>
+                                    <button type="button" onclick="" class="btn1">오늘</button>
+                                    <h5>일정관리</h5>
+                                </div>
+                                <table class="calendar">
+                                        <colgroup>
+                                            <col width="14.444%">
+                                            <col width="14.444%">
+                                            <col width="14.444%">
+                                            <col width="14.444%">
+                                            <col width="14.444%">
+                                            <col width="14.444%">
+                                            <col width="14.444%">
+                                        </colgroup>
+                                    <tr>
+                                        <th>일</th>
+                                        <th>월</th>
+                                        <th>화</th>
+                                        <th>수</th>
+                                        <th>목</th>
+                                        <th>금</th>
+                                        <th>토</th>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>3</td>
+                                        <td>4</td>
+                                        <td>5</td>
+                                        <td>6</td>
+                                        <td>7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td>9</td>
+                                        <td>10</td>
+                                        <td>11</td>
+                                        <td>12</td>
+                                        <td>13</td>
+                                        <td>14</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="con_box1">
+
+                        <div class="approve con_item">
+                            <div class="scroll_inner">
+                                <div class="flex_center">
+                                    <div class="table_frame">
+                                        <div class="btn_frame1">
+                                            <h5>전자결재</h5>
+                                        </div>
+                                        <table class="board_table1">
+                                            <colgroup>
+                                                <col width="10%">
+                                                <col width="*">
+                                                <col width="8%">
+                                                <col width="8%">
+                                                <col width="10%">
+                                                <col width="5%">
+                                                <col width="10%">
+                                            </colgroup>
+                                            <tr>
+                                                <th>날짜</th>
+                                                <th>제목</th>
+                                                <th>작성자</th>
+                                                <th>결재자</th>
+                                                <th>진행상태</th>
+                                                <th>결재</th>
+                                                <th>비고</th>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                                <td>7</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="notice con_item">
+                            <div class="scroll_inner">
+                                <div class="flex_center">
+                                    <div class="table_frame">
+                                        <div class="btn_frame1">
+                                            <h5>공지사항</h5>
+                                        </div>
+                                        <table class="board_table1">
+                                            <colgroup>
+                                                <col width="*">
+                                                <col width="10%">
+                                                <col width="10%">
+                                                <col width="8%">
+                                                <col width="10%">
+                                            </colgroup>
+                                            <tr>
+                                                <th>제목</th>
+                                                <th>작성일</th>
+                                                <th>작성자</th>
+                                                <th>조회</th>
+                                                <th>첨부</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_sub_tit"><a href="#">텍스트 길이 테스즈 중... 글이 길어지면 일정 생략하는 기능을 추가하였습니다.</a></td>
+                                                <td>3</td>
+                                                <td>4</td>
+                                                <td>5</td>
+                                                <td>6</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="extra con_item">
+                    <div class="flex_center">
+                        <div class="table_frame">
+                            <div class="btn_frame1">
+                                <h5>기타 등등..</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+    </body>
+</html>
