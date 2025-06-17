@@ -10,5 +10,7 @@ public class NoticeService {
 	public final NoticeRepository noticeRepository;
 	
 	// 컨트롤러 서비스 실행 설정
-	public NoticeService(NoticeRepository noticeRepository) {this.noticeRepository = noticeRepository;}
+	public NoticeService(NoticeRepository noticeRepository) {
+		this.noticeRepository = noticeRepository;
+	}
 }
