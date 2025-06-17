@@ -23,7 +23,7 @@ public class NoticeDto {
 	
 	@Id //기본키 설정 (고유번호)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int   	  ntcno;
+	private int  ntcno;
 	
 	// 비밀번호
 	@Column(nullable = false, length = 200)
