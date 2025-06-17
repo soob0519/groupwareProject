@@ -1,7 +1,9 @@
 package com.groupware.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.groupware.service.EdsmService;
 
@@ -14,6 +16,12 @@ public class EdsmController {
 		this.edsmService = edsmService;
 	}
 	
+	@GetMapping
+	public ModelAndView main() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/edsm/edsmMain");
+		return model;
+	}
 	
 	
 }

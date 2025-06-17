@@ -1,0 +1,34 @@
+spring.application.name=jpaProject2
+
+spring.datasource.driverClassName = oracle.jdbc.OracleDriver
+spring.datasource.url = jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+spring.datasource.username = c##java
+spring.datasource.password = 1234
+
+server.port = 8080
+
+#encoding
+server.servlet.encoding.charset=utf-8
+server.servlet.encoding.force=true
+server.servlet.encoding.enabled=true
+
+# JPA 설정
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.OracleDialect
+
+#resources
+#spring.mvc.static-path-pattern=/resources/**
+
+#mapper.xml
+#mybatis.type-aliases-package=com.myproject.dto
+#mybatis.mapper-locations: db/**/*.xml
+
+#thymeleaf 설정
+
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.check-template-location=true
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.mode=HTML5
+spring.thymeleaf.enabled=true
+spring.thymeleaf.cache=false
