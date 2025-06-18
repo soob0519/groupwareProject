@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>파일 업로드</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .upload-wrapper {
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      padding: 30px 40px;
+    }
+
+    .upload-header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .form-row label {
+      width: 100px;
+      font-weight: 500;
+    }
+
+    .form-row input[type="text"],
+    .form-row select {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .form-row textarea {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      height: 200px;
+      resize: vertical;
+    }
+
+    .form-row input[type="file"] {
+      flex: 1;
+      font-size: 13px;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 30px;
+    }
+
+    .upload-button {
+      background-color: #777;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .cancel-button {
+      border: 2px solid #777;
+      color: #777;
+      background-color: white;
+      padding: 10px 25px;
+      font-size: 15px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      box-sizing: border-box;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="upload-wrapper">
+    <div class="upload-header">파일 업로드</div>
+
+    <form>
+      <div class="form-row">
+        <label for="category">구분</label>
+        <select id="category">
+          <option value="">선택하세요</option>
+          <option value="업무">업무</option>
+          <option value="회의록">회의록</option>
+          <option value="기타">기타</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="title">파일제목</label>
+        <input type="text" id="title" placeholder="파일 제목을 입력하세요">
+      </div>
+
+      <div class="form-row">
+        <label for="description">내용</label>
+        <textarea id="description" placeholder="파일에 대한 설명을 입력하세요"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="file">파일</label>
+        <input type="file" id="file">
+      </div>
+
+      <div class="button-row">
+        <button type="button" class="cancel-button">취소</button>
+        <button type="submit" class="upload-button">업로드</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
