@@ -2,17 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta charset="UTF-8">
-	<title>전자결재 기안화면</title>
+	<title>기안 화면</title>
 	<link rel="stylesheet" href="/css/style.css" />
 	<link rel="stylesheet" href="/css/jquery-ui.css">
   	<script src="/js/jquery-3.7.1.js"></script>
   	<script src="/js/jquery-ui.js"></script>
   	<script src="/js/jquery-3.6.0.min.js"></script>
   	<script src="/js/script.js"></script>
-
 </head>
+
+ 
+
 <style>
-  
+
+table {
+	width:1200px;
+}
+ 
 </style>
 <body>
 <!-- header include -->
@@ -23,55 +29,82 @@
 
 <section class="contents">	
 	<form id="frm" name="frm">
-		<table border="1">
-			<tr>
-				<td>
-				<label for="title">제목</label>
-				<input type="text" id="title" name="title">
-				</td>
-			</tr>
-			<tr>
-				<td>
-				<label for="writer">작성자</label>
-				<input type="text" id="writer" name="writer">
-				</td>
-			</tr>
-			<tr>
-				<td>
-				<label for="department">부서</label>
-				<input type="text" id="department" name="department">
-				</td>
-			</tr>
-			<tr>
-				<td>
-				<label for="date">작성일</label>
-				<input type="date" id="date" name="date" >
-				</td>
-			</tr>
-			<tr>
-				<td>
-				<label for="content">내용</label>
-				<textarea id="content" name="content" rows="8" ></textarea>
-				</td>
-			</tr>
-			<tr>
-				<td>
-				<label for="approver">결재자 지정</label>
-				<select id="approver" name="approver">
-				<option value="manager">매니저</option>
-				<option value="director">이사</option>
-				<option value="ceo">대표</option>
-				</select>
-				</td>
-			</tr>
-		</table>
-		<div>
-		  <button type="submit">결재 요청</button>
-		  <button type="reset">취소</button>
-		</div>
+		<div>기안서작성</div>
+
+ <div>
+    <table>
+      <tr>
+        <th>일자</th>
+        <td><input type="date" value="2025-06-18" /></td>
+      </tr>
+      <tr>
+        <th>제목</th>
+        <td><input type="text" placeholder="제목을 입력하세요" /></td>
+      </tr>
+      <tr>
+        <th>결재자</th>
+        <td>
+          <div id="approverList">
+            <div class="approver-row">
+              <input type="text" name="approvers" placeholder="결재자 이름 입력" />
+              <button type="button" onclick="removeApprover(this)">삭제</button>
+            </div>
+          </div>
+          <button type="button" onclick="addApprover()">+ 결재자 추가</button>
+        </td>
+      </tr>
+      <tr>
+        <th>참조자</th>
+        <td><input type="text" placeholder="참조자" /></td>
+      </tr>
+      <tr>
+        <th>공유자</th>
+        <td><input type="text" placeholder="공유자" /></td>
+      </tr>
+      <tr>
+        <th>구분</th>
+        <td>
+          <select>
+            <option>구분</option>
+            <option>휴가</option>
+            <option>일반기안</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>기안내용</th>
+        <td><textarea placeholder="기안내용을 입력하세요."></textarea></td>
+      </tr>
+    </table>
+
+    <div class="buttons">
+      <button>기안 작성 결재</button>
+      <button>닫기</button>
+    </div>
+  </div>
+
 	</form>
 </section>
 </div>
+
+<script>
+    function addApprover() {
+      const approverList = document.getElementById('approverList');
+      const row = document.createElement('div');
+      row.className = 'approver-row';
+      row.innerHTML = `
+        <input type="text" placeholder="결재자 이름 입력" />
+        <button onclick="removeApprover(this)">삭제</button>
+      `;
+      approverList.appendChild(row);
+    }
+
+    function removeApprover(button) {
+      const row = button.parentElement;
+      row.remove();
+    }
+  </script>
+
 </body>
 </html> 
 
