@@ -80,7 +80,9 @@
     <script>
 	 	$(function() {
 	 		
-	 		$("#btn_List"  ).click(function() {location = "/notice/AdminList";});
+	 		$("#btn_List"  ).click(function() {
+	 			location = "/notice/AdminList";
+	 		});
 	 		
 	 		$("#btn_submit").click(function() {
 	 			
@@ -115,9 +117,13 @@
 	 						alert("등록완료!");
 	 						location = "/notice/AdminList";
 	 					}
-	 					else 			   alert("등록실패!");
+	 					else {
+	 						alert("등록실패!");
+	 					}
 	 				},
-	 				error	 : function() {alert("오류발생!");}
+	 				error	 : function() {
+	 					alert("오류발생!");
+	 				}
 	 			});
 	 		});
 	 	});
