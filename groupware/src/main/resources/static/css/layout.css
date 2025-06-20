@@ -14,9 +14,10 @@
 
 
 /* 아코디언메뉴 */
-.aside {width: 200px; height: 100vh; border-right: 1px solid #d1d1d1;}
-.main > li {margin-bottom: 5px;}
-.main > li > a {display: block; height: 50px; line-height: 50px; font-size: 20px; padding-left: 15px;}
+.aside {width: 250px; height: 100vh; border-right: 1px solid #d1d1d1; background: #f4f6fa;}
+.main > li {padding: 5px 20px;}
+.main > li > a {display: block; height: 40px; line-height: 40px; font-size: 20px; padding-left: 15px; font-size: 16px; transition: .2s; border-radius: 4px;}
+.main > li > a:hover {background: #777; color: #fff;}
 .main > li > a::after {content: ">"; padding-left: 20px;}
 .sub {display: none;}
 .sub li {margin-bottom: 5px;}
@@ -25,7 +26,7 @@
 
 
 /* contents */
-.contents {width: 100%; padding: 20px; background: #f5f5f5;}
+.contents {width: 100%; padding: 20px;}
 .con_items {gap: 10px; margin-bottom: 10px;}
 .con_item {padding: 20px; background: #fff; border-radius: 30px; transition: .3s; border: 1px solid #d1d1d1;}
 .con_item:hover {box-shadow: 5px 5px 10px #666;}
@@ -33,7 +34,6 @@
 .board_table1 {width: 100%;}
 .board_table1 tr {height: 28px;}
 .board_table1 .tbl_sub_tit a {text-overflow: ellipsis; overflow: hidden; white-space: nowrap; display: block; width: 90%; padding-left: 10px;}
-.contents th,td {border: 1px solid #d1d1d1; text-align: center;}
 
 .btn_frame1 {font-size: 18px; gap: 10px; padding-bottom: 15px; position: sticky; top: 0; background: #fff; z-index: 1;}
 .btn1 {background: #d1d1d1; cursor: pointer;}
