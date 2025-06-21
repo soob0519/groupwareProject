@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>최종 프로젝트</title>
-        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/gstyle.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
@@ -73,21 +73,59 @@
 		}
     
     </style>
+    
+    <script>
+    
+    $(function() {
+    	
+    	$("#btn_List").click(function() {location = "/notice/AdminList";});
+    	
+    	$("#btn_Modify").click(function() {
+ 			let ntcno = $("#ntcno").val();
+ 			location  = "/notice/2/" + ntcno;
+ 		});
+    	
+		$("#btn_Delete").click(function() {
+ 			
+ 			if(!confirm("정말 삭제하시겠습니까?")) return false;
+ 			
+ 			event.preventDefault();  
+ 			let ntcno = $("#ntcno").val();
+ 			$.ajax({
+ 				type	 : "post",	
+ 				url		 : "/notice", 
+ 				data     : "ntcno=" + ntcno + "&ntctt=",  
+ 				dataType : "text", 
+ 				success  : function(data) { 
+ 					if(data == "ok") { 		
+ 						alert("삭제완료!");
+ 						location = "/notice/AdminList";
+ 					}
+ 					else 			   alert("삭제실패!");
+ 				},
+ 				error	 : function() {alert("전송실패!");}
+ 			});
+ 		});
+    	
+    });
+    
+    </script>
 
     <body>
         <!-- header 시작 -->
-        <header th:insert="fragments/header"></header>
+        <header th:insert="fragments/gheader"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <aside th:insert="fragments/nav"></aside>
+            <aside th:insert="fragments/gnav"></aside>
             <!-- nav 종료 -->
 
             <section class="contents">
                 <div class="div_notice"><font class="font_notice">공지사항</font></div>
 				<div class="content-body" align="center">
+					<input type="hidden" id="ntcno" th:value="${dto.ntcno}">
 					<table class="detailtable">
 						<colgroup>
 							<col width="20%"/>
@@ -95,40 +133,18 @@
 						</colgroup>
 						<tr>
 							<th style="height:50px;">제목</th>
-							<td>신입들은 참고해라</td>
+							<td th:text="${dto.ntctt}"></td>
 						</tr>
 						<tr>
 							<th>내용</th>
-							<td><div class="div_content">데이비스 그룹(Davis Group Ltd.)과 미국의 교육에 관해 진행한 인터뷰에서 케이는 다음과 같이 말했습니다.
-
-저는 3살 때부터 유창하게 읽는 법을 배우는 불운을 겪었는지, 아니면 행운을 겪었는지 모르겠지만, 1학년이 되기 전에 이미 150권 정도의 책을 읽었고 선생님들이 저에게 거짓말을 하고 있다는 것을 이미 알고 있었습니다. [ 4 ]
-
-케이의 가족은 원래 매사추세츠주 스프링필드 출신으로 , 아버지의 생리학 분야 경력으로 인해 여러 번 이사를 다녔고 , 결국 뉴욕 대도시권 에 정착했습니다 .
-
-그는 브루클린 테크니컬 고등학교 에 다녔습니다 . 졸업에 필요한 학점을 취득한 후, 웨스트버지니아주 베다니 에 있는 베다니 칼리지 에 진학하여 생물학을 전공 하고 수학을 부전공했습니다.
-
-케이는 그 후 콜로라도 주 덴버 에서 1년 동안 기타를 가르쳤습니다 . 그는 미 육군 에 징집되었고, 이후 미 공군 에서 장교 훈련을 받을 자격을 얻었으며 , 적성 검사에 합격하여 컴퓨터 프로그래머 가 되었습니다 .
-
-그는 제대 후 콜로라도 볼더 대학 에 등록하여 1966년에 수학과 분자생물학 학사 학위를 취득했습니다 .
-
-1966년 가을, 그는 유타 대학교 공과대학 에서 대학원 과정을 시작했습니다 . 그는 1968년에 전기 공학 에서 이학 석사 학위를 취득한 후 1969년에 컴퓨터 과학 에서 철학 박사 학위를 취득했습니다 . 그의 박사 학위 논문인 FLEX: A Flexible Extendable Language 는 FLEX 라는 컴퓨터 언어 의 발명에 대해 설명했습니다 . [ 5 ] [ 6 ] [ 7 ] 그곳에서 그는 " 컴퓨터 그래픽 의 아버지 " 인 David C. Evans (최근 캘리포니아 대학교 버클리 에서 유타의 컴퓨터 과학과를 시작하기 위해 영입됨)와 Ivan Sutherland ( Sketchpad 와 같은 선구적인 프로그램을 작성한 것으로 가장 잘 알려짐 )와 함께 일했습니다. Kay는 Sutherland의 1963년 논문이 객체 와 컴퓨터 프로그래밍 에 대한 그의 견해에 영향을 미쳤다고 인정합니다 . 그는 국방 고등 연구 계획국 (DARPA) 에서 연구에 더욱 바빠지면서 음악 경력을 마감했습니다.
-
-1968년에 그는 세이무어 페퍼트를 만나 교육 목적으로 최적화된 Lisp 방언인 로고(Logo) 프로그래밍 언어 에 대해 알게 되었습니다 . 이를 통해 그는 장 피아제(Jean Piaget) , 제롬 브루너(Jerome Bruner) , 레프 비고츠키(Lev Vygotsky) 의 연구 와 구성주의 학습 에 대해 배우게 되었고 , 이는 그의 전문적인 지향에 더욱 영향을 미쳤습니다. 같은 해 12월 9일, 그는 더글러스 엥겔바트(Douglas Engelbart) 의 획기적인 컴퓨터 시연인 ' 모든 시연의 어머니(Mother of all Demos )'에 샌프란시스코에서 참석했습니다 . 그날 그는 고열로 아팠지만, 이 행사는 케이의 경력에 ​​큰 영향을 미쳤습니다. 그는 나중에 이렇게 회상했습니다. "그것은 내 인생에서 가장 위대한 경험 중 하나였습니다." [ 8 ]
-
-1969년, 케이는 카네기 멜론 대학교 교수직을 수락하기 위해 스탠퍼드 인공지능 연구소 의 방문 연구원이 되었습니다 . 1970년, 그는 캘리포니아주 팰로앨토 에 있는 제록스 PARC 연구진 에 합류했습니다 . 10년 동안 그는 프로그래밍 언어인 스몰토크 를 사용하여 네트워크 워크스테이션의 프로토타입을 개발했습니다 .
-
-Kay는 PARC의 몇몇 동료들과 함께 자신이 명명한 객체 지향 프로그래밍 (OOP)이라는 개념의 선구자 중 한 명입니다 . [ 9 ] '객체'와 '클래스'라는 단어의 사용을 포함한 일부 원래 객체 지향 개념은 노르웨이 컴퓨팅 센터 에서 Simula 67을 위해 개발되었습니다 . Kay는 다음과 같이 말했습니다.
-
-이 주제에 대해 오래전에 "객체"라는 용어를 만들어서 죄송합니다. 많은 사람들이 덜 중요한 개념에 집중하게 되니까요. 중요한 개념은 " 메시징 "입니다. [ 10 ]
-
-PARC에 있는 동안 Kay는 노트북과 태블릿 컴퓨터 및 전자책 의 주요 선구자인 Dynabook 개념을 고안했습니다 . 그는 또한 현대의 겹치는 윈도잉 그래픽 사용자 인터페이스 (GUI)의 설계자이기도 합니다. [ 11 ] Dynabook은 교육 플랫폼으로 고안되었기 때문에 그는 모바일 학습 분야의 최초 연구자 중 한 명으로 간주됩니다 . Dynabook 개념의 많은 기능이 Kay가 적극적으로 참여하고 있는 One Laptop Per Child 교육 플랫폼 의 설계에 채택되었습니다 . [ 12 ]</div></td>
+							<td><div class="div_content" th:text="${dto.ntcct}"></div></td>
 					</table>
 				</div>
 				<!-- button -->
 				<div class="div_button" align="center">
-					<button class="button">수정하기</button>
-					<button class="button">뒤로가기</button>
-					<button class="button">삭제하기</button>
+					<button class="button" id="btn_Modify">수정하기</button>
+					<button class="button" id="btn_List">목록으로</button>
+					<button class="button" id="btn_Delete">삭제하기</button>
 				</div>
             </section>
         </div>
