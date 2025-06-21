@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>최종 프로젝트</title>
-        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/gstyle.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
@@ -78,8 +78,9 @@
 		.noticetable{
 			margin-top:50px;
 		 	width:1000px;
-		 	height:300px;
 		}
+		
+		td {padding:3.5px;}
 		 
 		/*페이지 div css*/
 		.div_page {margin-top:-400px;}
@@ -88,30 +89,35 @@
 	    .td_page {
 	    	padding:10px;
 	    	border:0;
+	    	font-size:24px;
 	    }
     
     </style>
+    
+    <script>$(function() {$("#btn_Write").click(function() {location = "/notice/AdminWrite";});});</script>
 
     <body>
         <!-- header 시작 -->
-        <header th:insert="fragments/header"></header>
+        <header th:insert="fragments/gheader"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <aside th:insert="fragments/nav"></aside>
+            <aside th:insert="fragments/gnav"></aside>
             <!-- nav 종료 -->
 
             <section class="contents">
                 <div class="div_notice"><font class="font_notice">공지사항</font></div>
 				<div class="content-body" align="center">
-					<div class="div_write"><button type="button" class="write_button">작성하기</button></div>
-					<div class="div_search">
-					 	<input type="text" class="search"> &nbsp;&nbsp;
-						<button type="button" class="search_button">검색</button>
-					</div>
-					<table class="noticetable">
+					<div class="div_write"><button type="button" class="write_button" id="btn_Write">작성하기</button></div>
+					<form method="get" action="/notice/AdminList">
+						<div class="div_search">
+						 	<input type="text" class="search" name="search" th:value="${search}"> &nbsp;&nbsp;
+							<button type="submit" class="search_button">검색</button>
+						</div>
+					</form>
+					<table class="noticetable" th:if="${ptotalPage > 0}">
 						<colgroup>
 			 				<col style="width:8%">
 							<col style="width:auto">
@@ -127,101 +133,59 @@
 								<th scope="col">조회수</th>
 								<th scope="col">작성일</th>
 							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
 						</thead>
 						<tbody style="background-color:white;">
-							<tr>
-								<td align="center">10</td>
-								<td align="center"><font color="blue">신입들은 참고해라</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
+							<tr  th:each="result,myState : ${plist}">
+								<td align="center" th:text="${startPageRownum - myState.index}"></td>
+								<td align="center">
+									<a th:href="@{|/notice/1/${result.ntcno}|}" th:text="${result.ntctt}" 
+									   th:style="${'color:blue;'}">
+									</a>
+								</td>
+								<td align="center" th:text="${result.ntcwr}" th:style="${'color:blue;'}"></td>
+								<td align="center" th:text="${result.ntcht}" th:style="${'color:blue;'}"></td>
+								<td align="center" th:text="${#strings.substring(result.ntcrd,0,10)}"></td>
 							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">9</td>
-								<td align="center"><font color="blue">러우전쟁 관련 곡물가격 인상안내</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">8</td>
-								<td align="center"><font color="blue">트럼프 관세인상 관련 운항비안내</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">7</td>
-								<td align="center"><font color="blue">연가휴가 관련 이용안내</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">6</td>
-								<td align="center"><font color="blue">내 몸속에 일본놈들의 총알이</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">5</td>
-								<td align="center"><font color="blue">I am 신뢰에요</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">4</td>
-								<td align="center"><font color="blue">존경한다니까 진짜 존경하는줄 알더라</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">3</td>
-								<td align="center"><font color="blue">web발신 너는 나를 존중해야 한다 나는 발롱도르5개와...</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">2</td>
-								<td align="center"><font color="blue">네팀 버려? 네팀 버려? 4번은 개인주의야 자기밖에 몰라</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
-							<tr>
-								<td align="center">1</td>
-								<td align="center"><font color="blue">형, 라면이 아니라 뭐든 그렇게 먹으면 살쪄요</font></td>
-								<td align="center"><font color="blue">관리자</font></td>
-								<td align="center"><font color="blue">0</font></td>
-								<td align="center">2025-00-00</td>
-							</tr>
-							<tr><td colspan="5" height="1" bgcolor="#e7e7e7"></td></tr>
 						</tbody>
 					</table>
+					<!-- 검색 결과가 없을 때: 안내 문구 출력 -->
+					<div th:if="${#lists.isEmpty(plist)}" 
+						 style="text-align:center; margin-top:150px; font-weight:bold; font-size:50px;">
+						 검색 결과가 없습니다.
+					</div>
 				</div>
 				<!-- paging -->
-				<div class="div_page" align="center">	
+				<div class="div_page" align="center" th:if="${ptotalPage > 0}">	
 					<table>
 						<tr>
-							<td class="td_page"><font size="5">&lt&lt</font></td>
-							<td class="td_page"><font size="5">&lt</font></td>
-							<td class="td_page"><font size="5">1</font></td>
-							<td class="td_page"><font size="5">&gt</font></td>
-							<td class="td_page"><font size="5">&gt&gt</font></td>	
+							<!-- 맨 앞으로 (indexpage=1) -->
+							<td class="td_page">
+								<a th:href="@{|/notice/AdminList?indexpage=1&search=${search}|}">&lt;&lt;</a>
+							</td>
+							<!-- 이전 페이지 (indexpage=current-1, 단 1보다 작으면 1) -->
+							<td class="td_page">
+								<a th:href=
+								   "@{|/notice/AdminList?indexpage=${indexpage > 1 ? indexpage - 1 : 1}&search=${search}|}">
+									&lt;
+								</a>
+							</td>
+							<!-- 현재 페이지 -->
+							<td class="td_page" th:each="n : ${#numbers.sequence(1, ptotalPage)}">
+  								<a th:href="@{|/notice/AdminList?indexpage=${n}&search=${search}|}">
+    								<span th:text="${n}"></span>
+  								</a>
+							</td>
+							<!-- 다음 페이지 (indexpage=current+1, 단 totalPage보다 크면 totalPage) -->
+							<td class="td_page">
+								<a th:href=
+				  "@{|/notice/AdminList?indexpage=${indexpage < ptotalPage ? indexpage + 1 : ptotalPage}&search=${search}|}">
+								   &gt;
+								</a>
+							</td>					
+							<!-- 맨 뒤로 -->
+							<td class="td_page">
+								<a th:href="@{|/notice/AdminList?indexpage=${ptotalPage}&search=${search}|}">&gt;&gt;</a>
+							</td>
 						</tr>
 				    </table>
 				</div>
