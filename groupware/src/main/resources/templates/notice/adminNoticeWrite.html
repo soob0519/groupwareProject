@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>최종 프로젝트</title>
-        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/gstyle.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
@@ -80,9 +80,7 @@
     <script>
 	 	$(function() {
 	 		
-	 		$("#btn_List"  ).click(function() {
-	 			location = "/notice/AdminList";
-	 		});
+	 		$("#btn_List"  ).click(function() {location = "/notice/AdminList";});
 	 		
 	 		$("#btn_submit").click(function() {
 	 			
@@ -117,13 +115,9 @@
 	 						alert("등록완료!");
 	 						location = "/notice/AdminList";
 	 					}
-	 					else {
-	 						alert("등록실패!");
-	 					}
+	 					else 			   alert("등록실패!");
 	 				},
-	 				error	 : function() {
-	 					alert("오류발생!");
-	 				}
+	 				error	 : function() {alert("오류발생!");}
 	 			});
 	 		});
 	 	});
@@ -131,13 +125,13 @@
 
     <body>
         <!-- header 시작 -->
-        <header th:insert="fragments/header"></header>
+        <header th:insert="fragments/gheader"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <aside th:insert="fragments/nav"></aside>
+            <aside th:insert="fragments/gnav"></aside>
             <!-- nav 종료 -->
 
             <section class="contents">
