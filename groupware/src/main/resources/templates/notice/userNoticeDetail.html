@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>최종 프로젝트</title>
+        <link rel="stylesheet" href="/css/gstyle.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+    
+    <style>
+    
+	    /*전체화면 css*/ 
+		.content-body {
+		 	width: 100%;
+		 	height:800px; 	
+		 	margin-top:100px;
+		}
+		 
+		th {
+		 	font-size:20px;
+		 	font-weight:bold;
+		 	background-color:yellow;
+		}
+		 
+		td {
+			background-color:white;
+			font-size:20px;
+			font-weight:bold;
+			text-align:left;
+			padding:10px;
+		}
+		 
+		/*공지사항 div css*/
+		.div_notice {
+			height:10px;
+		 	margin-top:120px;
+		 	text-align:center;
+		}
+		 
+		/*공지사항 문구 css*/
+		.font_notice {
+		 	font-weight:900;       
+		 	font-size:40px;
+		}
+		 
+		/*상세보기 테이블 css*/
+		.detailtable{
+			width:600px;
+			height:450px;
+		}
+		
+		/*내용 div css*/
+		.div_content {
+			margin-top:-10px;
+			height:370px;
+			overflow-y: auto;
+		}
+		
+		/*버튼 div css*/
+		.div_button {margin-top:-320px;}
+		 
+		/*버튼*/
+		.button {
+			width:120px;
+			height:40px;
+			border-radius:10px;
+			font-size:20px;
+			font-weight:bold;
+			padding:3px;
+			cursor:pointer;
+			background-color:white;
+		}
+    
+    </style>
+    
+    <script>$(function() {$("#btn_List").click(function() {location = "/notice/UserList";});});</script>
+
+    <body>
+        <!-- header 시작 -->
+        <header th:insert="fragments/gheader"></header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <aside th:insert="fragments/gnav"></aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+                <div class="div_notice"><font class="font_notice">공지사항</font></div>
+				<div class="content-body" align="center">
+					<table class="detailtable">
+						<colgroup>
+							<col width="20%"/>
+							<col width="*"  />
+						</colgroup>
+						<tr>
+							<th style="height:50px;">제목</th>
+							<td th:text="${dto.ntctt}"></td>
+						</tr>
+						<tr>
+							<th>내용</th>
+							<td><div class="div_content" th:text="${dto.ntcct}"></div></td>
+					</table>
+				</div>
+				<!-- button -->
+				<div class="div_button" align="center"><button class="button" id="btn_List">목록으로</button></div>
+            </section>
+        </div>
+    </body>
+</html>
