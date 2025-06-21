@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>최종 프로젝트</title>
+        <link rel="stylesheet" href="/css/gstyle.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+    
+    <style>
+    
+	    /*전체화면 css*/ 
+		.content-body {
+		 	width: 100%;
+		 	height:800px; 	
+		 	margin-top:100px;
+		}
+		 
+		th {
+		 	font-size:20px;
+		 	font-weight:bold;
+		 	background-color:yellow;
+		}
+		 
+		td {background-color:white;}
+		 
+		/*공지사항 div css*/
+		.div_notice {
+			height:10px;
+		 	margin-top:120px;
+		 	text-align:center;
+		}
+		 
+		/*공지사항 문구 css*/
+		.font_notice {
+		 	font-weight:900;       
+		 	font-size:40px;
+		}
+		 
+		/*작성입력란(제목,암호,작성자)*/
+		.input {
+			margin-right:70px;
+			width:300px;
+			line-height: 1.4;
+			border-radius:10px;
+			font-size:20px;
+			padding:4px;
+		 }
+		 
+		 /*내용입력란*/
+		 .content {
+			width:380px;
+			height:150px;
+			border-radius:10px;
+			font-size:20px;
+			padding:4px;
+		 }
+		 
+		 /*작성하기 테이블 css*/
+		 .modifytable{height:300px;}
+		
+		 /*버튼 div css*/
+		 .div_button {margin-top:-450px;}
+		 
+		 /*버튼*/
+		.button {
+			width:120px;
+			height:40px;
+			border-radius:10px;
+			font-size:20px;
+			font-weight:bold;
+			padding:3px;
+			cursor:pointer;
+			background-color:white;
+		}
+    
+    </style>
+    
+    <script>
+	 	$(function() {
+	 		
+	 		$("#btn_List"  ).click(function() {location = "/notice/AdminList";});
+	 		
+	 		$("#btn_submit").click(function() {
+	 			
+	 			if($("#ntctt").val() == "") {
+	 				alert("제목을 입력하세요.");
+	 				$("#ntctt").focus();
+	 				return false;
+	 			}
+	 			
+	 			if($("#ntcps").val() == "") {
+	 				alert("암호를 입력하세요.");
+	 				$("#ntcps").focus();
+	 				return false;
+	 			}
+	 			
+	 			
+	 			if($("#ntcct").val() == "") {
+	 				alert("내용을 입력하세요.");
+	 				$("#ntcct").focus();
+	 				return false;
+	 			}
+	 			
+	 			event.preventDefault();  // 기본 폼 제출 막기
+	 			let form = $("#frm").serialize(); // serialize() : 폼을 인식하는 함수
+	 			//ajax : {비동기}전송
+	 			$.ajax({
+	 				type	 : "post",	//전송타입
+	 				url		 : "/notice", //전송장소
+	 				data     : form,   //전송데이터
+	 				dataType : "text", //받는 데이터 타입
+	 				success  : function(data) { // data변수 : 실제 받은 데이터 값
+	 					if(data == "ok") { 		// data변수 값이 "ok" 라면 저장 성공으로 판단함
+	 						alert("수정완료!");
+	 						location = "/notice/AdminList";
+	 					}
+	 					else 			   alert("수정실패!");
+	 				},
+	 				error	 : function() {alert("오류발생!");}
+	 			});
+	 		});
+	 	});
+ 	</script>
+
+    <body>
+        <!-- header 시작 -->
+        <header th:insert="fragments/gheader"></header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <aside th:insert="fragments/gnav"></aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+                <div class="div_notice"><font class="font_notice">공지사항</font></div>
+				<form id="frm">
+					<input type="hidden" name="ntcno" th:value="${dto.ntcno}">
+					<div class="content-body" align="center">
+						<table class="modifytable">
+							<colgroup>
+								<col width="20%"/>
+								<col width="*"  />
+							</colgroup>
+							<tr>
+								<th>제목</th>
+								<td><input type="text" class="input" id="ntctt" name="ntctt"  th:value="${dto.ntctt}"></td>
+							</tr>
+							<tr>
+								<th>암호</th>
+								<td><input type="password" class="input" id="ntcps" name="ntcps">
+								</td>
+							</tr>
+							<tr>
+								<th>작성자</th>
+								<td><input type="text" class="input" id="ntcwr" name="ntcwr" value="관리자" readonly></td>
+							</tr>
+							<tr>
+								<th>내용</th>
+								<td><textarea class="content" id="ntcct" name="ntcct" th:text="${dto.ntcct}"></textarea></td>
+							</tr>
+						</table>
+					</div>
+					<!-- button -->
+					<div class="div_button" align="center">
+						<button class="button" type="submit" id="btn_submit">수정하기</button>
+						<button class="button" type="reset">취소하기</button>
+						<button class="button" type="button" id="btn_List">목록으로</button>
+					</div>
+				</form>
+            </section>
+        </div>
+    </body>
+</html>
