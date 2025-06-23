@@ -1,7 +1,8 @@
 * {box-sizing: border-box; padding: 0; margin: 0;}
 ul,li,ol {list-style: none;}
 a {text-decoration: none; color: #111;}
-body {font-size: 14px; color: #111; overflow: hidden;}
+body {font-size: 14px; color: #111;}
 
 table {border-collapse: collapse;}
 .blind {position: absolute; left: -9999px; font-size: 0;}
+
