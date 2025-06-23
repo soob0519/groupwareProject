@@ -5,7 +5,7 @@
 .table1 tr:hover {background: #f0f0f0;}
 .table_box1 {margin-bottom: 50px;}
 .table_box2 {margin-top: 40px;}
-.table_box:last-child {margin-bottom: 0;}
+.table_box:last-child {margin-bottom: 0;}0
 
 .tit_h3 {height: 50px; line-height: 50px;}
 
@@ -30,7 +30,7 @@ textarea {width: 100%; flex: 1; padding: 10px; font-size: 14px; border: 1px soli
 
 /* button */
 .btn_frame2 {font-size: 18px; gap: 10px; display: flex; justify-content: flex-end; align-items: center;}
-.btn_frame3 {padding-left: 10px; font-size: 18px; gap: 10px; display: flex; justify-content: flex-end;}
+.btn_frame3 {width: 192px; padding-left: 10px; font-size: 18px; gap: 10px;}
 .button-row {display: flex; justify-content: flex-end; margin-top: 30px;}
 .search_button {width: 50px; background: #777; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; height: 36px; line-height: 36px; font-size: 14px;}
 .button1 {padding: 10px 25px; border: 1px solid #777; color: white; background: #777; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
@@ -85,6 +85,7 @@ textarea {width: 100%; flex: 1; padding: 10px; font-size: 14px; border: 1px soli
 
 
 
+#approverList {width: 100%;}
 
 
 
