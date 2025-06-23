@@ -73,6 +73,9 @@
 	    	border:0;
 	    	font-size:24px;
 	    }
+	    
+	    /*현재 페이지 색처리*/
+	    .current-page {color:blue;}
     
     </style>
 
@@ -133,7 +136,7 @@
 						 검색 결과가 없습니다.
 					</div>
 				</div>
-				<!-- paging -->
+				<!-- 페이징 -->
 				<div class="div_page" align="center" th:if="${ptotalPage > 0}">	
 					<table>
 						<tr>
@@ -149,10 +152,10 @@
 								</a>
 							</td>
 							<!-- 현재 페이지 -->
-							<td class="td_page" th:each="n : ${#numbers.sequence(1, ptotalPage)}">
-  								<a th:href="@{|/notice/UserList?indexpage=${n}&search=${search}|}">
-    								<span th:text="${n}"></span>
-  								</a>
+							<td class="td_page" th:each="n : ${#numbers.sequence(startPage, endPage)}">
+								<a th:href="@{|/notice/AdminList?indexpage=${n}&search=${search}|}">
+									<span th:text="${n}" th:class="${n} == ${indexpage} ? 'current-page' : '' "></span>
+								</a>
 							</td>
 							<!-- 다음 페이지 (indexpage=current+1, 단 totalPage보다 크면 totalPage) -->
 							<td class="td_page">
