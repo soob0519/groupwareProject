@@ -19,7 +19,7 @@ public class EdsmController {
 	@GetMapping
 	public ModelAndView main() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/edsm/edsmMain");
+		model.setViewName("/edsm/edsmWait");
 		return model;
 	}
 	
