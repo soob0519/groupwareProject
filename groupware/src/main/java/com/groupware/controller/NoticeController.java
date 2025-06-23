@@ -55,10 +55,10 @@ public class NoticeController {
 		ModelAndView  model = new ModelAndView();
 		Long 		  total = noticeService.count();
 		
-	    // 1page를 원하면 -> 0번세팅, 검색 포함 페이징 처리
+	    // 1page를 원하면 -> 0번세팅, 검색 포함 페이징 처리 한 페이지당 항목10개
 	    Page<NoticeDto> page = noticeService.list(indexpage -1, 10, search);
 		
-		// 화면 출력 시작번호 = (총 데이터개수 -(현재페이지번호 - 1) * 출력단위)
+		// 화면 출력 시작번호 = (총 데이터개수 -(현재페이지번호 - 1) * 출력단위) 화면에 나타낼수 있는 페이지 수는 5까지 다음은 화살표로 해결
 		int startPageRownum = (int)(page.getTotalElements() - page.getNumber() * 5);
 		
 		model.addObject("search", search);
