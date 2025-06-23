@@ -1,88 +1,198 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="UTF-8">
-	<title>시스템메인</title>
-	<link rel="stylesheet" href="/css/style.css" />
-	<link rel="stylesheet" href="/css/jquery-ui.css">
-  	<script src="/js/jquery-3.7.1.js"></script>
-  	<script src="/js/jquery-ui.js"></script>
-  	<script src="/js/jquery-3.6.0.min.js"></script>
-  	<script src="/js/script.js"></script>
-</head>
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>관리자페이지 메인</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
 
-<body>
-<!-- header include -->
-<header th:insert="fragments/header"></header>
-<div class="flex_between">
-<!-- nav include -->
-<nav th:insert="fragments/nav"></nav>
-<section>
-	 <h1>테이블 목록 관리 메인</h1>
+    <body>
+        <!-- header 시작 -->
+        <!-- <header class="header" th:insert="fragments/header"></header> -->
+        <header class="header flex_between">
+            <div class="logo">
+                <h1>logo</h1>
+                <span class="blind"></span>
+            </div>
+            <div class="header_cate">
+                <ul class="category_list flex_start">
+                    <li>
+                        <a href="#none">aaa</a>
+                    </li>
+                    <li>
+                        <a href="#none">bbb</a>
+                    </li>
+                    <li>
+                        <a href="#none">ccc</a>
+                    </li>
+                    <li>
+                        <a href="#none">fff</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!-- header 종료 -->
 
-  <!-- 사원정보 -->
-  <div>
-    <a href="emp.html">▶ 사원정보 관리</a>
-    <table>
-      <thead>
-        <tr>
-          <th>사원번호</th><th>아이디</th><th>이름</th><th>부서번호</th><th>직급번호</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>a01</td><td>hong</td><td>홍길동</td><td>101</td><td>1001</td></tr>
-        <tr><td>b01</td><td>kim</td><td>김철수</td><td>101</td><td>1001</td></tr>
-      </tbody>
-    </table>
-  </div>
+        <div class="flex_between">
 
-  <!-- 부서정보 -->
-  <div>
-    <a href="dept.html">▶ 부서정보 관리</a>
-    <table>
-      <thead>
-        <tr>
-          <th>부서번호</th><th>부서이름</th><th>팀이름</th><th>사용여부</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>101</td><td>인사부</td><td>인사팀</td><td>Y</td></tr>
-      </tbody>
-    </table>
-  </div>
+            <!-- nav 시작 -->
+            <!-- <header class="header" th:insert="fragments/header"></header> -->
+            <aside class="aside">
+                <nav class="nav">
+                    <ul class="main">
+                        <li>
+                            <a href="#">전자결재</a>
+                            <ul class="sub">
+                                <li><a href="#">결재기안</a></li>
+                                <li><a href="#">결재대기</a></li>
+                                <li><a href="#">결재진행</a></li>
+                                <li><a href="#">결재완료</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">휴가</a>
+                            <ul class="sub">
+                                <li><a href="#">휴가신청</a></li>
+                                <li><a href="#">휴가일정</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">공지사항</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">일정관리</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">문서관리</a>
+                            <ul class="sub">
+                                <li><a href="#">문서관리</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">메일</a>
+                            <ul class="sub">
+                                <li><a href="#">받은메일</a></li>
+                                <li><a href="#">보낸메일</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <!-- nav 종료 -->
 
-  <!-- 직급정보 -->
-  <div>
-    <a href="position.html">▶ 직급정보 관리</a>
-    <table>
-      <thead>
-        <tr>
-          <th>직급번호</th><th>직급이름</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>1001</td><td>사원</td></tr>
-      </tbody>
-    </table>
-  </div>
+            <section class="contents">
+                <h3 class="tit_h3">테이블 목록 관리 메인</h3>
 
-  <!-- 코드정보 -->
-  <div>
-    <a href="code.html">▶ 코드정보 관리</a>
-    <table>
-      <thead>
-        <tr>
-          <th>코드번호</th><th>코드유형</th><th>코드값</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>1</td><td>gender</td><td>M</td></tr>
-        <tr><td>2</td><td>gender</td><td>F</td></tr>
-      </tbody>
-    </table>
-  </div>
+                <!-- 사원정보 -->
+                <div class="table_box1">
+                    <table class="table1">
+                        <a href="admin/empList">▶ 사원정보 관리</a>
+                        <thead>
+                            <tr>
+                                <th>사원번호</th>
+                                <th>아이디</th>
+                                <th>이름</th>
+                                <th>부서번호</th>
+                                <th>직급번호</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>a01</td>
+                                <td>hong</td>
+                                <td>홍길동</td>
+                                <td>101</td>
+                                <td>1001</td>
+                            </tr>
+                            <tr>
+                                <td>b01</td>
+                                <td>kim</td>
+                                <td>김철수</td>
+                                <td>101</td>
+                                <td>1001</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-</section>
-</div>
-</body>
+                <!-- 부서정보 -->
+                <div class="table_box1">
+                    <table class="table1">
+                        <a href="admin/deptList">▶ 부서정보 관리</a>
+                        <thead>
+                            <tr>
+                                <th>부서번호</th>
+                                <th>부서이름</th>
+                                <th>팀이름</th>
+                                <th>사용여부</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>101</td>
+                                <td>인사부</td>
+                                <td>인사팀</td>
+                                <td>Y</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 직급정보 -->
+                <div class="table_box1">
+                    <table class="table1">
+                        <a href="admin/posList">▶ 직급정보 관리</a>
+                        <thead>
+                            <tr>
+                                <th>직급번호</th>
+                                <th>직급이름</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1001</td>
+                                <td>사원</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 코드정보 -->
+                <div class="table_box1">
+                    <table class="table1">
+                        <a href="admin/codeList">▶ 코드정보 관리</a>
+                        <thead>
+                            <tr>
+                                <th>코드번호</th>
+                                <th>코드유형</th>
+                                <th>코드값</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>gender</td>
+                                <td>M</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>gender</td>
+                                <td>F</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+        </div>
+    </body>
 </html>
+
