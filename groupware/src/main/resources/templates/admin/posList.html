@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>최종 프로젝트</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+
+    <body>
+        <!-- header 시작 -->
+        <!-- <header class="header" th:insert="fragments/header"></header> -->
+        <header class="header flex_between">
+            <div class="logo">
+                <h1>logo</h1>
+                <span class="blind"></span>
+            </div>
+            <div class="header_cate">
+                <ul class="category_list flex_start">
+                    <li>
+                        <a href="#none">aaa</a>
+                    </li>
+                    <li>
+                        <a href="#none">bbb</a>
+                    </li>
+                    <li>
+                        <a href="#none">ccc</a>
+                    </li>
+                    <li>
+                        <a href="#none">fff</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <!-- <header class="header" th:insert="fragments/header"></header> -->
+            <aside class="aside">
+                <nav class="nav">
+                    <ul class="main">
+                        <li>
+                            <a href="#">전자결재</a>
+                            <ul class="sub">
+                                <li><a href="#">결재기안</a></li>
+                                <li><a href="#">결재대기</a></li>
+                                <li><a href="#">결재진행</a></li>
+                                <li><a href="#">결재완료</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">휴가</a>
+                            <ul class="sub">
+                                <li><a href="#">휴가신청</a></li>
+                                <li><a href="#">휴가일정</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">공지사항</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">일정관리</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">문서관리</a>
+                            <ul class="sub">
+                                <li><a href="#">문서관리</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">메일</a>
+                            <ul class="sub">
+                                <li><a href="#">받은메일</a></li>
+                                <li><a href="#">보낸메일</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+                <h3 class="tit_h3">테이블 목록 관리 메인</h3>
+
+
+                <!-- 직급정보 -->
+                <div class="table_box1">
+                    <table class="table1">
+                        <a href="position.html">▶ 직급정보 관리</a>
+                        <thead>
+                            <tr>
+                                <th>직급번호</th>
+                                <th>직급이름</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1001</td>
+                                <td>사원</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="button1">추가등록</button>
+                </div>
+
+            </section>
+        </div>
+    </body>
+</html>
+

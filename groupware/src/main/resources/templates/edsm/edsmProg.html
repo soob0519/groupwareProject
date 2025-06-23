@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>결재 진행</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+
+    <body>
+        <!-- header 시작 -->
+        <!-- <header class="header" th:insert="fragments/header"></header> -->
+        <header class="header flex_between">
+            <div class="logo">
+                <h1>logo</h1>
+                <span class="blind"></span>
+            </div>
+            <div class="header_cate">
+                <ul class="category_list flex_start">
+                    <li>
+                        <a href="#none">aaa</a>
+                    </li>
+                    <li>
+                        <a href="#none">bbb</a>
+                    </li>
+                    <li>
+                        <a href="#none">ccc</a>
+                    </li>
+                    <li>
+                        <a href="#none">fff</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <!-- <header class="header" th:insert="fragments/header"></header> -->
+            <aside class="aside">
+                <nav class="nav">
+                    <ul class="main">
+                        <li>
+                            <a href="#">전자결재</a>
+                            <ul class="sub">
+                                <li><a href="#">결재기안</a></li>
+                                <li><a href="#">결재대기</a></li>
+                                <li><a href="#">결재진행</a></li>
+                                <li><a href="#">결재완료</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">휴가</a>
+                            <ul class="sub">
+                                <li><a href="#">휴가신청</a></li>
+                                <li><a href="#">휴가일정</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">공지사항</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">일정관리</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">문서관리</a>
+                            <ul class="sub">
+                                <li><a href="#">문서관리</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">메일</a>
+                            <ul class="sub">
+                                <li><a href="#">받은메일</a></li>
+                                <li><a href="#">보낸메일</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+
+                <h3 class="tit_h3">내 결재 관리</h3>
+
+                <div class="btn_frame2">
+                    <button class="button1">전체</button>
+                    <button class="button1">기안중</button>
+                    <button class="button1">진행중</button>
+                    <button class="button1">반려</button>
+                    <button class="button1">결재</button>
+                    <input type="text" placeholder="라벨 입력 후 Enter" />
+                    <button class="button3">Search(F3)</button>
+                </div>
+
+                <div class="table_box2">
+                    <table class="table1">
+                        <thead>
+                            <tr>
+                                <th>기안일자</th>
+                                <th>제목</th>
+                                <th>기안자</th>
+                                <th>결재자</th>
+                                <th>진행상태</th>
+                                <th>결재</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025/06/27</td>
+                                <td>※ 내결재관리에서는 본인의 결재문서에 대해서만 확인이 가능합니다 ※</td>
+                                <td>ecount</td>
+                                <td>이가운트</td>
+                                <td>진행중</td>
+                                <td><a href="#">보기</a></td>
+                            </tr>
+                            <tr>
+                                <td>2025/06/27</td>
+                                <td>※ 기안서통합관리에서는 모든 기안서를 확인할 수 있습니다 ※</td>
+                                <td>ecount</td>
+                                <td>이가운트</td>
+                                <td>진행중</td>
+                                <td><a href="#">보기</a></td>
+                            </tr>
+                            <tr>
+                                <td>2025/06/23</td>
+                                <td>영업팀 김지훈 법인차량 운행일지</td>
+                                <td>guest</td>
+                                <td>최현경</td>
+                                <td>진행중</td>
+                                <td><a href="#">보기</a></td>
+                            </tr>
+                            <tr>
+                                <td>2025/06/16</td>
+                                <td><span class="urgent">[긴급]</span> 비품신청서</td>
+                                <td>guest</td>
+                                <td>변종호</td>
+                                <td>진행중</td>
+                                <td><a href="#">보기</a></td>
+                            </tr>
+                            <tr>
+                                <td>2025/06/11</td>
+                                <td>기획팀 박정민 시간외근무 신청서</td>
+                                <td>guest</td>
+                                <td>변종호</td>
+                                <td>진행중</td>
+                                <td><a href="#">보기</a></td>
+                            </tr>
+                            <tr>
+                                <td>2025/06/10</td>
+                                <td>인사팀 정연대 대리 경조금 신청서</td>
+                                <td>guest</td>
+                                <td>최현경</td>
+                                <td>진행중</td>
+                                <td><a href="#">보기</a></td>
+                            </tr>
+                            <tr>
+                                <td>2025/06/07</td>
+                                <td>개발팀 윤지환 휴가신청서</td>
+                                <td>guest</td>
+                                <td>최현경</td>
+                                <td>진행중</td>
+                                <td><a href="#">보기</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </body>
+</html>
+
