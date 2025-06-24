@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>부서 등록 시스템</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+	<script>
+ 	$( function() {
+	
+   		$("#btn_submit").click( function(){
+   			if( $("#deptnm").val() == "" ) {
+				alert("부서명을 입력하세요.");
+				$("#deptnm").focus();
+				return false;
+   			}
+   			if( $("#depttm").val() == "" ) {
+				alert("팀명을 입력하세요.");
+				$("#depttm").focus();
+				return false;
+   			}
+
+   			let form = $("#frm").serialize();
+			$.ajax({
+				type:"post",
+				url:"/dept/deptSave",
+				data:form, 
+   				datatype:"text",
+   				success:function(data) { 
+					if( data == "1" ) { 
+						alert("부서저장완료!");
+						location="/dept/deptList";
+					} else {
+						alert("부서저장실패!");
+					}
+   				},
+   				error:function(){	
+					alert("전송실패!");
+   				}
+   			});
+   		});
+  	});
+  	</script>
+    <body>
+        <!-- header 시작 -->
+        <!-- <header class="header" th:insert="fragments/header"></header> -->
+        <header class="header flex_between">
+            <div class="logo">
+                <h1>logo</h1>
+                <span class="blind"></span>
+            </div>
+            <div class="header_cate">
+                <ul class="category_list flex_start">
+                    <li>
+                        <a href="#none">aaa</a>
+                    </li>
+                    <li>
+                        <a href="#none">bbb</a>
+                    </li>
+                    <li>
+                        <a href="#none">ccc</a>
+                    </li>
+                    <li>
+                        <a href="#none">fff</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <!-- <header class="header" th:insert="fragments/header"></header> -->
+            <aside class="aside">
+                <nav class="nav">
+                    <ul class="main">
+                        <li>
+                            <a href="#">전자결재</a>
+                            <ul class="sub">
+                                <li><a href="#">결재기안</a></li>
+                                <li><a href="#">결재대기</a></li>
+                                <li><a href="#">결재진행</a></li>
+                                <li><a href="#">결재완료</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">휴가</a>
+                            <ul class="sub">
+                                <li><a href="#">휴가신청</a></li>
+                                <li><a href="#">휴가일정</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">공지사항</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">일정관리</a>
+                            <ul class="sub">
+                                <li><a href="#"></a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">문서관리</a>
+                            <ul class="sub">
+                                <li><a href="#">문서관리</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">메일</a>
+                            <ul class="sub">
+                                <li><a href="#">받은메일</a></li>
+                                <li><a href="#">보낸메일</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+                
+                <form  id ="frm" name="frm">
+                    <div class="upload-wrapper">
+                                
+                        <h3 class="tit_h3">부서등록</h3>
+
+                        <table>
+                        	 <tr class="form-row">
+                                <th><label for="deptno">부서번호</label></th>
+                                <td><input type="text" id="deptno" name="deptno" th:value="${code}" readonly></td>
+                            </tr>
+                            <tr class="form-row">
+                                <th><label for="deptnm">부서명</label></th>
+                                <td><input type="text" id="deptnm" name="deptnm" ></td>
+                            </tr>
+                            <tr class="form-row">
+                                <th><label for="depttm">팀 명</label></th>
+                                <td><input type="text" id="depttm" name="depttm" ></td>
+                            </tr>
+                            <tr class="form-row">
+                                <th><label for="deptst">사용유무</label></th>
+                                <td>
+									<select name="deptst">
+										<option value="Y">사용</option>
+										<option value="N">불가</option>
+									</select>
+						      	</td>
+                            </tr>
+                        </table>
+
+                        <div class="btn_frame2">
+                            <button type="submit" class="button1" id="btn_submit">등록</button>
+                            <button type="reset" class="button2">초기화</button>
+                        </div>
+                    </div>
+                </form>
+
+            </section>
+        </div>
+    </body>
+</html>
+
