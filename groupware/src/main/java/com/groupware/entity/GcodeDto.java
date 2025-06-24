@@ -31,5 +31,7 @@ public class GcodeDto {
 	@Column(length=200,nullable=false)
 	private String cdvalue;
 	
+	@Column(length=200,nullable=false)
+	private String cdexplan;
 	
 }

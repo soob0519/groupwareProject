@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PositionDto {
 
-	@Id  // 기본키 설정
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@Column(nullable=false)
 	private int posno;
 	
 	@Column(length=200,nullable=false)
