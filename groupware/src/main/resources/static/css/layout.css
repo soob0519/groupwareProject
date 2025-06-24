@@ -14,7 +14,7 @@
 
 
 /* 아코디언메뉴 */
-.aside {width: 250px; height: 100vh; border-right: 1px solid #d1d1d1; background: #f4f6fa;}
+.aside {width: 250px; height: calc(100vh - 80px); border-right: 1px solid #d1d1d1; background: #f4f6fa;}
 .main > li {padding: 5px 20px;}
 .main > li > a {display: block; height: 40px; line-height: 40px; font-size: 20px; padding-left: 15px; font-size: 16px; transition: .2s; border-radius: 4px;}
 .main > li > a:hover {background: #777; color: #fff;}
@@ -26,7 +26,7 @@
 
 
 /* contents */
-.contents {width: 100%; padding: 40px;}
+.contents {width: 100%; padding: 20px 40px;}
 .con_items {gap: 10px; margin-bottom: 10px;}
 .con_item {padding: 20px; background: #fff; border-radius: 30px; transition: .3s; border: 1px solid #d1d1d1;}
 .con_item:hover {box-shadow: 5px 5px 10px #666;}
@@ -40,9 +40,8 @@
 
 .schedule {width: 100%; height: 500px;}
 .calendar {width: 100%;}
-.calendar th {height: 40px;}
-.calendar td {height: 70px;}
-.calendar th,td {border: 1px solid #d1d1d1;}
+.calendar th {height: 40px; border: 1px solid #d1d1d1; border-bottom: none; background: #f9f9f9; text-align: center; font-weight: bold;}
+.calendar td {height: 70px; border: 1px solid #d1d1d1;}
 
 .con_box1 {width: 100%; display: flex; flex-direction: column; gap: 10px;}
 .approve {height: 290px; overflow: hidden; display: flex; flex-direction: column;}

@@ -1,67 +1,91 @@
-/* 게시판 공통 */
+/* 공통 css */
 .table1 {width: 100%;}
 .table1 th,.table1 td {border-bottom: 1px solid #ddd; padding: 10px; text-align: left;}
-.table1 th {background: #f9f9f9;}
+.table1 th {background: #e9e9e9;}
 .table1 tr:hover {background: #f0f0f0;}
+.table_box1 {margin-bottom: 50px;}
+.table_box2 {margin-top: 40px;}
+.table_box:last-child {margin-bottom: 0;}
+
+.tit_h3 {height: 50px; line-height: 50px;}
+
+input[type="file"] {flex: 1; font-size: 13px;}
+input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="password"],
+  input[type="datetime-local"],
+  select 
+    {width: 100%; flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;}
+label {width: 100px; font-weight: 500;}
+textarea {width: 100%; flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; height: 200px; resize: vertical;}
+
+.upload-wrapper {max-width: 800px; margin: 40px auto; background: #fff; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); padding: 30px 40px;}
+.upload-wrapper table {width: 100%;}
+.upload-header {font-size: 20px; font-weight: bold; margin-bottom: 20px;}
+
+.form-row {display: flex; align-items: center; margin-bottom: 18px;}
+.form-row td {width: 100%;}
+.form-row label,th {width: 100px; font-weight: 500; text-align: left;}
 
 /* button */
+.btn_frame2 {font-size: 18px; gap: 10px; display: flex; justify-content: flex-end; align-items: center;}
+.btn_frame3 {width: 192px; padding-left: 10px; font-size: 18px; gap: 10px;}
+.button-row {display: flex; justify-content: flex-end; margin-top: 30px;}
+.search_button {width: 50px; background: #777; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; height: 36px; line-height: 36px; font-size: 14px;}
 .button1 {padding: 10px 25px; border: 1px solid #777; color: white; background: #777; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
 .button2 {padding: 10px 25px; border: 1px solid #777; color: #777; background: white; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
-.search_button {width: 50px; background: #777; color: white; border: none; font-weight: bold; border-radius: 4px; cursor: pointer; height: 36px; line-height: 36px; font-size: 14px;}
+.button1_1 {padding: 5px 25px; border: 1px solid #777; color: white; background: #777; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
+.button2_1 {padding: 5px 25px; border: 1px solid #777; color: #777; background: white; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
+.button3 {padding: 10px 25px; border: 1px solid #777; color: white; background: #777; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
+.upload-button {background: #777; color: white; border: none; padding: 10px 25px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
+.cancel-button {border: 2px solid #777; color: #777; background: white; padding: 10px 25px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-right: 10px; box-sizing: border-box;}
+
+
+
 
 /* dfile */
-.content {flex: 1; padding: 20px 40px; display: flex; flex-direction: column;}
-
+.content {flex: 1; display: flex; flex-direction: column;}
 /* content */
+.search {display: flex; justify-content: flex-end; margin-top: 10px; gap: 10px;}
 .search_select {padding: 8px; height: 36px; /* input이랑 맞추기 */ border: 1px solid #ccc; border-radius: 4px; font-size: 14px;}
-.search_input {padding: 8px; width: 250px; height: 36px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;}
-.top_bar {display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;}
-.top_left {font-size: 14px; position: relative; top: 30px;}
-.top_right {align-items: center; gap: 10px;}
+.search_input {padding: 8px; width: 250px !important; height: 36px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;}
+.top_bar {display: flex; justify-content: flex-end;}
+.data_total {padding: 10px 0;}
 .pagination {margin-top: 20px; text-align: center;}
 .pagination a {margin: 0 4px; padding: 6px 10px; color: #333; border: 1px solid #ccc; border-radius: 4px; transition: .2s;}
 .pagination a.active {background: #777; color: white; border-color: #777;}
 .pagination a:hover {background: #f0f0f0; color: #777;}
 
-/* filewrite */
-.upload-wrapper {max-width: 800px; margin: 40px auto; background: #fff; border: 1px solid #ddd; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); padding: 30px 40px;}
-.upload-header {font-size: 20px; font-weight: bold; margin-bottom: 20px;}
-.form_list {display: flex; align-items: center; margin-bottom: 18px;}
-.form_list label {width: 100px; font-weight: 500;}
-.form_list input[type="text"],.form_list select {flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;}
-.form_list textarea {flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; height: 200px; resize: vertical;}
-.form_list input[type="file"] {flex: 1; font-size: 13px;}
-.button-row,.btn_box {display: flex; justify-content: flex-end; margin-top: 30px; gap: 10px;}
-.upload-button {background: #777; color: white; border: none; padding: 10px 25px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer;}
-.cancel-button {border: 2px solid #777; color: #777; background: white; padding: 10px 25px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-right: 10px; box-sizing: border-box;}
 
 
 /* schedule */
-.sel_day_box {width: 20%;}
+.schedule_box {gap: 20px;}
+.sel_day_box {width: 20%; height: 100%; border: 1px solid #d1d1d1; padding: 10px; border-radius: 6px;}
 .sel_day_box .sel_month {width: 100%;}
 .sel_day_box .sel_month .month_list {width: 100%; flex-wrap: wrap;}
-.sel_day_box .sel_month .month_list li {width: 25%;} 
-
-.btn_frame2 {font-size: 18px; gap: 10px; padding-bottom: 15px;}
+.sel_day_box .sel_month .month_list li {width: 25%; height: 40px; line-height: 30px;}
+.sel_day_box .sel_month .month_list li a {width: 80%; transition: .2s; display: inline-block; text-align: center; border-radius: 4px;}
+.sel_day_box .sel_month .month_list li a:hover {background: #d1d1d1;}
+.sel_year {width: 50%;}
+.sel_month {padding: 10px; margin-top: 10px;}
 
 .sub_con_item {box-shadow: none !important; height: 100%;}
 .sub_calendar td {height: 100px;}
 
 /* modal */
-.schedule_wrap {max-width: 800px; margin: 0 auto; background: #fff; border: 1px solid #d1d1d1; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); padding: 30px 40px;}
-.schedule_tit {font-size: 20px; font-weight: bold; margin-bottom: 20px;}
+.modal_schedule_write,.modal_sd_detail {display: ; position: ab; left: 0; top: 0; right: 0; bottom: 0; width: 100%; height: 100vh; background: rgba(0, 0, 0, .3);}
+.modal_schedule_write {}
+.modal_sd_detail {}
+.schedule_wrap {max-width: 800px; margin: 0 auto; background: #fff; border: 1px solid #d1d1d1; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); padding: 30px 40px; position: relative; top: 50%; transform: translateY(-50%);}
+.schedule_wrap i {font-size: 25px; cursor: pointer;}
+.schedule_tit {font-size: 18px; font-weight: bold; margin-bottom: 20px;}
 .form_list {display: flex; align-items: center; margin-bottom: 18px;}
-.form_list label {width: 100px; font-weight: 500;}
-.form_list input[type="text"],
- .form_list input[type="date"],
- .form_list input[type="time"],
- .form_list select 
-   {flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px;}
-.form_list textarea {flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; height: 120px; resize: vertical;}
 .form_list .value {flex: 1; padding: 10px; font-size: 14px; background: #f9f9f9; border: 1px solid #ccc; border-radius: 4px;}
 
 
 
+#approverList {width: 100%;}
 
 
 
