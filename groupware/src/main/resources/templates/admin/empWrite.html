@@ -50,82 +50,13 @@
   	</script>
     <body>
         <!-- header 시작 -->
-        <!-- <header class="header" th:insert="fragments/header"></header> -->
-        <header class="header flex_between">
-            <div class="logo">
-                <h1>logo</h1>
-                <span class="blind"></span>
-            </div>
-            <div class="header_cate">
-                <ul class="category_list flex_start">
-                    <li>
-                        <a href="#none">aaa</a>
-                    </li>
-                    <li>
-                        <a href="#none">bbb</a>
-                    </li>
-                    <li>
-                        <a href="#none">ccc</a>
-                    </li>
-                    <li>
-                        <a href="#none">fff</a>
-                    </li>
-                </ul>
-            </div>
-        </header>
+        <header class="header" th:insert="fragments/header"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <!-- <header class="header" th:insert="fragments/header"></header> -->
-            <aside class="aside">
-                <nav class="nav">
-                    <ul class="main">
-                        <li>
-                            <a href="#">전자결재</a>
-                            <ul class="sub">
-                                <li><a href="#">결재기안</a></li>
-                                <li><a href="#">결재대기</a></li>
-                                <li><a href="#">결재진행</a></li>
-                                <li><a href="#">결재완료</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">휴가</a>
-                            <ul class="sub">
-                                <li><a href="#">휴가신청</a></li>
-                                <li><a href="#">휴가일정</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">공지사항</a>
-                            <ul class="sub">
-                                <li><a href="#"></a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">일정관리</a>
-                            <ul class="sub">
-                                <li><a href="#"></a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">문서관리</a>
-                            <ul class="sub">
-                                <li><a href="#">문서관리</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">메일</a>
-                            <ul class="sub">
-                                <li><a href="#">받은메일</a></li>
-                                <li><a href="#">보낸메일</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
-            </aside>
+            <header class="aside" th:insert="fragments/nav"></header>
             <!-- nav 종료 -->
 
             <section class="contents">
