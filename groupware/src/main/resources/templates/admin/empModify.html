@@ -2,14 +2,14 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>직원 등록 시스템</title>
+        <title>직원 수정 시스템</title>
         <link rel="stylesheet" href="/css/style.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
 	<script>
- 	$( function() {
-	
+	$( function() {
+
    		$("#btn_submit").click( function(){
    			if( $("#userid").val() == "" ) {
 				alert("아이디를 입력하세요.");
@@ -30,19 +30,19 @@
    			let form = $("#frm").serialize();
 			$.ajax({
 				type:"post",
-				url:"/emp/empSave",
+				url:"/emp/empModify",
 				data:form, 
    				datatype:"text",
    				success:function(data) { 
 					if( data == "1" ) { 
-						alert("사원저장완료!");
+						alert("수정완료!");
 						location="/emp/empList";
 					} else {
-						alert("사원저장실패!");
+						alert("수정실패!");
 					}
    				},
    				error:function(){	
-					alert("전송실패!");
+					alert("수정실패!");
    				}
    			});
    		});
@@ -133,20 +133,24 @@
                 <form id ="frm" name="frm">
                     <div class="upload-wrapper">
                                 
-                        <h3 class="tit_h3">사원등록</h3>
+                        <h3 class="tit_h3">사원수정</h3>
 
                         <table>
+                        	 <tr class="form-row">
+                                <th><label for="empno">사원번호</label></th>
+                                <td><input type="text" id="empno" name="empno" th:value="${dto.empno}" readonly></td>
+                            </tr>
                             <tr class="form-row">
                                 <th><label for="userid">아이디</label></th>
-                                <td><input type="text" id="userid" name="userid" ></td>
+                                <td><input type="text" id="userid" name="userid" th:value="${dto.userid}" ></td>
                             </tr>
                             <tr class="form-row">
                                 <th><label for="pass">비밀번호</label></th>
-                                <td><input type="text" id="pass" name="pass" ></td>
+                                <td><input type="text" id="pass" name="pass" th:value="${dto.pass}" ></td>
                             </tr>
                             <tr class="form-row">
                                 <th><label for="name">이름</label></th>
-                                <td><input type="text" id="name" name="name" ></td>
+                                <td><input type="text" id="name" name="name" th:value="${dto.name}" ></td>
                             </tr>
                             <tr class="form-row">
 					        <th><label for="deptno">부서</label></th>
@@ -154,7 +158,9 @@
 								<select name="deptno">
 									<option th:each="result3 : ${list3}"
 											th:value="${result3.deptno}"
-											th:text="${result3.deptnm + ' ' + result3.depttm}"></option>
+											th:text="${result3.deptnm + ' ' + result3.depttm}"
+											th:selected="${dto.deptno} == ${result3.deptno}">
+									</option>
 								</select>
 							</td>
 					      </tr>
@@ -164,15 +170,16 @@
 					        	<select name="posno">
 									<option th:each="result2 : ${list2}"
 											th:value="${result2.posno}"
-											th:text="${result2.posnm}"></option>
+											th:text="${result2.posnm}"
+											th:selected="${dto.posno} == ${result2.posno}">
+									</option>
 								</select>
 					        </td>
 					      </tr>
                         </table>
 
                         <div class="btn_frame2">
-                            <button type="submit" class="button1" id="btn_submit">등록</button>
-                            <button type="reset" class="button2">초기화</button>
+                            <button type="submit" class="button1" id="btn_submit">수정</button>
                         </div>
                     </div>
                 </form>

@@ -51,4 +51,11 @@ public class EmpService {
 	public EmpDto detail(int empno) {
 		return empRepository.findById(empno).orElse(null);
 	}
+	
+	/**
+	 * 상세보기
+	 */
+	public EmpDto getFindById(Integer empno) {
+		return empRepository.findById(empno).orElse(null);
+	}
 }

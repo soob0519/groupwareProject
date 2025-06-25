@@ -117,14 +117,14 @@
                 <!-- 사원정보 -->
                 <div class="table_box1">
                     <table class="table1">
-                        <a href="emp/empList">▶ 사원정보 관리</a>
+                        <p>▶ 사원정보 관리</p>
                         <thead>
                             <tr>
                                 <th>사원번호</th>
                                 <th>아이디</th>
                                 <th>이름</th>
-                                <th>부서번호</th>
-                                <th>직급번호</th>
+                                <th>부서</th>
+                                <th>직급</th>
                                 <th>삭제</th>
                             </tr>
                         </thead>
@@ -132,9 +132,15 @@
                             <tr th:each="result : ${list}">
                                 <td th:text="${result.empno}"></td>
                                 <td th:text="${result.userid}"></td>
-                                <td th:text="${result.name}"></td>
-                                <td th:text="${result.deptno}"></td>
-                                <td th:text="${result.posno}"></td>
+                                <td>
+                                <a th:href="@{|/emp/${result.empno}|}" th:text="${result.name}"></a>
+                                </td>
+                            	<td th:each="d : ${list3}" 
+									th:if="${d.deptno} == ${result.deptno}" 
+									th:text="${d.deptnm + ' ' + d.depttm}"></td>
+								<td th:each="p : ${list2}" 
+									th:if="${p.posno} == ${result.posno}" 
+									th:text="${p.posnm}"></td>
                                 <td>
                                 	<button type="button" class="button1" 
                                 			th:onClick="fn_delete('[[${result.empno}]]')">삭제</button>
