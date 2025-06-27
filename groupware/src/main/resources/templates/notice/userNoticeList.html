@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8">
         <title>최종 프로젝트</title>
-        <link rel="stylesheet" href="/css/gstyle.css">
+        <link rel="stylesheet" href="/css/common.css">
+        <link rel="stylesheet" href="/css/layout.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
@@ -120,8 +121,14 @@
 							</tr>
 						</thead>
 						<tbody style="background-color:white;">
-							<tr  th:each="result,myState : ${plist}">
-								<td align="center" th:text="${startPageRownum - myState.index}"></td>
+							<tr th:each="result,myState : ${plist}" 
+								th:style="${result.ntcca == '필수'} ? 'background-color:#ffefe8;' : '' ">
+								<td align="center">
+									<span th:if="${result.ntcca == '필수'}">공지</span>
+        							<span th:unless="${result.ntcca == '필수'}" 
+        								  th:text="${startPageRownum - myState.index}">
+        							</span>
+								</td>
 								<td align="center">
 									<a th:href="@{|/notice/${result.ntcno}|}" th:text="${result.ntctt}" 
 									   th:style="${'color:blue;'}">
@@ -156,7 +163,7 @@
 							</td>
 							<!-- 현재 페이지 -->
 							<td class="td_page" th:each="n : ${#numbers.sequence(startPage, endPage)}">
-								<a th:href="@{|/notice/AdminList?indexpage=${n}&search=${search}|}">
+								<a th:href="@{|/notice/UserList?indexpage=${n}&search=${search}|}">
 									<span th:text="${n}" th:class="${n} == ${indexpage} ? 'current-page' : '' "></span>
 								</a>
 							</td>

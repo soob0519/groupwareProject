@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8">
         <title>최종 프로젝트</title>
-        <link rel="stylesheet" href="/css/gstyle.css">
+        <link rel="stylesheet" href="/css/common.css">
+        <link rel="stylesheet" href="/css/layout.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
@@ -59,9 +60,17 @@
 			width:380px;
 			height:150px;
 			font-size:20px;
+			font-weight:bold;
 			padding:4px;
 			border:none;
 			outline: none;
+		 }
+		 
+		 /*선택란*/
+		 .radio{
+		 	margin-left:10px;
+		 	font-size:30px;
+		 	transform: scale(1.5);
 		 }
 		 
 		 /*작성하기 테이블 css*/
@@ -85,25 +94,34 @@
     </style>
     
     <script>
-	 	$(function() {
+	 	
+    	$(function() {
 	 		
 	 		$("#btn_List"  ).click(function() {location = "/notice/AdminList";});
 	 		
+	 		// 암호입력 스페이스 입력 막기
+	 		$("#ntcps").on('keydown', function(e) {if (e.key === " " || e.keyCode === 32) e.preventDefault();});
+	 		
 	 		$("#btn_submit").click(function() {
 	 			
-	 			if($("#ntctt").val() == "") {
+	 			if($("#ntctt").val().trim() == "") {
 	 				alert("제목을 입력하세요.");
 	 				$("#ntctt").focus();
 	 				return false;
 	 			}
 	 			
-	 			if($("#ntcps").val() == "") {
+	 			if($("#ntcps").val().trim() == "") {
 	 				alert("암호를 입력하세요.");
 	 				$("#ntcps").focus();
 	 				return false;
 	 			}
 	 			
-	 			if($("#ntcct").val() == "") {
+	 			if (!$("input[name='ntcca']:checked").val()) {
+	 				alert("유형을 선택하세요.");
+	 				return false;
+	 			}
+	 			
+	 			if($("#ntcct").val().trim() == "") {
 	 				alert("내용을 입력하세요.");
 	 				$("#ntcct").focus();
 	 				return false;
@@ -128,6 +146,7 @@
 	 			});
 	 		});
 	 	});
+	 	
  	</script>
 
     <body>
@@ -161,6 +180,15 @@
 							<tr>
 								<th>작성자</th>
 								<td><input type="text" class="input" id="ntcwr" name="ntcwr" value="관리자" readonly></td>
+							</tr>
+							<tr>
+								<th>유형</th>
+								<td>
+									<input type="radio" class="radio" id="ntcca" name="ntcca" value="필수">
+									&nbsp;<font size="4">필수</font>
+									<input type="radio" class="radio" id="ntcca" name="ntcca" value="일반">
+									&nbsp;<font size="4">일반</font>
+								</td>
 							</tr>
 							<tr>
 								<th>내용</th>
