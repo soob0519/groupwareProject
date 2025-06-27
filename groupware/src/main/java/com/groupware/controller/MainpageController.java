@@ -14,7 +14,7 @@ import com.ZEC_Project.entity.ScheduleDto;
 import com.ZEC_Project.service.ScheduleService;
 
 @RestController
-@RequestMapping("/mainpage")
+@RequestMapping("/index")
 public class MainpageController {
 	
 	public final ScheduleService scheduleService;
@@ -28,7 +28,7 @@ public class MainpageController {
 	/**
 	 * 메인화면 출력
 	 */
-	@GetMapping("/index")
+	@GetMapping
 	public ModelAndView index(String year, String month) {
 		
 		ModelAndView model = new ModelAndView();
