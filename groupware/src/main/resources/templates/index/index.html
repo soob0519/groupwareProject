@@ -6,6 +6,66 @@
         <link rel="stylesheet" href="/css/style.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
+        
+        <script>
+        	function fn_next(n) {
+        		let yy = Number($("#span_year").text());
+        		let mm = Number($("#span_month").text());
+        		
+        		let send_yy = "";
+        		let send_mm = "";
+        		
+        		if(n == 2) {
+        			send_yy = yy;
+        			send_mm = mm+1;
+        			if(send_mm > 12) {
+        				send_yy = send_yy + 1;
+        				send_mm = 1;
+        			}
+        		} else if(n == 1) {
+        			send_yy = yy;
+        			send_mm = mm-1;
+        			if(send_mm == 0) {
+        				send_yy = send_yy - 1;
+        				send_mm = 12;
+        			}
+        		}
+        		location = "/index/index?year="+send_yy+"&month="+send_mm;
+        	}
+        	
+        	
+        	$(document).ready(function(){
+        		$("#btn_sdsave").click(function(){
+        			
+        			let form = $("#frm").serialize();
+        			let formData = new FormData(form);
+        			$.ajax({
+        				type:"post",
+        				url:"/index",
+        				data:formData,
+        				datatype:"text",
+        				success:function(data) {
+        					if(data == "1") {
+        						alert("저장완료");
+        						location = "/index"
+        					} else if (data == "2") {
+        						alert("중복");
+        					} else {
+        						alert("저장실패");
+        					}
+        				},
+        				error:function() {
+        					alert("전송실패");
+        				}
+        			});
+        		});
+        	});
+        </script>
+        
+        <style>
+        	.calendar td:hover {background: #f9f9f9;}
+        </style>
+        
     </head>
 
     <body>
@@ -26,11 +86,11 @@
                         <div class="flex_center">
                             <div class="table_frame">
                                 <div class="btn_frame1 flex_start">
-                                    <button type="button" onclick="fn_next(1)" class="btn1">이전</button>
-                                    <span></span>년
-                                    <span></span>월
-                                    <button type="button" onclick="fn_next(2)"  class="btn1">다음</button>
-                                    <button type="button" onclick="" class="btn1">오늘</button>
+                                    <button type="button" onclick="fn_next(1)" class="button1">이전</button>
+                                    <span id="span_year" th:text="${yy}"></span>년
+                                    <span id="span_month" th:text="${mm+1}"></span>월
+                                    <button type="button" onclick="fn_next(2)"  class="button1">다음</button>
+                                    <button type="button" onclick="location='/mainpage/index'" class="button1">오늘</button>
                                     <h5>일정관리</h5>
                                 </div>
                                 <table class="calendar">
@@ -52,51 +112,53 @@
                                         <th>금</th>
                                         <th>토</th>
                                     </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>2</td>
-                                        <td>3</td>
-                                        <td>4</td>
-                                        <td>5</td>
-                                        <td>6</td>
-                                        <td>7</td>
+                                    <tr th:with="newline='</tr><tr>',cnt=${dayOfWeek-1}">
+                                    	<!-- 공백 -->
+                                    	<th:block th:each="dd:${#numbers.sequence(1,cnt)}">
+                                    		<th:block th:if="${cnt>0}">
+                                    			<td></td>
+                                    		</th:block>
+                                    	</th:block>
+                                    	
+                                    	<!-- 반복문(날짜출력) -->
+					        			<td style="cursor: pointer;"
+					        				th:each="dd:${#numbers.sequence(1,lastDay)}"
+					        				th:with="bg='pink'"
+					        				th:onClick="|fn_action(${yy},${mm},${dd})|">
+					        			
+					        				<th:block th:if="${(tyy>yy) || 
+					        								   (tyy==yy && tmm>mm) || 
+					        								   (tyy==yy && tmm==mm && tdd>dd)}" 
+					        						  th:with="bg='green'">
+					        					<!-- <span th:text="${bg}"></span> -->
+					        				</th:block>
+					        				
+					        				<th:block th:if="${tyy==yy && tmm==mm && tdd==dd}">
+						        				<span th:style="${'color:green;font-weight:bold;'}" th:text="${dd}"></span>
+					        				</th:block>
+					        				
+					        				<th:block th:if="${tyy!=yy || tmm!=mm || tdd!=dd}">
+						        				<!-- (출력날짜 + 공백회수)%7 결과값이 0이면 토요일  -->
+						        				<th:block th:if="${(dd+cnt)%7 == 0}">
+						        					<span th:style="${'color:blue;'}" th:text="${dd}"></span>
+						        				</th:block>
+						        				<th:block th:if="${(dd+cnt)%7 == 1}">
+						        					<span th:style="${'color:red;'}" th:text="${dd}"></span>
+						        				</th:block>
+						        				<th:block th:if="${(dd+cnt)%7 > 1}">
+						        					<span th:text="${dd}"></span>
+						        				</th:block>
+					        				</th:block>
+					        				
+					        				<th:block th:if="${(dd+cnt)%7 == 0}" th:utext="${newline}"></th:block>
+					        			</td>
+                                    	
+                                    	<!-- 공백 -->
+                                    	<th:block th:each="dd:${#numbers.sequence((cnt+lastDay)%7,6)}">
+                                    		<td th:if="${(cnt+lastDay)%7>0}"></td>
+                                    	</th:block>
                                     </tr>
-                                    <tr>
-                                        <td>8</td>
-                                        <td>9</td>
-                                        <td>10</td>
-                                        <td>11</td>
-                                        <td>12</td>
-                                        <td>13</td>
-                                        <td>14</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                    
                                 </table>
                                 
                             </div>
@@ -396,6 +458,122 @@
                 </div>
 
             </section>
+        </div>
+        
+        
+        <!-- modal_write -->
+        <div class="modal_schedule_write">
+	        <form id="frm"  class="schedule_wrap">
+	            <h2 class="schedule_tit">일정 등록</h2>
+        		<ul>
+	                <li class="form_list">
+	                    <label for="sdtitle">제목</label>
+	                    <input type="text" id="sdtitle" name="sdtitle" required>
+	                </li>
+	                
+	                <li class="form_list">
+					    <label for="divis">구분</label>
+					    <select id="divis" name="divis" required>
+					        <option value="">-- 선택 --</option>
+					        <option value="option1">휴가</option>
+					        <option value="option2">외근</option>
+					        <option value="option3">휴가</option>
+					    </select>
+	                </li>
+	
+	                <li class="form_list">
+	                    <label for="sddate">날짜</label>
+	                    <input type="date" id="sddate" name="sddate" required>
+	                </li>
+	
+	                <li class="form_list">
+	                    <label for="starttime">시작시간</label>
+	                    <input type="time" id="starttime" name="starttime">
+	                </li>
+	
+	                <li class="form_list">
+	                    <label for="endtime">종료시간</label>
+	                    <input type="time" id="endtime" name="endtime">
+	                </li>
+	
+	                <li class="form_list">
+	                    <label for="writer">작성자</label>
+	                    <input type="text" id="writer" name="writer" placeholder="작성자 성함을 입력하세요.">
+	                </li>
+	
+	                <li class="form_list">
+	                    <label for="description">설명</label>
+	                    <textarea id="description" name="description"></textarea>
+	                </li>
+	
+	                <li class="form_list">
+	                    <label for="calcheck">공개범위</label>
+	                    <select id="calcheck" name="calcheck">
+		                    <option value="1">개인</option>
+		                    <option value="2">공유</option>
+	                    </select>
+	                </li>
+		
+		        </ul>
+                <div class="btn_frame2">
+                    <button type="button" class="button2">취소</button>
+                    <button type="submit" class="button1" id="btn_sdsave">등록</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- modal_detail -->
+        <div class="modal_sd_detail">
+			<div class="schedule_wrap">
+			    <div class="schedule_tit">일정 상세보기</div>
+			
+			    <ul>
+			        <li class="form_list">
+			            <label>제목</label>
+			            <div class="value">주간 회의</div>
+			        </li>
+			        
+			        <li class="form_list">
+			            <label>구분</label>
+			            <div class="value">휴가</div>
+			        </li>
+			
+			        <li class="form_list">
+			            <label>날짜</label>
+			            <div class="value">2025-06-21</div>
+			        </li>
+			
+			        <li class="form_list">
+			            <label>시작시간</label>
+			            <div class="value">10:00</div>
+			        </li>
+			
+			        <li class="form_list">
+			            <label>종료시간</label>
+			            <div class="value">11:30</div>
+			        </li>
+			        
+			        <li class="form_list">
+			            <label>작성자</label>
+			            <div class="value">홍길동</div>
+			        </li>
+			
+			        <li class="form_list">
+			            <label>설명</label>
+			            <div class="value">병결 유급휴가..</div>
+			        </li>
+			
+			        <li class="form_list">
+			            <label>공개범위</label>
+			            <div class="value">팀 공개</div>
+			        </li>
+			    </ul>
+			
+			    <div class="btn_frame2">
+			        <button type="button" class="button2" onclick="history.back()">뒤로가기</button>
+			        <button type="button" class="button1">수정하기</button>
+			    </div>
+			</div>
         </div>
     </body>
 </html>
