@@ -22,7 +22,7 @@ public class NoticeController {
 	public NoticeController(NoticeService noticeService) {this.noticeService = noticeService;}
 	
 	
-	/// 사용자 공지사항 목록화면 출력
+	// 사용자 공지사항 목록화면 출력
 	@GetMapping("/UserList")
 	public ModelAndView userList(@RequestParam(defaultValue = "1") int indexpage, 
 							 	 @RequestParam(defaultValue = "") String search) {
@@ -70,7 +70,7 @@ public class NoticeController {
 	@GetMapping("/AdminList")
 	public ModelAndView adminList(@RequestParam(defaultValue = "1") int indexpage, 
 							 	  @RequestParam(defaultValue = "") String search) {
-		
+			
 		// 화면 모델 출력
 		ModelAndView  model = new ModelAndView();
 		
@@ -109,7 +109,6 @@ public class NoticeController {
 		
 		return model;
 	}
-	
 	
 	// 사용자 공지사항 상세보기화면,수정하기화면 출력
 	@GetMapping("/{ntcno}")
@@ -178,7 +177,6 @@ public class NoticeController {
 		return model;
 	}
 		
-	
 	// 관리자 공지사항 등록화면 출력
 	@GetMapping("/AdminWrite")
 	public ModelAndView AdminWrite() {

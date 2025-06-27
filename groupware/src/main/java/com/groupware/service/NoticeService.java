@@ -3,7 +3,6 @@ package com.groupware.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.groupware.entity.NoticeDto;
 import com.groupware.repository.NoticeRepository;
@@ -17,15 +16,11 @@ public class NoticeService {
 	// 컨트롤러 서비스 실행 설정
 	public NoticeService(NoticeRepository noticeRepository) {this.noticeRepository = noticeRepository;}
 	
-	// 공지사항 목록화면 출력
+	// 공지사항 목록화면 출력 (필수공지사항 -> 일반공지사항 순으로 역순 정렬 + 검색기능에 따른 데이터 개수에 따라 페이지 재 정렬)
 	public Page<NoticeDto> list(int page,int size,String search) {
 			
-		// pageable : 페이징 처리를 위한 스프링에서 제공하는 인터페이스 = pageRequest.of(현재페이지번호,출력단위페이지번호,정렬방식)
-		Pageable pageable = PageRequest.of(page,size,Sort.by("ntcno").descending()); 
-		
-		// 검색어가 있으면 검색, 없으면 전체 목록
-	    if (search != null && !search.trim().isEmpty()) return noticeRepository.findByNtcttContaining(search, pageable);
-	    else 											return noticeRepository.findAll(pageable);
+		 Pageable pageable = PageRequest.of(page,size);
+		 return noticeRepository.findByNtcttContaining(search, pageable);
 	}
 	
 	// 공지사항 목록화면 총데이터 개수

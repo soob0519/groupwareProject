@@ -23,7 +23,7 @@ public class NoticeDto {
 	
 	@Id //기본키 설정 (고유번호)
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int  ntcno;
+	private int   	  ntcno;
 	
 	// 비밀번호
 	@Column(nullable = false, length = 200)
@@ -36,6 +36,10 @@ public class NoticeDto {
 	// 작성자(관리자)
 	@Column(nullable = false, length = 200)
 	private String    ntcwr;
+	
+	// 유형 일반/필수
+	@Column(nullable = false, length = 50)
+	private String 	  ntcca;
 	
 	// 게시일
 	@CreationTimestamp
