@@ -52,15 +52,15 @@
 		}
 		 
 		/*검색입력 div css*/
-		 .div_search1 {
+		.div_search1 {
 			margin-top:-37px;
 			margin-left:400px;
 		}
-
+		
 		.div_search2 {
 			margin-top:-41px;
 			margin-left:730px;
-		}
+		 }
 		 
 		/*검색입력란*/
 		.search {
@@ -119,15 +119,7 @@
     
     </style>
     
-    <script>
-    	
-    	$(function() {
-    		$("#btn_Write").click(function() {
-    			location = "/Inotice/AdminWrite";
-    		});
-    	});
-    
-    </script>
+    <script>$(function() {$("#btn_Write").click(function() {location = "/Gnotice/AdminWrite";});});</script>
 
     <body>
         <!-- header 시작 -->
@@ -141,9 +133,7 @@
             <!-- nav 종료 -->
 
             <section class="contents">
-                <div class="div_notice">
-                	<font class="font_notice">전체공지사항</font>
-                </div>
+                <div class="div_notice"><font class="font_notice">일반공지사항</font></div>
 				<div class="content-body" align="center">
 					<div class="div_dept">
 						<button type="button" class="button">전체부서</button>
@@ -151,17 +141,15 @@
 						<button type="button" class="button">인사부</button>
 						<button type="button" class="button">영업부</button>
 					</div>
-					<form method="get" action="/Inotice/AdminList">
+					<form method="get" action="/Gnotice/AdminList">
 						<div class="div_search1">
 							<input type="text" class="search" name="search" th:value="${search}"> &nbsp;&nbsp;
 						</div>
-						<div class="div_search2">
-							<button type="submit" class="search_button">검색</button>
-						</div>
+						<div class="div_search2"><button type="submit" class="search_button">검색</button></div>
 					</form>
 					<table class="noticetable" th:if="${ptotalPage > 0}">
 						<colgroup>
-			 				<col style="width:8%">
+			 				<col style="width:10%">
 							<col style="width:auto">
 							<col style="width:12%">
 							<col style="width:12%">
@@ -179,23 +167,17 @@
 							</tr>
 						</thead>
 						<tbody style="background-color:white;">
-							<tr th:each="result,myState : ${plist}" 
-								th:style="${result.intcca == '필수'} ? 'background-color:#ffefe8;' : '' ">
+							<tr th:each="result,myState : ${plist}">
+								<td align="center"  th:text="${startPageRownum - myState.index}"></td>
 								<td align="center">
-									<span th:if="${result.intcca == '필수'}">공지</span>
-        							<span th:unless="${result.intcca == '필수'}" 
-        								  th:text="${startPageRownum - myState.index}">
-        							</span>
-								</td>
-								<td align="center">
-									<a th:href="@{|/Inotice/1/${result.intcno}|}" th:text="${result.intctt}" 
+									<a th:href="@{|/Gnotice/1/${result.gntcno}|}" th:text="${result.gntctt}" 
 									   th:style="${'color:blue;'}">
 									</a>
 								</td>
 								<td align="center" th:text="${result.deptno}" th:style="${'color:blue;'}"></td>
 								<td align="center">관리자</td>
-								<td align="center" th:text="${result.intcht}" th:style="${'color:blue;'}"></td>
-								<td align="center" th:text="${#strings.substring(result.intcrd,0,10)}"></td>
+								<td align="center" th:text="${result.gntcht}" th:style="${'color:blue;'}"></td>
+								<td align="center" th:text="${#strings.substring(result.gntcrd,0,10)}"></td>
 							</tr>
 						</tbody>
 					</table>
@@ -211,32 +193,32 @@
 						<tr>
 							<!-- 맨 앞으로 (indexpage=1) -->
 							<td class="td_page1">
-								<a th:href="@{|/Inotice/AdminList?indexpage=1&search=${search}|}">&lt;&lt;</a>
+								<a th:href="@{|/Gnotice/AdminList?indexpage=1&search=${search}|}">&lt;&lt;</a>
 							</td>
 							<!-- 이전 페이지 (indexpage=current-1, 단 1보다 작으면 1) -->
 							<td class="td_page1">
 								<a th:href=
-								   "@{|/Inotice/AdminList?indexpage=${indexpage > 1 ? indexpage - 1 : 1}&search=${search}|}">
+								   "@{|/Gnotice/AdminList?indexpage=${indexpage > 1 ? indexpage - 1 : 1}&search=${search}|}">
 									&lt;
 								</a>
 							</td>
 							<!-- 현재 페이지 -->
 							<td th:class=" ${n} == ${indexpage} ? 'td_page2' : 'td_page1' " 
 								th:each="n : ${#numbers.sequence(startPage, endPage)}">
-								<a th:href="@{|/Inotice/AdminList?indexpage=${n}&search=${search}|}">
+								<a th:href="@{|/Gnotice/AdminList?indexpage=${n}&search=${search}|}">
 									<span th:text="${n}" th:class="${n} == ${indexpage} ? 'current-page' : '' "></span>
 								</a>
 							</td>
 							<!-- 다음 페이지 (indexpage=current+1, 단 totalPage보다 크면 totalPage) -->
 							<td class="td_page1">
 								<a th:href=
-				  "@{|/Inotice/AdminList?indexpage=${indexpage < ptotalPage ? indexpage + 1 : ptotalPage}&search=${search}|}">
+				  "@{|/Gnotice/AdminList?indexpage=${indexpage < ptotalPage ? indexpage + 1 : ptotalPage}&search=${search}|}">
 								   &gt;
 								</a>
 							</td>					
 							<!-- 맨 뒤로 -->
 							<td class="td_page1">
-								<a th:href="@{|/Inotice/AdminList?indexpage=${ptotalPage}&search=${search}|}">&gt;&gt;</a>
+								<a th:href="@{|/Gnotice/AdminList?indexpage=${ptotalPage}&search=${search}|}">&gt;&gt;</a>
 							</td>
 						</tr>
 				    </table>
