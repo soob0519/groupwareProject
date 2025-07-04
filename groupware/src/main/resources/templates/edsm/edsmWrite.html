@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>사원 목록</title>
+        <title>결재문서 작성</title>
         <link rel="stylesheet" href="css/style.css">
 		<link rel="stylesheet" href="css/jquery-ui.css">		
         <script src="js/jquery-3.6.0.min.js"></script>
@@ -34,12 +34,26 @@
 								</td>
                             </tr>
                             <tr class="form-row">
+                                <th>구분</th>
+                                <td>
+									<div class="flex_between">
+										<input type="radio" id="" name= "" value="1" /> 연차
+										<input type="radio" id="" name= "" value="1" /> 반차
+										<input type="radio" id="" name= "" value="1" /> 공가
+										<input type="radio" id="" name= "" value="1" /> 병가
+									</div>
+								</td>
+                            </tr>
+                            <tr class="form-row">
                                 <th>제목</th>
                                 <td><input type="text" placeholder="제목을 입력하세요" /></td>
                             </tr>
                             <tr class="form-row">
 								<th>결재자</th>
 								<td class="flex_between">
+									<div class="flex_between">
+										<input type="text" name="approvers" value="조수빈"/> &nbsp;
+									</div>
 									<div id="approverList" >
 										<div class="flex_between">
 											<input type="text" name="approvers" placeholder="결재자 이름 입력" /> &nbsp;
