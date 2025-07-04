@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>사원 목록</title>
+        <link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="css/jquery-ui.css">		
+        <script src="js/jquery-3.6.0.min.js"></script>
+        <script src="js/script.js"></script>
+    </head>
+	<style>
+	.org_tree ul {
+    padding-left: 20px;
+    list-style: none;
+    position: relative;
+	}
+
+	.org_tree ul::before {
+		content: '';
+		border-left: 1px solid #ccc;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 10px;
+	}
+
+	.org_tree li {
+		margin: 0;
+		padding: 10px 0 0 20px;
+		position: relative;
+	}
+
+	.org_tree li::before {
+		content: '';
+		border-top: 1px solid #ccc;
+		position: absolute;
+		top: 15px;
+		left: 0;
+		width: 10px;
+		height: 0;
+	}
+	</style>
+    <body>
+        <!-- header 시작 -->
+        <header class="header">
+            <header class="header flex_between">
+            <div class="logo">
+                <h1>logo</h1>
+                <span class="blind"></span>
+            </div>
+            <div class="header_cate">
+                <ul class="category_list flex_start">
+                    <li>
+                        <a href="#none">aaa</a>
+                    </li>
+                    <li>
+                        <a href="#none">bbb</a>
+                    </li>
+                    <li>
+                        <a href="#none">ccc</a>
+                    </li>
+                    <li>
+                        <a href="#none">fff</a>
+                    </li>
+                </ul>
+            </div>
+			</header>
+        </header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <header class="aside" >
+                <aside class="aside">
+                    <nav class="nav">
+                        <ul class="main">
+                            <li>
+                                <a href="#">공지사항</a>
+                            </li>
+                            <li>
+                                <a href="#">전자결재</a>
+                                <ul class="sub">
+                                    <li><a href="#">기안</a></li>
+                                    <li><a href="#">임시보관함</a></li>
+                                    <li><a href="#">결재진행중</a></li>
+                                    <li><a href="#">결재목록</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">일정관리</a>
+                                <ul class="sub">
+                                    <li><a href="#">내 스케줄</a></li>
+                                    <li><a href="#">내 근태확인</a></li>
+                                    <li><a href="#">부서일정</a></li>
+                                    <li><a href="#">회의일정</a></li>                    
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">문서관리</a>
+                                <ul class="sub">
+                                    <li><a href="#">문서목록</a></li>
+                                    <li><a href="#">문서업로드</a></li>
+                                    <li><a href="#">내가 올린 문서</a></li>
+                                    <li><a href="#">삭제문서</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">메일</a>
+                                <ul class="sub">
+                                    <li><a href="#">메일 작성</a></li>
+                                    <li><a href="#">보낸메일</a></li>
+                                    <li><a href="#">받은메일</a></li>
+                                    <li><a href="#">중요메일함</a></li>
+                                    <li><a href="#">임시보관함</a></li>
+                                    <li><a href="#">내게쓴메일함</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">관리자페이지</a>
+                                <ul class="sub">
+                                    <li><a href="#">사원관리</a></li>
+                                    <li><a href="#">조직도관리</a></li>
+                                    <li><a href="#">공지사항관리</a></li>
+                                    <li><a href="#">근태관리</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </aside>
+            </header>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+				<h3 class="tit_h3">조직도</h3>
+
+				<div class="org_tree">
+					<ul>
+						<li>
+							<strong>개발부</strong>
+							<ul>
+								<li>팀장: 홍길동</li>
+								<li>과장: 김개발</li>
+								<li>대리: 이코드</li>
+								<li>사원: 박테스트</li>
+							</ul>
+						</li>
+						<li>
+							<strong>인사부</strong>
+							<ul>
+								<li>팀장: 최인사</li>
+								<li>과장: 윤채용</li>
+								<li>대리: 정복지</li>
+								<li>사원: 오인턴</li>
+							</ul>
+						</li>
+						<li>
+							<strong>홍보부</strong>
+							<ul>
+								<li>팀장: 장홍보</li>
+								<li>과장: 백마케팅</li>
+								<li>대리: 심콘텐츠</li>
+								<li>사원: 조신입</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</section>
+        </div>
+    </body>
+</html>
