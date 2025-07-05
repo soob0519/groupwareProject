@@ -48,6 +48,7 @@ public class EmpController {
 		model.addObject("list2", result2.getContent());
 		model.addObject("list3", result3.getContent());
 		model.setViewName("/admin/empWrite");
+		
 		return model;
 	}
 
