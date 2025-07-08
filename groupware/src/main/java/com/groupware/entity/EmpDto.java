@@ -38,13 +38,36 @@ public class EmpDto {
 	@Column(length=200,nullable=false)
 	private String name;
 	
-	@Column(nullable=false)
-	private int deptno;
+	//부서 코드테이블
+	@Column(length=200,nullable=false)
+	private int dept;
 	
-	@Column(nullable=false)
-	private int posno;
+	//직급 코드테이블
+	@Column(length=200,nullable=false)
+	private int position;
 	
+	// 등록일
 	@CreationTimestamp
 	private Timestamp rdate;
+	
+	// 입사일
+	@CreationTimestamp
+	private Timestamp jdate;
+	
+	//퇴사일
+	@CreationTimestamp
+	private Timestamp qdate;
+	
+	@Column(length=2000)
+	private String addr;
+	
+	@Column(length=200)
+	private String email;
+	
+	@Column(length=200)
+	private String phone;
+	
+	@Column(length=200,nullable=false)
+	private String state;
 	
 }

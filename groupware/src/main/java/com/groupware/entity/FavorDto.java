@@ -1,9 +1,5 @@
 package com.groupware.entity;
 
-import java.sql.Timestamp;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,31 +14,24 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="EDSMLINE")
+@Table(name="FAVOR")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EdsmlineDto {
+public class FavorDto {
 
 	@Id  // 기본키 설정
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int lineno;
+	private int favorno;
 	
-	@Column(nullable=false)
-	private int edsmno;
-	
+	// 누른 사원
 	@Column(nullable=false)
 	private int empno;
 	
-	@Column(length=200,nullable=false)
-	private String edpro;
-	
-	@Column(length=200,nullable=false)
-	private int edst;
-	
-	@CreationTimestamp
-	private Timestamp eddate;
+	// 즐겨찾기 사원
+	@Column(nullable=false)
+	private int fempno;
 
 	
 }

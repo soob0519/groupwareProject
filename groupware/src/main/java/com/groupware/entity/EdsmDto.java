@@ -3,6 +3,7 @@ package com.groupware.entity;
 import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,18 +36,36 @@ public class EdsmDto {
 	@Column(length=4000,nullable=false)
 	private String edcont;
 	
-	@Column(nullable=false)
-	private int edopti;
+	//휴가종류 코드테이블
+	@Column(length=200,nullable=false)
+	private String vtype;
 	
+	//결재상태 코드테이블
+	@Column(length=200,nullable=false)
+	private String edst;
+	
+	// 작성일
 	@CreationTimestamp
 	private Timestamp wdate;
 	
-	@CreationTimestamp
+	// 수정일
+	@UpdateTimestamp
 	private Timestamp udate;
 	
-	@Column(nullable=false)
-	private int edst;
-	
-	@CreationTimestamp
+	// 승인완결날짜
 	private Timestamp apdate;
+	
+	// 휴가날짜 시작일
+	private Timestamp svac;
+	
+	// 휴가날짜 종료일
+	private Timestamp evac;
+	
+	// 작성자
+	@Column(nullable=false)
+	private int empno;
+	
+	//반려의견
+	@Column(length=1000)
+	private String edcomment;
 }

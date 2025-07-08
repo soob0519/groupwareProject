@@ -18,12 +18,12 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="EDSMLINE")
+@Table(name="VCOUNT")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EdsmlineDto {
+public class VcountDto {
 
 	@Id  // 기본키 설정
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
