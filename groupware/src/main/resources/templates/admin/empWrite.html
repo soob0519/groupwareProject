@@ -7,15 +7,16 @@
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
+
     <body>
         <!-- header 시작 -->
-        <header class="header" th:insert="fragments/header"></header>
+        <header th:insert="fragments/header"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <header class="aside" th:insert="fragments/nav"></header>
+            <aside th:insert="fragments/nav"></aside>
             <!-- nav 종료 -->
 
             <section class="contents">
@@ -40,7 +41,7 @@
                             </tr>
 							<tr class="form-row">
                                 <th>입사일</th>
-                                <td><input type="date" value="2025-06-18" /></td>
+                                <td><input type="date" value="2025-06-18" class="input1"/></td>
                             </tr>
 							 <tr class="form-row">
                                 <th><label for="name">이메일</label></th>
@@ -57,7 +58,7 @@
                             <tr class="form-row">
 					        <th><label for="deptno">부서</label></th>
 					        <td>
-								<select name="deptno">
+								<select name="deptno" class="select1">
 									<option>개발부</option>
 								</select>
 							</td>
@@ -65,7 +66,7 @@
 					      <tr class="form-row">
 					        <th><label for="posno">직급</label></th>
 					        <td>
-					        	<select name="posno">
+					        	<select name="posno" class="select1">
 									<option>사원</option>
 								</select>
 					        </td>

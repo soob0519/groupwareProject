@@ -21,22 +21,35 @@
 
             <section class="contents">
                 <h3 class="tit_h3">테이블 목록 관리 메인</h3>
-				<div class="btn_frame2">
-                    <button class="button1">전체</button>
-                    <button class="button1">제직중</button>
-					<button class="button1">퇴사자</button>
-					<select name="deptno" style="width:50px;">
-						<option>이름</option>
-						<option>부서</option>
-					</select>
-                    <input type="text" placeholder="라벨 입력 후 Enter" />
-                    <button class="button3">Search(F3)</button>
+				<div class="flex_between">
+                    <div>
+                        <button class="button1">전체</button>
+                        <button class="button1">제직중</button>
+                        <button class="button1">퇴사자</button>
+                    </div>
+                    <div class="searchbox flex_between">
+                        <select name="deptno">
+                            <option>이름</option>
+                            <option>부서</option>
+                        </select>
+                        <input type="text" placeholder="라벨 입력 후 Enter" class="input_search" />
+                        <button class="button1">Search(F3)</button>
+                    </div>
                 </div>
 
                 <!-- 사원정보 -->
                 <div class="table_box1">
                     <table class="table1">
-                        <p>▶ 사원정보 관리</p>
+                        <caption class="table_tit1">▶ 사원정보 관리</caption>
+                        <colgroup>
+                            <col width="10%" />
+                            <col width="20%" />
+                            <col width="20%" />
+                            <col width="15%" />
+                            <col width="15%" />
+                            <col width="10%" />
+                            <col width="10%" />
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>사원번호</th>
@@ -57,7 +70,7 @@
 								<td>사원</td>
 								<td>재직중</td>
                                 <td>
-                                	<button type="button" class="button1" >퇴사</button>
+                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -70,7 +83,7 @@
 								<td>사원</td>
 								<td>재직중</td>
                                 <td>
-                                	<button type="button" class="button1" >퇴사</button>
+                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -83,7 +96,7 @@
 								<td>사원</td>
 								<td>재직중</td>
                                 <td>
-                                	<button type="button" class="button1" >퇴사</button>
+                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -96,27 +109,28 @@
 								<td>사원</td>
 								<td>재직중</td>
                                 <td>
-                                	<button type="button" class="button1" >퇴사</button>
+                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
                                 </td>
                             </tr>
                         </tbody>
 						
                     </table>
                     <button type="button" class="button1" onClick="location='/emp/empWrite'">추가등록</button>
-					<div style="margin-top:20px; text-align:center;">
-							<a href="?page=1" style="margin:0 5px;">처음</a>
-							<a href="?page=2" style="margin:0 5px;">이전</a>
-
-							<!-- 페이지 번호들 -->
-							<a href="?page=1" style="margin:0 3px;">1</a>
-							<a href="?page=2" style="margin:0 3px;">2</a>
-							<a href="?page=3" style="margin:0 3px; font-weight:bold; color:red;">3</a>
-							<a href="?page=4" style="margin:0 3px;">4</a>
-							<a href="?page=5" style="margin:0 3px;">5</a>
-
-							<a href="?page=4" style="margin:0 5px;">다음</a>
-							<a href="?page=10" style="margin:0 5px;">끝</a>
-					</div>
+                    <div>
+                        <ul class="paging">
+                            <li><a href="?page=1">처음</a></li>
+                            <li><a href="?page=2">이전</a></li>
+                            <li class="page_num">
+                                <a href="?page=1">1</a>
+                                <a href="?page=2">2</a>
+                                <a href="?page=3" style="font-weight:bold; color:red;">3</a>
+                                <a href="?page=4">4</a>
+                                <a href="?page=5">5</a>
+                            </li>
+                            <li><a href="?page=4">다음</a></li>
+                            <li><a href="?page=10">끝</a></li>
+                        </ul>
+                    </div>
                 </div>
 				
             </section>

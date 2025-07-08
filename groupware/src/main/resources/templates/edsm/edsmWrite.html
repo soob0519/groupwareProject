@@ -3,20 +3,20 @@
     <head>
         <meta charset="utf-8">
         <title>결재문서 작성</title>
-        <link rel="stylesheet" href="css/style.css">
-		<link rel="stylesheet" href="css/jquery-ui.css">		
-        <script src="js/jquery-3.6.0.min.js"></script>
-        <script src="js/script.js"></script>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
     </head>
+
     <body>
         <!-- header 시작 -->
-        <header class="header" th:insert="fragments/header"></header>
+        <header th:insert="fragments/header"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <header class="aside" th:insert="fragments/nav"></header>
+            <aside th:insert="fragments/nav"></aside>
             <!-- nav 종료 -->
 
             <section class="contents">
@@ -36,12 +36,12 @@
                             <tr class="form-row">
                                 <th>구분</th>
                                 <td>
-									<div class="flex_between">
-										<input type="radio" id="" name= "" value="1" /> 연차
-										<input type="radio" id="" name= "" value="1" /> 반차
-										<input type="radio" id="" name= "" value="1" /> 공가
-										<input type="radio" id="" name= "" value="1" /> 병가
-									</div>
+									<ul class="flex_start" style="gap: 20px;">
+										<li><input type="radio" id="" name= "" value="1" /> 연차</li>
+										<li><input type="radio" id="" name= "" value="1" /> 반차</li>
+										<li><input type="radio" id="" name= "" value="1" /> 공가</li>
+										<li><input type="radio" id="" name= "" value="1" /> 병가</li>
+                                    </ul>
 								</td>
                             </tr>
                             <tr class="form-row">
@@ -50,19 +50,15 @@
                             </tr>
                             <tr class="form-row">
 								<th>결재자</th>
-								<td class="flex_between">
-									<div class="flex_between">
-										<input type="text" name="approvers" value="조수빈"/> &nbsp;
-									</div>
-									<div id="approverList" >
-										<div class="flex_between">
-											<input type="text" name="approvers" placeholder="결재자 이름 입력" /> &nbsp;
-											<button class="button1" type="button">즐겨찾기</button> &nbsp;
-											<button class="button1" type="button" onclick="removeApprover(this)">삭제</button>
-										</div>
-									</div>
-									<div class="btn_frame3">
+								<td>
+									<div class="approvers flex_start">
+										<input type="text" name="approvers" value="조수빈" class="input1"/>
+										<button class="button1" type="button">즐겨찾기</button>
 										<button class="button1" type="button" onclick="addApprover()">+ 결재자 추가</button>
+									</div>
+									<div id="approverList" class="flex_start">
+                                        <input type="text" name="approvers" placeholder="결재자 이름 입력" class="input1"/>
+                                        <button class="button1" type="button" onclick="removeApprover(this)">삭제</button>
 									</div>
 								</td>
 							</tr>
@@ -77,8 +73,8 @@
 							<tr class="form-row">
                                 <th>첨부문서</th>
                                 <td>
-									<div class="flex_between">
-										<input type="text" placeholder="첨부문서" />
+									<div class="flex_start" style="gap: 10px;">
+										<input type="text" placeholder="첨부문서" class="input1"/>
 										<button class="button1" type="button">첨부문서</button>
 									</div>
 								</td>

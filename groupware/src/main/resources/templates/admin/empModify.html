@@ -7,15 +7,16 @@
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
+
     <body>
         <!-- header 시작 -->
-        <header class="header" th:insert="fragments/header"></header>
+        <header th:insert="fragments/header"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <header class="aside" th:insert="fragments/nav"></header>
+            <aside th:insert="fragments/nav"></aside>
             <!-- nav 종료 -->
 
             <section class="contents">
@@ -34,42 +35,42 @@
                                 <th><label for="name">이름</label></th>
                                 <td><input type="text" id="name" name="name" value="조수빈"></td>
                             </tr>
-							<tr class="form-row">
+                            <tr class="form-row">
                                 <th>입사일</th>
-                                <td><input type="date" value="2025-06-18" /></td>
+                                <td><input type="date" value="2025-06-18" class="input1" /></td>
                             </tr>
-							<tr class="form-row">
+                            <tr class="form-row">
                                 <th>퇴사일</th>
-                                <td><input type="date" value="2025-06-27" /></td>
+                                <td><input type="date" value="2025-06-27" class="input1" /></td>
                             </tr>
-							 <tr class="form-row">
+                            <tr class="form-row">
                                 <th><label for="name">이메일</label></th>
                                 <td><input type="text" id="name" name="name" value="test1@naver.com"></td>
                             </tr>
-							 <tr class="form-row">
+                            <tr class="form-row">
                                 <th><label for="name">휴대폰번호</label></th>
                                 <td><input type="text" id="name" name="name" value="010-9967-7153"></td>
                             </tr>
-							 <tr class="form-row">
+                            <tr class="form-row">
                                 <th><label for="name">주소</label></th>
                                 <td><input type="text" id="name" name="name" value="경기도 구리시 "></td>
                             </tr>
                             <tr class="form-row">
-					        <th><label for="deptno">부서</label></th>
-					        <td>
-								<select name="deptno">
-									<option>개발부</option>
-								</select>
-							</td>
-					      </tr>
-					      <tr class="form-row">
-					        <th><label for="posno">직급</label></th>
-					        <td>
-					        	<select name="posno">
-									<option>사원</option>
-								</select>
-					        </td>
-					      </tr>
+                                <th><label for="deptno">부서</label></th>
+                                <td>
+                                    <select name="deptno" class="select1">
+                                        <option>개발부</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="form-row">
+                                <th><label for="posno">직급</label></th>
+                                <td>
+                                    <select name="posno" class="select1">
+                                        <option>사원</option>
+                                    </select>
+                                </td>
+                            </tr>
                         </table>
 
                         <div class="btn_frame2">

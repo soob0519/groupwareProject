@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ZEC_Project.entity.ScheduleDto;
-import com.ZEC_Project.service.ScheduleService;
+import com.groupware.entity.ScheduleDto;
+import com.groupware.service.ScheduleService;
 
 @RestController
 @RequestMapping("/index")

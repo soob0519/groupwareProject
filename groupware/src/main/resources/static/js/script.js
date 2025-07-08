@@ -3,15 +3,20 @@ $(function () {
     e.preventDefault(); // a 태그 기본 동작 막기
 
     let $submenu = $(this).next(".sub");
+    let $arrow = $(this).find(".arr_btm");
 
-    // 이미 열려 있는 경우 닫기
     if ($submenu.is(":visible")) {
+      // 서브메뉴 닫기 + 화살표 원위치
       $submenu.slideUp(200);
+      $arrow.removeClass("rotate");
     } else {
-      // 다른 메뉴 닫기
+      // 모든 서브메뉴 닫기 + 모든 화살표 원위치
       $(".sub").slideUp(200);
-      // 현재 클릭한 메뉴 열기
+      $(".arr_btm").removeClass("rotate");
+
+      // 현재 메뉴 열기 + 화살표 회전
       $submenu.slideDown(200);
+      $arrow.addClass("rotate");
     }
   });
 });

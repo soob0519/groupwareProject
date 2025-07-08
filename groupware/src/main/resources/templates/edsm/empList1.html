@@ -6,43 +6,42 @@
         <link rel="stylesheet" href="/css/style.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
+		<style>
+			.org_tree ul {
+			padding-left: 20px;
+			list-style: none;
+			position: relative;
+			}
+
+			.org_tree ul::before {
+				content: '';
+				border-left: 1px solid #ccc;
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 10px;
+			}
+
+			.org_tree li {
+				margin: 0;
+				padding: 10px 0 0 20px;
+				position: relative;
+			}
+
+			.org_tree li::before {
+				content: '';
+				border-top: 1px solid #ccc;
+				position: absolute;
+				top: 15px;
+				left: 0;
+				width: 10px;
+				height: 0;
+			}
+
+            .star {width: 15px; height: 15px; margin-left: 5px; cursor: pointer;}
+		</style>
     </head>
-	<style>
-        .org_tree ul {
-            padding-left: 20px;
-            list-style: none;
-            position: relative;
-        }
 
-        .org_tree ul::before {
-            content: '';
-            border-left: 1px solid #ccc;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 10px;
-        }
-
-        .org_tree li {
-            margin: 0;
-            padding: 10px 0 0 20px;
-            position: relative;
-        }
-
-        .org_tree li::before {
-            content: '';
-            border-top: 1px solid #ccc;
-            position: absolute;
-            top: 15px;
-            left: 0;
-            width: 10px;
-            height: 0;
-        }
-
-        .employees {
-            margin-left: 20px;
-        }
-    </style>
     <body>
         <!-- header 시작 -->
         <header th:insert="fragments/header"></header>
@@ -63,8 +62,8 @@
 							<li>
 								<strong>개발부</strong>
 								<ul>
-									<li><label><input type="radio" name="employee" value="홍길동"> 팀장: 홍길동</label></li>
-									<li><label><input type="radio" name="employee" value="김개발"> 과장: 김개발</label></li>
+									<li><label><input type="radio" name="employee" value="홍길동"> 팀장: 홍길동</label><img src="../images/star_full.png" alt="star" class="star"></li>
+									<li><label><input type="radio" name="employee" value="김개발"> 과장: 김개발</label><img src="../images/star_empty.png" alt="star" class="star"></li>
 									<li><label><input type="radio" name="employee" value="이코드"> 대리: 이코드</label></li>
 									<li><label><input type="radio" name="employee" value="박테스트"> 사원: 박테스트</label></li>
 								</ul>

@@ -3,37 +3,43 @@
     <head>
         <meta charset="utf-8">
         <title>기안문서 임시보관함</title>
-        <link rel="stylesheet" href="css/style.css">
-		<link rel="stylesheet" href="css/jquery-ui.css">		
-        <script src="js/jquery-3.6.0.min.js"></script>
-        <script src="js/script.js"></script>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
     </head>
+
     <body>
         <!-- header 시작 -->
-        <header class="header" th:insert="fragments/header"></header>
+        <header th:insert="fragments/header"></header>
         <!-- header 종료 -->
 
         <div class="flex_between">
 
             <!-- nav 시작 -->
-            <header class="aside" th:insert="fragments/nav"></header>
+            <aside th:insert="fragments/nav"></aside>
             <!-- nav 종료 -->
 
             <section class="contents">
 
                 <h3 class="tit_h3">임시보관함</h3>
 
-                <div class="btn_frame2">
-					<select name="deptno" style="width:50px;">
+                <div class="searchbox flex_end">
+					<select name="deptno">
 						<option>제목</option>
 						<option>내용</option>
 					</select>
-                    <input type="text" placeholder="라벨 입력 후 Enter" />
-                    <button class="button3">Search(F3)</button>
+                    <input type="text" placeholder="라벨 입력 후 Enter" class="input_search" />
+                    <button class="button1">Search(F3)</button>
                 </div>
 
                 <div class="table_box2">
                     <table class="table1">
+                        <colgroup>
+                            <col width="*" />
+                            <col width="10%" />
+                            <col width="10%" />
+                            <col width="15%" />
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>제목</th>

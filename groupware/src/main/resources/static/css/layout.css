@@ -1,32 +1,36 @@
 /* flex_style */
-.flex_between {display: flex; justify-content: space-between;}
-.flex_around {display: flex; justify-content: space-around;}
-.flex_center {display: flex; justify-content: center;}
-.flex_end {display: flex; justify-content: flex-end;}
-.flex_start {display: flex; justify-content: flex-start;}
+.flex_between {display: flex !important; justify-content: space-between;}
+.flex_around {display: flex !important; justify-content: space-around;}
+.flex_center {display: flex !important; justify-content: center;}
+.flex_end {display: flex !important; justify-content: flex-end;}
+.flex_start {display: flex !important; justify-content: flex-start;}
 
 
 /* header */
-.header {height: 80px; border: 1px solid #d1d1d1; line-height: 80px; padding-left: 20px; position: relative;}
+.header {height: 80px; background: #fff; border: 1px solid #d1d1d1; line-height: 80px; padding-left: 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 101;}
 .logo {width: 150px;}
 .header_cate {width: 100%; height: 50px; line-height: 50px; display: inline-block; transform: translateY(-100%); position: relative; top: 100%;}
 .category_list {width: 100%; gap: 80px;}
 
 
 /* 아코디언메뉴 */
-.aside {width: 250px; height: calc(100vh - 80px); border-right: 1px solid #d1d1d1; background: #f4f6fa;}
-.main > li {padding: 5px 20px;}
-.main > li > a {display: block; height: 40px; line-height: 40px; font-size: 20px; padding-left: 15px; font-size: 16px; transition: .2s; border-radius: 4px;}
-.main > li > a:hover {background: #777; color: #fff;}
-.main > li > a::after {content: ">"; padding-left: 20px;}
+.aside {width: 200px; height: 100vh; border-right: 1px solid #d1d1d1; background: #f4f6fa; position: fixed; top: 0; left: 0; z-index: 100; overflow-y: auto; padding-top: 80px;}
+.main {width: 100%;}
+.main>li {padding: 5px 20px; width: 100%;}
+.main>li>a {display: block; width: 100%; height: 40px; line-height: 40px; font-size: 20px; padding-left: 15px; font-size: 16px; transition: .2s; border-radius: 4px;}
+.main>li>a .arr_btm {background: url(../images/arrow_bottom_111.png) no-repeat center center/ contain; display: inline-block; position: relative; top: 50%; right: 5%; transform: translateY(-50%) rotate(0deg); transition: transform 0.3s ease; width: 10px; height: 6px;}
+.main>li>a:hover {background: #777; color: #fff;}
+.main>li>a:hover .arr_btm {background: url(../images/arrow_bottom_fff2.png) no-repeat center center/ contain;}
+.main>li>a .arr_btm.rotate {transform: translateY(-50%) rotate(180deg);}
 .sub {display: none;}
 .sub li {margin-bottom: 5px;}
-.sub li a {display: block; height: 30px; line-height: 30px; background: #f2f4f7; padding-left: 15px;}
-.sub li a:hover {background:darkgoldenrod}
+.sub li a {display: block; height: 30px; line-height: 30px; padding-left: 15px; width: 100%;}
+.sub li a::after {content: " "; background: #f5a301; position: relative; bottom: 1px; display: block; width: 100%; height: 1px; transform: scaleX(0); transform-origin: left; transition: ease-in-out .3s;}
+.sub li a:hover::after {transform: scaleX(1);}
 
 
 /* contents */
-.contents {width: 100%; padding: 20px 40px;}
+.contents {width: 100%; padding: 20px 40px; margin: 80px 0 0 200px;}
 .con_items {gap: 10px; margin-bottom: 10px;}
 .con_item {padding: 20px; background: #fff; border-radius: 30px; transition: .3s; border: 1px solid #d1d1d1;}
 .con_item:hover {box-shadow: 5px 5px 10px #666;}
