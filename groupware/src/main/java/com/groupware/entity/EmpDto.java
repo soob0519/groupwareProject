@@ -51,11 +51,9 @@ public class EmpDto {
 	private Timestamp rdate;
 	
 	// 입사일
-	@CreationTimestamp
 	private Timestamp jdate;
 	
 	//퇴사일
-	@CreationTimestamp
 	private Timestamp qdate;
 	
 	@Column(length=2000)
