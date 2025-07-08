@@ -39,7 +39,7 @@ public class VcountDto {
 	private String edpro;
 	
 	@Column(length=200,nullable=false)
-	private int edst;
+	private String edst;
 	
 	@CreationTimestamp
 	private Timestamp eddate;

@@ -18,31 +18,40 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="EDSMLINE")
+@Table(name="CODE")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EdsmlineDto {
-
-	@Id  // 기본키 설정
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int lineno;
+public class CodeDto {
 	
-	@Column(nullable=false)
-	private int edsmno;
+	//부모코드
+	@Column(length=200)
+	private String pcode;
 	
-	@Column(nullable=false)
-	private int empno;
+	// 코드값
+	@Column(length=200)
+	private String vcode;
 	
-	@Column(length=200,nullable=false)
-	private String edpro;
+	// 코드이름
+	@Column(length=200)
+	private String ncode;
 	
-	@Column(length=200,nullable=false)
-	private String edst;
+	// 순서
+	@Column
+	private int dorder;
 	
-	@CreationTimestamp
-	private Timestamp eddate;
-
+	//사용 여부
+	@Column(length=200)
+	private String state;
+	
+	// 비고
+	@Column(length=200)
+	private String remark;
+	
+	// 사용시 코드
+	@Id
+	@Column(length=200)
+	private String ucode;
 	
 }

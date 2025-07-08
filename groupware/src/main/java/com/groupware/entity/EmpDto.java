@@ -40,11 +40,11 @@ public class EmpDto {
 	
 	//부서 코드테이블
 	@Column(length=200,nullable=false)
-	private int dept;
+	private String dept;
 	
 	//직급 코드테이블
 	@Column(length=200,nullable=false)
-	private int position;
+	private String position;
 	
 	// 등록일
 	@CreationTimestamp
@@ -67,7 +67,7 @@ public class EmpDto {
 	@Column(length=200)
 	private String phone;
 	
-	@Column(length=200,nullable=false)
-	private String state;
+	@Column(length=200, nullable=false)
+	private String state = "Y";
 	
 }
