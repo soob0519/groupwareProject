@@ -7,7 +7,6 @@
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
-
     <body>
         <!-- header 시작 -->
         <header th:insert="fragments/header"></header>
@@ -23,17 +22,19 @@
                 <h3 class="tit_h3">테이블 목록 관리 메인</h3>
 				<div class="flex_between">
                     <div>
-                        <button class="button1">전체</button>
-                        <button class="button1">제직중</button>
-                        <button class="button1">퇴사자</button>
+                        <button class="button1" onclick="location.href='/emp/empList'">전체</button>
+                        <button class="button1" onclick="location.href='/emp/empList?state=Y'">제직중</button>
+                        <button class="button1" onclick="location.href='/emp/empList?state=N'">퇴사자</button>
                     </div>
                     <div class="searchbox flex_between">
-                        <select name="deptno">
-                            <option>이름</option>
-                            <option>부서</option>
+                    	<form action="/emp/empList" method="get">
+                        <select name="searchType" id="searchType">
+                            <option value="name" th:selected="${searchType == 'name'}">이름</option>
+                            <option value="deptname" th:selected="${searchType == 'deptname'}">부서</option>
                         </select>
-                        <input type="text" placeholder="라벨 입력 후 Enter" class="input_search" />
-                        <button class="button1">Search(F3)</button>
+                        <input type="text" class="input_search" name="keyword" placeholder="라벨 입력 후 Enter" th:value="${keyword}"/>
+                        <button type="submit" class="button1">Search(F3)</button>
+                    	</form>
                     </div>
                 </div>
 
@@ -42,98 +43,97 @@
                     <table class="table1">
                         <caption class="table_tit1">▶ 사원정보 관리</caption>
                         <colgroup>
-                            <col width="10%" />
                             <col width="20%" />
                             <col width="20%" />
                             <col width="15%" />
                             <col width="15%" />
-                            <col width="10%" />
-                            <col width="10%" />
+                            <col width="15%" />
+                            <col width="15%" />
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>사원번호</th>
                                 <th>아이디</th>
                                 <th>이름</th>
                                 <th>부서</th>
                                 <th>직급</th>
                                 <th>제직/퇴사</th>
-                                <th>퇴사자 변경</th>
+                                <th>제직상태 변경</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>20250701</td>
-                                <td>test1</td>
-                                <td>조수빈</td>
-                            	<td>개발부</td>
-								<td>사원</td>
-								<td>재직중</td>
+                            <tr th:each="result: ${list}">
+                                <td th:text="${result.userid}">아이디</td>
                                 <td>
-                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
+                                	<a th:href="@{|/emp/${result.empno}|}" th:text="${result.name}"></a>
+                                </td>
+							    <td th:each="result2 : ${list2}"
+							        th:if="${result2.ucode == result.dept}"
+							        th:text="${result2.ncode}">부서</td>
+							    <td th:each="result2 : ${list2}"
+							        th:if="${result2.ucode == result.position}"
+							        th:text="${result2.ncode}">직급</td>
+
+								<td th:text="${result.state == 'Y' ? '재직중' : '퇴사자'}"></td>
+                                <td>
+                                	<button type="button" class="in_tbl_btn1 btn_state" 
+                                			th:attr="data-empno=${result.empno}">변경</button>
                                 </td>
                             </tr>
-                        </tbody>
-						<tbody>
-                            <tr>
-                                <td>20250702</td>
-                                <td>test2</td>
-                                <td>조수빈</td>
-                            	<td>개발부</td>
-								<td>사원</td>
-								<td>재직중</td>
-                                <td>
-                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
-                                </td>
-                            </tr>
-                        </tbody>
-						<tbody>
-                            <tr>
-                                <td>20250703</td>
-                                <td>test2</td>
-                                <td>조수빈</td>
-                            	<td>개발부</td>
-								<td>사원</td>
-								<td>재직중</td>
-                                <td>
-                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
-                                </td>
-                            </tr>
-                        </tbody>
-						<tbody>
-                            <tr>
-                                <td>20250704</td>
-                                <td>test2</td>
-                                <td>조수빈</td>
-                            	<td>개발부</td>
-								<td>사원</td>
-								<td>재직중</td>
-                                <td>
-                                	<button type="button" class="in_tbl_btn1" >퇴사</button>
-                                </td>
-                            </tr>
-                        </tbody>
-						
+                        </tbody>						
                     </table>
                     <button type="button" class="button1" onClick="location='/emp/empWrite'">추가등록</button>
                     <div>
                         <ul class="paging">
-                            <li><a href="?page=1">처음</a></li>
-                            <li><a href="?page=2">이전</a></li>
-                            <li class="page_num">
-                                <a href="?page=1">1</a>
-                                <a href="?page=2">2</a>
-                                <a href="?page=3" style="font-weight:bold; color:red;">3</a>
-                                <a href="?page=4">4</a>
-                                <a href="?page=5">5</a>
-                            </li>
-                            <li><a href="?page=4">다음</a></li>
-                            <li><a href="?page=10">끝</a></li>
-                        </ul>
+						    <li>
+						        <a th:href="@{|/emp/empList?page=0&searchType=${searchType}&keyword=${keyword}&state=${state}|}">처음</a>
+						    </li>
+						    <li>
+						        <a th:href="@{|/emp/empList?page=${page.number - 1}&searchType=${searchType}&keyword=${keyword}&state=${state}|}"
+						           th:if="${page.hasPrevious()}">이전</a>
+						        <span th:if="${!page.hasPrevious()}">이전</span>
+						    </li>
+						    <li class="page_num">
+						        <a th:each="i : ${#numbers.sequence(1, page.totalPages)}"
+						           th:href="@{|/emp/empList?page=${i - 1}&searchType=${searchType}&keyword=${keyword}&state=${state}|}"
+						           th:text="${i}"
+						           th:classappend="${page.number == i - 1} ? 'current' : ''"></a>
+						    </li>
+						    <li>
+						        <a th:href="@{|/emp/empList?page=${page.number + 1}&searchType=${searchType}&keyword=${keyword}&state=${state}|}"
+						           th:if="${page.hasNext()}">다음</a>
+						        <span th:if="${!page.hasNext()}">다음</span>
+						    </li>
+						    <li>
+						        <a th:href="@{|/emp/empList?page=${page.totalPages - 1}&searchType=${searchType}&keyword=${keyword}&state=${state}|}">끝</a>
+						    </li>
+						</ul>
                     </div>
                 </div>
 				
             </section>
         </div>
     </body>
+    
+    <script>
+	// 재직 상황 변경 버튼
+		$(document).ready(function () {
+		    $('.btn_state').click(function () {
+		        const empno = $(this).data('empno');
+	
+		        $.ajax({
+		            url: '/emp/changeState',  // 컨트롤러의 매핑 주소
+		            method: 'POST',
+		            data: { empno: empno },
+		            success: function (response) {
+		                alert('재직 상태가 변경되었습니다.');
+		                location.reload();  // 상태 업데이트를 반영하기 위해 페이지 리로드
+		            },
+		            error: function () {
+		                alert('상태 변경 중 오류가 발생했습니다.');
+		            }
+		        });
+		    });
+		});
+	</script>
+    
 </html>

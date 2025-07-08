@@ -7,7 +7,60 @@
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
-
+    
+	<script>
+ 	$( function() {
+	
+   		$("#btn_submit").click( function(){
+   			if( $("#userid").val() == "" ) {
+				alert("아이디를 입력하세요.");
+				$("#userid").focus();
+				return false;
+   			}
+   			if( $("#pass").val() == "" ) {
+				alert("비밀번호를 입력하세요.");
+				$("#pass").focus();
+				return false;
+   			}
+   			if( $("#name").val() == "" ) {
+				alert("이름을 입력하세요.");
+				$("#name").focus();
+				return false;
+   			}
+   			
+   			// 시간 붙이기
+			const dateVal = $("#jdate_date").val();
+	        if (dateVal) {
+	            $("#jdate").val(dateVal + " 00:00:00");
+	        } else {
+	            $("#jdate").val("");
+	        }
+			
+	        
+	        
+   			let form = $("#frm").serialize();
+			$.ajax({
+				type:"post",
+				url:"/emp/empSave",
+				data:form, 
+   				datatype:"text",
+   				success:function(data) { 
+					if( data == "1" ) { 
+						alert("저장완료!");
+						location="/emp/empList";
+					} else {
+						alert("저장실패!");
+					}
+   				},
+   				error:function(){	
+					alert("전송실패!");
+   				}
+   			});
+			
+   		});
+  	});
+  	</script>
+  	
     <body>
         <!-- header 시작 -->
         <header th:insert="fragments/header"></header>
@@ -41,40 +94,53 @@
                             </tr>
 							<tr class="form-row">
                                 <th>입사일</th>
-                                <td><input type="date" value="2025-06-18" class="input1"/></td>
+                                <td>
+                                	<input type="date" id="jdate_date" name="jdate_date" />
+									<input type="hidden" id="jdate" name="jdate" />
+								</td>
                             </tr>
 							 <tr class="form-row">
                                 <th><label for="name">이메일</label></th>
-                                <td><input type="text" id="name" name="name" ></td>
+                                <td><input type="text" id="email" name="email"></td>
                             </tr>
 							 <tr class="form-row">
                                 <th><label for="name">휴대폰번호</label></th>
-                                <td><input type="text" id="name" name="name" ></td>
+                                <td><input type="text" id="phone" name="phone" ></td>
                             </tr>
 							 <tr class="form-row">
                                 <th><label for="name">주소</label></th>
-                                <td><input type="text" id="name" name="name" ></td>
+                                <td><input type="text" id="addr" name="addr" ></td>
                             </tr>
                             <tr class="form-row">
-					        <th><label for="deptno">부서</label></th>
+					        <th><label for="dept">부서</label></th>
 					        <td>
-								<select name="deptno" class="select1">
-									<option>개발부</option>
+								<select name="dept" class="select1">
+									<option>부서</option>
+									<th:block th:each="result2 : ${list2}">
+									<option th:if="${result2.pcode == 'B200' and result2.ncode != '전체부서'}"
+											 th:value="${result2.ucode}" 
+											 th:text="${result2.ncode}"></option>
+									</th:block>
 								</select>
 							</td>
 					      </tr>
 					      <tr class="form-row">
-					        <th><label for="posno">직급</label></th>
+					        <th><label for="position">직급</label></th>
 					        <td>
-					        	<select name="posno" class="select1">
-									<option>사원</option>
+					        	<select name="position" class="select1">
+									<option>직급</option>
+									<th:block th:each="result2 : ${list2}">
+									<option th:if="${result2.pcode == 'A100'}"
+											 th:value="${result2.ucode}" 
+											 th:text="${result2.ncode}"></option>
+									</th:block>
 								</select>
 					        </td>
 					      </tr>
                         </table>
 
                         <div class="btn_frame2">
-                            <button type="submit" class="button1" id="btn_submit">등록</button>
+                            <button type="submit" class="button1" id="btn_submit" onClick="return false;">등록</button>
                             <button type="reset" class="button2">초기화</button>
                         </div>
                     </div>
