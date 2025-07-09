@@ -8,101 +8,88 @@
 		<script src="/js/script.js"></script>
 	</head>
 	<script>
-function deleteMail(mailno) {
-    if (!confirm("정말 삭제하시겠습니까?")) return;
+    function deleteMail(mailno) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
 
-    fetch("/mail/delete", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "mailno=" + mailno
-    })
-    .then(response => {
-        if (response.ok) {
-            alert("삭제 성공!");
-            window.location.href = "/mail"; // 리스트로 이동
-        } else {
-            alert("삭제 실패...");
-        }
-    })
-    .catch(err => {
-        alert("에러 발생!");
-        console.error(err);
-    });
-}
-</script>
-	
-	
-	
-	
+        fetch("/mail/delete", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "mailno=" + mailno
+        })
+        .then(response => {
+            if (response.ok) {
+                alert("삭제 성공!");
+                window.location.href = "/mail"; // 리스트로 이동
+            } else {
+                alert("삭제 실패...");
+            }
+        })
+        .catch(err => {
+            alert("에러 발생!");
+            console.error(err);
+        });
+    }
+  </script>
 	
 	<body>
-		<!-- header include -->
-		<header th:insert="fragments/header"></header>
-		<div class="flex_between">
-			<!-- nav include -->
-			<nav th:insert="fragments/nav"></nav>
-			
-			<section class="contents">
-					<!-- 메일 내용 영역 -->
-					    <div class="content">
-			<table class="table1">
-			
-			  <tr>
-    <td colspan="2" style="text-align: right;">
-      <!-- 삭제 버튼 -->
-      <form th:action="@{/mail/delete}" method="post" style="display: inline;">
-        <input type="hidden" name="mailno" th:value="${mail.mailno}" />
-        <button type="submit">삭제</button>
-      </form>
-      
+    <!-- header include -->
+    <header th:insert="fragments/header"></header>
+    <div class="flex_between">
+      <!-- nav include -->
+      <nav th:insert="fragments/nav"></nav>
 
-      
+      <section class="contents">
+        <!-- 메일 내용 영역 -->
+        <div class="content">
 
+          <div class="mail_detail">
+            <div class="mail_btn_area">
+              <!-- 삭제 버튼 -->
+              <form th:action="@{/mail/delete}" method="post" style="display: inline;">
+                <input type="hidden" name="mailno" th:value="${mail.mailno}" />
+                <button type="submit" class="button2">삭제</button>
+              </form>
 
-      <!-- 답장 버튼 -->
-      <form th:action="@{/mail/reply}" method="get" style="display: inline;">
-        <input type="hidden" name="receiverId" th:value="${mail.senderId}" />
-        <input type="hidden" name="subject" th:value="'RE: ' + ${mail.subject}" />
-        <button type="submit">답장</button>
-      </form>
-    </td>
-  </tr>
-  <tr>
-    <th>보낸 사람</th>
-    <td th:utext="${mail.senderId}">보낸 사람</td>
-  </tr>
-  <tr>
-    <th>받은 사람</th>
-    <td th:utext="${mail.receiverId}">받은 사람</td>
-  </tr>
-  <tr>
-    <th>보낸 시간</th>
-    <td>
-      <span th:text="${mail.sentAt != null ? #temporals.format(mail.sentAt, 'yyyy-MM-dd HH:mm:ss') : '시간 정보 없음'}">보낸 시간</span>
-    </td>
-  </tr>
-  <tr>
-    <th>제목</th>
-    <td th:utext="${mail.subject}">메일 제목</td>
-  </tr>
-  <tr>
-    <th>내용</th>
-    <td>
-      <p th:utext="${#strings.replace(mail.content != null ? mail.content : '', '\n', '<br/>')}"></p>
-    </td>
-  </tr>
-  
+              <!-- 답장 버튼 -->
+              <form th:action="@{/mail/reply}" method="get" style="display: inline;">
+                <input type="hidden" name="receiverId" th:value="${mail.senderId}" />
+                <input type="hidden" name="subject" th:value="'RE: ' + ${mail.subject}" />
+                <button type="submit" class="button2">답장</button>
+              </form>
+            </div>
 
-</table>
-			
+            <div class="mail_header">
+              <h3 class="mail_title">
+                <span th:utext="${mail.subject}">제목이 여기에 들어가요~</span>
+              </h3>
 
-					     	
+              <div class="mail_option">
+                <div class="sender flex_start">
+                  <p class="opt_tit_area">보낸사람</p>
+                  <span th:utext="${mail.senderId}" class="opt_area">보낸사람</span>
+                </div>
+                <div class="option_item flex_start">
+                  <p class="opt_tit_area">받은사람</p>
+                  <span th:utext="${mail.receiverId}" class="opt_area">받은사람</span>
+                </div>
+              </div>
 
-					  </div>
+              <div class="time_info">
+                <span th:text="${mail.sentAt != null ? #temporals.format(mail.sentAt, 'yyyy-MM-dd HH:mm:ss') : '시간 정보 없음'}">보낸시간</span>
+              </div>
+            </div>
 
-			</section>
-		</div>
-	</body>
+            <div class="mail_body">
+              <span class="blind">메일 내용(내용 작성은 아레 P 태그에서.. 이건 설명용..)</span>
+              <p th:utext="${#strings.replace(mail.content != null ? mail.content : '', '\n', '<br/>')}">내용용~</p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+    </div>
+  </body>
 </html>

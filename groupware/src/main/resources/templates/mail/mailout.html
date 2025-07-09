@@ -15,66 +15,64 @@
 			<nav th:insert="fragments/nav"></nav>
 			
 			<section class="contents">
-					<!-- 메일 내용 영역 -->
-					    <div class="content">
-					      <!-- 상단 바 -->
-					      <div class="top-bar">
-					        <div class="top-left">
-					         <span>총 <strong th:text="${ptotal}"></strong>개의 메일</span>
-					        </div>
-					        <div class="top-right">
-					          <button class="write-button">메일 쓰기</button>
-					          <div class="search">
-					             <input type="text" placeholder="메일 검색" class="search-input">
-					              <button class="search-button">검색</button>
-					
-					          </div>
-					        </div>
-					      </div>
-					
-					      <!-- 메일 목록 테이블 -->
-					      <table class="email-table">
-					        <thead>
-					          <tr>
-					            <th class="checkbox-cell"><input type="checkbox"></th>
-					            <th>번호</th>
-					            <th>구분</th>
-					            <th>성명</th>
-					            <th>제목</th>
-					            <th>날짜</th>
-					          </tr>
-					        </thead>
-					        <tbody>
-								  <tr th:each="mail, myState : ${plist}"
-								      th:onclick="|location.href='/dfile/filedetail/${mail.mailno}'|"
-								      style="cursor:pointer;">
-								    <td><input type="checkbox"></td>
-								    <td th:text="${startPageRownum - myState.index}"></td>
-								
-								    <!-- 송수신 구분 출력 -->
-								    <td th:text="${mail.senderId == userId ? '발신' : '수신'}"></td>
-								
-								    <!-- 송수신에 따라 다른 값 출력 (예: 상대방 아이디) -->
-								    <td th:text="${mail.senderId == userId ? mail.receiverId : mail.senderId}"></td>
-								
-								    <td th:text="${mail.subject}"></td>
-								    <td th:text="${#temporals.format(mail.sentAt, 'yyyy-MM-dd')}"></td>
-								  </tr>
-					        </tbody>
-					      </table>
-					
-					      <!-- 페이지네이션 -->
-					      <div class="pagination">
-					        <a href="#">&laquo;</a>
-					        <a href="#" class="active">1</a>
-					        <a href="#">2</a>
-					        <a href="#">3</a>
-					        <a href="#">4</a>
-					        <a href="#">5</a>
-					        <a href="#">&raquo;</a>
-					      </div>
-					    </div>
-					  </div>
+				<!-- 메일 내용 영역 -->
+				<div class="content">
+					<!-- 상단 바 -->
+					<div class="top-bar">
+						<div class="flex_between">
+							<button class="button1">메일 쓰기</button>
+							<div class="searchbox">
+								<input type="text" placeholder="메일 검색" class="input_search">
+								<button class="button1">검색</button>
+							</div>
+						</div>
+					</div>
+					<div class="data_total">
+						<span>총 <strong th:text="${ptotal}"></strong>개의 메일</span>
+					</div>
+
+					<!-- 메일 목록 테이블 -->
+					<table class="table1">
+						<thead>
+							<tr>
+								<th class="checkbox-cell"><input type="checkbox"></th>
+								<th>번호</th>
+								<th>구분</th>
+								<th>성명</th>
+								<th>제목</th>
+								<th>날짜</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="mail, myState : ${plist}"
+								th:onclick="|location.href='/dfile/filedetail/${mail.mailno}'|"
+								style="cursor:pointer;">
+								<td><input type="checkbox"></td>
+								<td th:text="${startPageRownum - myState.index}"></td>
+
+								<!-- 송수신 구분 출력 -->
+								<td th:text="${mail.senderId == userId ? '발신' : '수신'}"></td>
+
+								<!-- 송수신에 따라 다른 값 출력 (예: 상대방 아이디) -->
+								<td th:text="${mail.senderId == userId ? mail.receiverId : mail.senderId}"></td>
+
+								<td th:text="${mail.subject}"></td>
+								<td th:text="${#temporals.format(mail.sentAt, 'yyyy-MM-dd')}"></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<!-- 페이지네이션 -->
+					<div class="pagination">
+						<a href="#">&laquo;</a>
+						<a href="#" class="active">1</a>
+						<a href="#">2</a>
+						<a href="#">3</a>
+						<a href="#">4</a>
+						<a href="#">5</a>
+						<a href="#">&raquo;</a>
+					</div>
+				</div>
 
 			</section>
 		</div>

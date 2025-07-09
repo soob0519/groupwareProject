@@ -13,6 +13,7 @@
 input[type="file"] {flex: 1;}
 input[type="radio"] {margin-right: 5px;}
 input[type="text"],
+  input[type="email"],
   input[type="date"],
   input[type="time"],
   input[type="password"],
@@ -33,7 +34,7 @@ textarea {width: 100%; flex: 1; padding: 10px; font-size: 14px; border: 1px soli
 .form-row td {width: 100%;}
 .form-row label,th {width: 100px; font-weight: 500; text-align: left;}
 
-.searchbox {gap: 10px; display: flex; justify-content: flex-end; padding-top: 20px;}
+.searchbox {gap: 10px; display: flex; justify-content: flex-end; }
 
 .approvers {gap: 10px;}
 #approverList {margin-top: 5px; gap: 10px;}
@@ -72,7 +73,7 @@ button {border-radius: 5px !important; font-size: 1.5rem; transition: .2s; curso
 .search {display: flex; justify-content: flex-end; margin-top: 10px; gap: 10px;}
 .search_select {padding: 10px; border: 1px solid #ccc; border-radius: 4px;}
 .search_input {padding: 10px; width: 250px !important; border: 1px solid #ccc; border-radius: 4px;}
-.top_bar {display: flex; justify-content: space-between; height: 100%;}
+.top_bar {display: flex; justify-content: flex-end; height: 100%;}
 .top_left {}
 .top_left span {position: relative; top: 60%;}
 .data_total {padding: 10px 0;}
@@ -82,10 +83,27 @@ button {border-radius: 5px !important; font-size: 1.5rem; transition: .2s; curso
 .pagination a:hover {background: #f0f0f0; color: #777;}
 
 
+/* mail */
+.mail_wrapper {max-width: 1600px; margin: 0 auto;}
+
+.mail_detail {width: 100%;}
+.mail_btn_area {border-top: 1px solid #d1d1d1; display: flex; gap: 10px;}
+.mail_btn_area {padding: 10px 0 10px 20px;}
+.mail_header, .mail_body {padding: 20px;}
+
+.mail_title {font-size: 20px; padding-bottom: 15px; color: #111;}
+.mail_header {border-bottom: 1px solid #e1e1e1; border-top: 1px solid #e1e1e1;}
+.mail_option {}
+.sender, .option_item {gap: 20px; padding: 5px 0;}
+.opt_tit_area {font-weight: bold;}
+.opt_area {}
+.time_info {padding-top: 10px;}
+
+
 
 /* schedule */
 .schedule_box {gap: 20px;}
-.sel_day_box {width: 20%; height: 100%; border: 1px solid #d1d1d1; padding: 10px; border-radius: 6px;}
+.sel_day_box {width: 20%; height: 100%; border: 1px solid #d1d1d1; padding: 10px; border-radius: 6px; margin-right: 20px;}
 .sel_day_box .sel_month {width: 100%;}
 .sel_day_box .sel_month .month_list {width: 100%; flex-wrap: wrap;}
 .sel_day_box .sel_month .month_list li {width: 25%; height: 40px; line-height: 30px;}
@@ -99,12 +117,14 @@ button {border-radius: 5px !important; font-size: 1.5rem; transition: .2s; curso
 .calendar td:hover {background: #f9f9f9;}
 
 /* modal */
-.modal_schedule_write,.modal_sd_detail {display: ; position: ab; left: 0; top: 0; right: 0; bottom: 0; width: 100%; height: 100vh; background: rgba(0, 0, 0, .3);}
+.modal_schedule_write,.modal_sd_detail {display: none; position: fixed; left: 0; top: 0; right: 0; bottom: 0; width: 100%; height: 100vh; background: rgba(0, 0, 0, .3);}
 .modal_schedule_write {}
 .modal_sd_detail {}
-.schedule_wrap {max-width: 800px; margin: 0 auto; background: #fff; border: 1px solid #d1d1d1; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); padding: 30px 40px; position: relative; top: 50%; transform: translateY(-50%);}
+.modal_header {background: #555; border-radius: 12px 12px 0 0; padding: 6px 20px; cursor: move; color: #fff;}
+.modal_close_btn {text-align: right; font-size: 23px; cursor: pointer;}
+.schedule_wrap {max-width: 800px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); position: relative;}
 .schedule_wrap i {font-size: 25px; cursor: pointer;}
-.schedule_tit {font-size: 18px; font-weight: bold; margin-bottom: 20px;}
+.modal_contents {padding: 10px 30px 20px;}
 .form_list {display: flex; align-items: center; margin-bottom: 18px;}
 .form_list .value {flex: 1; padding: 10px; font-size: 14px; background: #f9f9f9; border: 1px solid #ccc; border-radius: 4px;}
 
@@ -120,3 +140,15 @@ button {border-radius: 5px !important; font-size: 1.5rem; transition: .2s; curso
 
 .div_content {height:350px;	overflow-y: auto;}
 
+
+
+/* loginpage */
+.login_frame {height: 100vh; display: flex; justify-content: center; align-items: center;}
+.login_box {background: #fff; padding: 40px 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); width: 100%; max-width: 400px;}
+.login_box h2 {text-align: center; margin-bottom: 30px; color: #333;}
+.input_group {position: relative; margin-bottom: 25px;}
+.input_group input {width: 100%; padding: 14px 40px 14px 15px; border: 1px solid #ccc; border-radius: 8px; outline: none; transition: 0.3s;}
+.input_group input:focus {box-shadow: 0 0 5px rgba(245, 163, 1, 0.3);}
+.input_group .fa {position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #999;}
+.login_btn {width: 100%; padding: 14px; background: #999; border: none; border-radius: 8px; color: #fff; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s;}
+.login_btn:hover {background: #777;}

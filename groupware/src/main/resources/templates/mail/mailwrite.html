@@ -15,37 +15,37 @@
 			<nav th:insert="fragments/nav"></nav>
 			
 			<section class="contents">
-					<div class="mail-wrapper">
-					    <div class="mail-header">메일쓰기</div>
-					
-					    <form>
-					      <div class="form-row">
-					        <label for="receiver">받는사람</label>
-					        <input type="email" id="receiver" placeholder="이메일 주소 입력">
-					      </div>
-					
-					      <div class="form-row">
-					        <label for="subject">제목</label>
-					        <input type="text" id="subject" placeholder="메일 제목 입력">
-					      </div>
-					
-					      <div class="form-row">
-					        <label for="file">파일첨부</label>
-					        <input type="file" id="file" class="file-upload">
-					      </div>
-					
-					      <div class="form-row">
-					        <label for="content">내용</label>
-					        <textarea id="content" placeholder="메일 내용을 입력하세요"></textarea>
-					      </div>
-					
-					      <div class="button-row">
-					        <button type="submit" class="cancle-button">취소</button>
-					        <button type="submit" class="save-button">임시저장</button>
-					        <button type="submit" class="send-button">보내기</button>
-					     
-					      </div>
-					    </form>
+				<div class="mail_wrapper">
+					<h3 class="tit_h3">메일쓰기</h3>
+				
+					<form>
+						<div class="form-row">
+							<label for="receiver">받는사람</label>
+							<input type="email" id="receiver" placeholder="이메일 주소 입력">
+						</div>
+				
+						<div class="form-row">
+							<label for="subject">제목</label>
+							<input type="text" id="subject" placeholder="메일 제목 입력">
+						</div>
+				
+						<div class="form-row">
+							<label for="file">파일첨부</label>
+							<input type="file" id="file" class="file-upload">
+						</div>
+				
+						<div class="form-row">
+							<label for="content">내용</label>
+							<textarea id="content" placeholder="메일 내용을 입력하세요" style="height:  500px;"></textarea>
+						</div>
+				
+						<div class="btn_frame2">
+							<button type="submit" class="button2">취소</button>
+							<button type="submit" class="button2">임시저장</button>
+							<button type="submit" class="button1">보내기</button>
+						</div>
+					</form>
+				</div>
 			</section>
 		</div>
 	</body>
