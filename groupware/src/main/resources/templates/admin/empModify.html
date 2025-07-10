@@ -7,7 +7,69 @@
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
-
+	<script>
+ 	$( function() {
+	
+   		$("#btn_submit").click( function(){
+   			if( $("#userid").val() == "" ) {
+				alert("아이디를 입력하세요.");
+				$("#userid").focus();
+				return false;
+   			}
+   			if( $("#name").val() == "" ) {
+				alert("이름을 입력하세요.");
+				$("#name").focus();
+				return false;
+   			}
+   			
+   			if($("#qdate_date").val().trim() === "") {
+   				$("#qdate").remove();   				
+   			} else {
+   			// 시간 붙이기
+   				const dateVal = $("#qdate_date").val();
+   		        if (dateVal) {
+   		            $("#qdate").val(dateVal + " 00:00:00");
+   		         	$("#state").val("N");
+   		        } else {
+   		            $("#qdate").val("");
+   		        }
+   			}
+   			
+   			if($("#jdate_date").val().trim() === "") {
+   				alert("입사일이 없어요");
+   				return false;
+   			} else {
+   			// 시간 붙이기
+   				const dateVal2 = $("#jdate_date").val();
+   		        if (dateVal2) {
+   		            $("#jdate").val(dateVal2 + " 00:00:00");
+   		        } else {
+   		            $("#jdate").val("");
+   		        }
+   			}
+   			
+   			let form = $("#frm").serialize();
+			$.ajax({
+				type:"post",
+				url:"/emp/empUpdate",
+				data:form, 
+				dataType:"text",
+   				success:function(data) { 
+					if( data == "1" ) { 
+						alert("저장완료!");
+						location="/emp/empList";
+					} else {
+						alert("저장실패!");
+					}
+   				},
+   				error:function(){	
+					alert("전송실패!");
+   				}
+   			});
+			
+   		});
+  	});
+  	</script>
     <body>
         <!-- header 시작 -->
         <header th:insert="fragments/header"></header>
@@ -22,6 +84,8 @@
             <section class="contents">
                 
                 <form id ="frm" name="frm">
+                <input type="hidden" name="empno" th:value="${dto.empno}" >
+                <input type="hidden" name="pass" th:value="${dto.pass}" >
                     <div class="upload-wrapper">
                                 
                         <h3 class="tit_h3">사원수정</h3>
@@ -29,45 +93,57 @@
                         <table>
                             <tr class="form-row">
                                 <th><label for="userid">아이디</label></th>
-                                <td><input type="text" id="userid" name="userid" value="test1"></td>
+                                <td><input type="text" id="userid" name="userid" th:value="${dto.userid}"></td>
                             </tr>
                             <tr class="form-row">
                                 <th><label for="name">이름</label></th>
-                                <td><input type="text" id="name" name="name" value="조수빈"></td>
+                                <td><input type="text" id="name" name="name" th:value="${dto.name}"></td>
                             </tr>
                             <tr class="form-row">
                                 <th>입사일</th>
-                                <td><input type="date" value="2025-06-18" class="input1" /></td>
+                                <td>
+                                	<input type="date" id="jdate_date" name="jdate_date" th:value="${#strings.substring(dto.jdate,0,10)}" class="input1" />
+									<input type="hidden" id="jdate" name="jdate" />
+								</td>
                             </tr>
                             <tr class="form-row">
                                 <th>퇴사일</th>
-                                <td><input type="date" value="2025-06-27" class="input1" /></td>
+                                <td>
+                                	<input type="date" id="qdate_date" name="qdate_date" th:value="${#strings.substring(dto.qdate,0,10)}" class="input1" />
+									<input type="hidden" id="qdate" name="qdate" />
+									<input type="hidden" id="state" name="state" />
+                                </td>
                             </tr>
                             <tr class="form-row">
                                 <th><label for="name">이메일</label></th>
-                                <td><input type="text" id="name" name="name" value="test1@naver.com"></td>
+                                <td><input type="text" id="email" name="email" th:value="${dto.email}"></td>
                             </tr>
                             <tr class="form-row">
                                 <th><label for="name">휴대폰번호</label></th>
-                                <td><input type="text" id="name" name="name" value="010-9967-7153"></td>
+                                <td><input type="text" id="phone" name="phone" th:value="${dto.phone}"></td>
                             </tr>
                             <tr class="form-row">
                                 <th><label for="name">주소</label></th>
-                                <td><input type="text" id="name" name="name" value="경기도 구리시 "></td>
+                                <td><input type="text" id="addr" name="addr" th:value="${dto.addr}"></td>
                             </tr>
                             <tr class="form-row">
-                                <th><label for="deptno">부서</label></th>
+                                <th><label for="dept">부서</label></th>
                                 <td>
-                                    <select name="deptno" class="select1">
-                                        <option>개발부</option>
+                                    <select name="dept" class="select1">
+                                        <option value="B20002" th:selected="${dto.dept == 'B20002'}">개발부</option>
+                                        <option value="B20003" th:selected="${dto.dept == 'B20003'}">인사부</option>
+                                        <option value="B20004" th:selected="${dto.dept == 'B20004'}">영업부</option>
                                     </select>
                                 </td>
                             </tr>
                             <tr class="form-row">
-                                <th><label for="posno">직급</label></th>
+                                <th><label for="position">직급</label></th>
                                 <td>
-                                    <select name="posno" class="select1">
-                                        <option>사원</option>
+                                    <select name="position" class="select1">
+                                        <option value="A10001" th:selected="${dto.position == 'A10001'}">팀장</option>
+                                        <option value="A10002" th:selected="${dto.position == 'A10002'}">과장</option>
+                                        <option value="A10003" th:selected="${dto.position == 'A10003'}">대리</option>
+                                        <option value="A10004" th:selected="${dto.position == 'A10004'}">사원</option>
                                     </select>
                                 </td>
                             </tr>

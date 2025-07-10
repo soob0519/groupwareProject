@@ -3,6 +3,7 @@ package com.groupware.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +59,6 @@ public class EmpController {
 		if( dto1 == null ) {
 			msg = "2";
 		}
-		System.out.println("------------"+dto1);
 		return msg;
 	}
 	
@@ -147,7 +147,7 @@ public class EmpController {
 	/**
 	 * 사원 수정
 	 */
-	@PostMapping("/empModify")
+	@PostMapping("/empUpdate")
 	public String empModify(EmpDto dto) {
 		String msg = "1";
 		EmpDto dto1 = empService.save(dto);
@@ -158,5 +158,42 @@ public class EmpController {
 	}
 	
 	
+	/**
+	 * 사원 조직도
+	 */
+	@GetMapping("/empOrgani")
+	public ModelAndView empOrgani(@RequestParam(defaultValue = "0") int page,
+								@RequestParam(defaultValue = "10") int size) {
+		
+		ModelAndView model = new ModelAndView();
+		
+		List<EmpDto> empList = empService.findAll();
+		System.out.println("사원 수: " + empList.size());
+		List<CodeDto> result2 = codeService.list();
+		Map<String, List<EmpDto>> deptMap = empList.stream()
+		        .collect(Collectors.groupingBy(EmpDto::getDept));
+
+		model.addObject("deptMap", deptMap);
+		model.addObject("list", empList);
+		model.addObject("list2", result2);
+		model.setViewName("/admin/empList2");
+		
+		return model;
+	}
+	
+	/**
+	 * 사원 상세정보
+	 */
+	@GetMapping("/detail/{empno}")
+	public ModelAndView detail(@PathVariable Integer empno) {
+		
+		
+		ModelAndView model = new ModelAndView();
+		EmpDto dto = empService.getFindById(empno);
+		model.setViewName("/admin/empList2Detail");
+		model.addObject("dto", dto);
+		
+		return model;
+	}
 	
 }

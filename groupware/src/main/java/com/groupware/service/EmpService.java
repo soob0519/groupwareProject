@@ -1,5 +1,8 @@
 package com.groupware.service;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -116,11 +119,23 @@ public class EmpService {
 	 */
 	public void toggleState(int empno) {
 	    EmpDto emp = empRepository.findById(empno).orElse(null);
-	    if (emp != null) {
-	        String currentState = emp.getState();
-	        emp.setState("Y".equals(currentState) ? "N" : "Y");
-	        empRepository.save(emp);
-	    }
+		if (emp != null) {
+			String currentState = emp.getState();
+			if ("Y".equals(currentState)) {
+				// 재직중 → 퇴직 처리
+				emp.setState("N");
+				emp.setQdate(new Timestamp(System.currentTimeMillis()));  // 오늘 날짜 퇴사일로 설정
+			} else {
+				// 퇴직 → 재직중 처리
+			emp.setState("Y");
+			emp.setQdate(null);  // 퇴사일 초기화
+				}
+				empRepository.save(emp);
+		}
+	}
+
+	public List<EmpDto> findAll() {
+		return empRepository.findAll();
 	}
 
 	

@@ -9,19 +9,10 @@
     </head>
 
     <body>
-        <!-- header 시작 -->
-        <header th:insert="fragments/header"></header>
-        <!-- header 종료 -->
-
         <div class="flex_between">
-
-            <!-- nav 시작 -->
-            <aside th:insert="fragments/nav"></aside>
-            <!-- nav 종료 -->
 
             <section class="contents">
                 
-                <form id ="frm" name="frm">
                     <div class="upload-wrapper">
                                 
                         <h3 class="tit_h3">사원</h3>
@@ -29,35 +20,18 @@
                         <table>
                             <tr class="form-row">
                                 <th><label for="name">이름</label></th>
-                                <td><input type="text" id="name" name="name" value="조수빈"></td>
+                                <td><input type="text" id="name" name="name" th:value="${dto.name}" readonly></td>
                             </tr>
                             <tr class="form-row">
                                 <th><label for="name">이메일</label></th>
-                                <td><input type="text" id="name" name="name" value="test1@naver.com"></td>
+                                <td><input type="text" id="email" name="email" th:value="${dto.email}" readonly></td>
                             </tr>
                             <tr class="form-row">
-                                <th><label for="name">휴대폰번호</label></th>
-                                <td><input type="text" id="name" name="name" value="010-9967-7153"></td>
-                            </tr>
-                            <tr class="form-row">
-                                <th><label for="deptno">부서</label></th>
-                                <td>
-                                    <select name="deptno" class="select1">
-                                        <option>개발부</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="form-row">
-                                <th><label for="posno">직급</label></th>
-                                <td>
-                                    <select name="posno" class="select1">
-                                        <option>사원</option>
-                                    </select>
-                                </td>
+                                <th><label for="phone">휴대폰번호</label></th>
+                                <td><input type="text" id="phone" name="phone" th:value="${dto.phone}" readonly></td>
                             </tr>
                         </table>
                     </div>
-                </form>
 
             </section>
         </div>
