@@ -1,39 +1,22 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>조직도 사원 상세화면(모달예정)</title>
-        <link rel="stylesheet" href="/css/style.css">
-        <script src="/js/jquery-3.6.0.min.js"></script>
-        <script src="/js/script.js"></script>
-    </head>
 
-    <body>
-        <div class="flex_between">
 
-            <section class="contents">
-                
-                    <div class="upload-wrapper">
-                                
-                        <h3 class="tit_h3">사원</h3>
+<div class="upload-wrapper">
+            
+    <h3 class="tit_h3">사원</h3>
 
-                        <table>
-                            <tr class="form-row">
-                                <th><label for="name">이름</label></th>
-                                <td><input type="text" id="name" name="name" th:value="${dto.name}" readonly></td>
-                            </tr>
-                            <tr class="form-row">
-                                <th><label for="name">이메일</label></th>
-                                <td><input type="text" id="email" name="email" th:value="${dto.email}" readonly></td>
-                            </tr>
-                            <tr class="form-row">
-                                <th><label for="phone">휴대폰번호</label></th>
-                                <td><input type="text" id="phone" name="phone" th:value="${dto.phone}" readonly></td>
-                            </tr>
-                        </table>
-                    </div>
-
-            </section>
-        </div>
-    </body>
-</html>
+    <table>
+        <tr class="form-row">
+            <th><label for="name">이름</label></th>
+            <td><input type="text" id="name" name="name" th:value="${dto.name}" readonly></td>
+        </tr>
+        <tr class="form-row">
+            <th><label for="name">이메일</label></th>
+            <td><input type="text" id="email" name="email" th:value="${dto.email}" readonly></td>
+        </tr>
+        <tr class="form-row">
+            <th><label for="phone">휴대폰번호</label></th>
+            <td><input type="text" id="phone" name="phone" th:value="${dto.phone}" readonly></td>
+        </tr>
+	
+	</table>
+</div>
