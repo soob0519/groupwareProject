@@ -41,7 +41,7 @@
 .btn_frame1 {font-size: 18px; gap: 10px; padding-bottom: 15px; position: sticky; top: 0; background: #fff; z-index: 1;}
 .btn1 {background: #d1d1d1; cursor: pointer;}
 
-.schedule {width: 100%; height: 500px;}
+.schedule {width: 100%;}
 .calendar {width: 100%;}
 .calendar th {height: 40px; border: 1px solid #d1d1d1; border-bottom: none; background: #f9f9f9; text-align: center; font-weight: bold;}
 .calendar td {height: 70px; border: 1px solid #d1d1d1;}
@@ -61,7 +61,8 @@
   border-radius: 4px;
 }
 .scroll_inner::-webkit-scrollbar-track {
-  background: hotpink;
+  background: #d1d1d1;
+  border-radius: 4px;
 }
 
 

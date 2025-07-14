@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>일정관리 리스트</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/script.js"></script>
+    </head>
+
+    <body>
+        <!-- header 시작 -->
+        <!-- <header th:insert="fragments/header"></header> -->
+         <header class="header flex_between">
+            <div class="logo">
+                <h1>logo</h1>
+                <span class="blind"></span>
+            </div>
+            <div class="header_cate">
+                <ul class="category_list flex_start">
+                    <li>
+                        <a href="#none">aaa</a>
+                    </li>
+                    <li>
+                        <a href="#none">bbb</a>
+                    </li>
+                    <li>
+                        <a href="#none">ccc</a>
+                    </li>
+                    <li>
+                        <a href="#none">fff</a>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <!-- <aside th:insert="fragments/nav"></aside> -->
+             <aside class="aside">
+                <nav class="nav">
+                    <ul class="main">
+                        <li>
+                            <a href="#">공지사항</a>
+                        </li>
+                        <li>
+                            <a href="#">전자결재</a>
+                            <ul class="sub">
+                                <li><a href="#">기안</a></li>
+                                <li><a href="#">임시보관함</a></li>
+                                <li><a href="#">결재진행중</a></li>
+                                <li><a href="#">결재목록</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">일정관리</a>
+                            <ul class="sub">
+                                <li><a href="#">내 스케줄</a></li>
+                                <li><a href="#">내 근태확인</a></li>
+                                <li><a href="#">부서일정</a></li>
+                                <li><a href="#">회의일정</a></li>                    
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">문서관리</a>
+                            <ul class="sub">
+                                <li><a href="#">문서목록</a></li>
+                                <li><a href="#">문서업로드</a></li>
+                                <li><a href="#">내가 올린 문서</a></li>
+                                <li><a href="#">삭제문서</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">메일</a>
+                            <ul class="sub">
+                                <li><a href="#">메일 작성</a></li>
+                                <li><a href="#">보낸메일</a></li>
+                                <li><a href="#">받은메일</a></li>
+                                <li><a href="#">중요메일함</a></li>
+                                <li><a href="#">임시보관함</a></li>
+                                <li><a href="#">내게쓴메일함</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#">관리자페이지</a>
+                            <ul class="sub">
+                                <li><a href="#">사원관리</a></li>
+                                <li><a href="#">조직도관리</a></li>
+                                <li><a href="#">공지사항관리</a></li>
+                                <li><a href="#">근태관리</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+				<!-- 파일 목록 영역 -->
+			    <div class="flex_between">
+                        
+                   	<div class="sel_day_box">
+                   		<div class="sel_year">
+                   			<select id="sel_year">
+                   				<option value="">2027</option>
+                   				<option value="">2026</option>
+                   				<option value="">2025</option>
+                   				<option value="">2024</option>
+                   				<option value="">직접입력</option>
+                   			</select>
+                   		</div>
+                   		<div class="sel_month">
+                   			<ul class="month_list flex_between">
+                   				<li><a href="#none">1월</a></li>
+                   				<li><a href="#none">2월</a></li>
+                   				<li><a href="#none">3월</a></li>
+                   				<li><a href="#none">4월</a></li>
+                   				<li><a href="#none">5월</a></li>
+                   				<li><a href="#none">6월</a></li>
+                   				<li><a href="#none">7월</a></li>
+                   				<li><a href="#none">8월</a></li>
+                   				<li><a href="#none">9월</a></li>
+                   				<li><a href="#none">10월</a></li>
+                   				<li><a href="#none">11월</a></li>
+                   				<li><a href="#none">12월</a></li>
+                   			</ul>
+                   			<a href="#none">오늘</a>
+                   		</div>
+                   	</div>
+
+                    <div class="schedule con_item sub_con_item">
+                        <div class="flex_center">
+                        
+                            <div class="table_frame">
+                                <div class="flex_between">
+                                    <h3 class="tit_h3">일정관리</h3>
+                                    <div class="btn_frame2">
+                                        <button type="button" onclick="fn_next(1)" class="button1">이전</button>
+                                        <span></span>년
+                                        <span></span>월
+                                        <button type="button" onclick="fn_next(2)"  class="button1">다음</button>
+                                        <button type="button" onclick="" class="button1">오늘</button>
+                                    </div>
+                                </div>
+                                <table class="calendar sub_calendar">
+	                                <colgroup>
+	                                    <col width="14.444%">
+	                                    <col width="14.444%">
+	                                    <col width="14.444%">
+	                                    <col width="14.444%">
+	                                    <col width="14.444%">
+	                                    <col width="14.444%">
+	                                    <col width="14.444%">
+	                                </colgroup>
+                                    <tr>
+                                        <th>일</th>
+                                        <th>월</th>
+                                        <th>화</th>
+                                        <th>수</th>
+                                        <th>목</th>
+                                        <th>금</th>
+                                        <th>토</th>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>3</td>
+                                        <td>4</td>
+                                        <td>5</td>
+                                        <td>6</td>
+                                        <td>7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8</td>
+                                        <td>9</td>
+                                        <td>10</td>
+                                        <td>11</td>
+                                        <td>12</td>
+                                        <td>13</td>
+                                        <td>14</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <button type="button" id="testbtn">modaltest</button>
+                            
+                        </div>
+                    </div>
+                    
+			    </div>
+			</section>
+        </div>
+        
+        
+<script>
+    $(document).ready(function() {
+        $('#testbtn').click(function() {
+            $('.modal_schedule_write').fadeIn();
+            $('#modal_1').css({top: '200px' });
+        });
+
+        $('#close_modal').click(function() {
+            $('.modal_schedule_write').fadeOut();
+        });
+
+        // 드래그 기능
+        let isDragging = false;
+        let offset = { x: 0, y: 0 };
+
+        $('.modal_header').on('mousedown', function(e) {
+            isDragging = true;
+            const modal = $('#modal_1');
+            offset.x = e.pageX - modal.offset().left;
+            offset.y = e.pageY - modal.offset().top;
+        });
+
+        $(document).on('mousemove', function(e) {
+            if (isDragging) {
+            $('#modal_1').css({
+                left: e.pageX - offset.x,
+                top: e.pageY - offset.y
+            });
+            }
+        });
+
+        $(document).on('mouseup', function() {
+            isDragging = false;
+        });
+    });
+</script>
+
+        
+        <!-- modal_write -->
+        <div class="modal_schedule_write">
+        	<ul class="schedule_wrap" id="modal_1">
+                <div class="modal_header flex_end">
+                    <span class="modal_close_btn" id="close_modal">✖</span>
+                </div>
+                <div class="modal_contents">
+                    <h3 class="tit_h3">일정 등록</h3>
+                    <form id="frm">
+                        <li class="form_list">
+                            <label for="title">제목</label>
+                            <input type="text" id="title" name="title" required>
+                        </li>
+                        
+                        <li class="form_list">
+                            <label for="divis">구분</label>
+                            <select id="divis" name="divis" required style="width: 100%;">
+                                <option value="">-- 선택 --</option>
+                                <option value="option1">휴가</option>
+                                <option value="option2">외근</option>
+                                <option value="option3">휴가</option>
+                            </select>
+                        </li>
+        
+                        <li class="form_list">
+                            <label for="date">날짜</label>
+                            <input type="date" id="date" name="date" required>
+                        </li>
+        
+                        <li class="form_list">
+                            <label for="startTime">시작시간</label>
+                            <input type="time" id="startTime" name="startTime">
+                        </li>
+        
+                        <li class="form_list">
+                            <label for="endTime">종료시간</label>
+                            <input type="time" id="endTime" name="endTime">
+                        </li>
+        
+                        <li class="form_list">
+                            <label for="writer">작성자</label>
+                            <input type="text" id="writer" name="writer" placeholder="작성자 성함을 입력하세요.">
+                        </li>
+        
+                        <li class="form_list">
+                            <label for="description">설명</label>
+                            <textarea id="description" name="description"></textarea>
+                        </li>
+        
+                        <li class="form_list">
+                            <label for="visibility">공개범위</label>
+                            <select id="visibility" name="visibility">
+                                <option value="public">전체 공개</option>
+                                <option value="private">비공개</option>
+                                <option value="team">팀 공개</option>
+                            </select>
+                        </li>
+        
+                        <div class="btn_frame2">
+                            <button type="button" class="button2">취소</button>
+                            <button type="submit" class="button1">등록</button>
+                        </div>
+                    </form>
+                </div>
+	        </ul>
+        </div>
+        
+        <!-- modal_detail -->
+        <div class="modal_sd_detail">
+			<div class="schedule_wrap modal_2">
+                <div class="modal_header flex_end">
+                    <span class="modal_close_btn">✖</span>
+                </div>
+
+                <div class="modal_contents">
+                    <h3 class="tit_h3">일정 상세보기</h3>
+                    <ul>
+                        <li class="form_list">
+                            <label>제목</label>
+                            <div class="value">주간 회의</div>
+                        </li>
+                        
+                        <li class="form_list">
+                            <label>구분</label>
+                            <div class="value">휴가</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>날짜</label>
+                            <div class="value">2025-06-21</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>시작시간</label>
+                            <div class="value">10:00</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>종료시간</label>
+                            <div class="value">11:30</div>
+                        </li>
+                        
+                        <li class="form_list">
+                            <label>작성자</label>
+                            <div class="value">홍길동</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>설명</label>
+                            <div class="value">병결 유급휴가..</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>공개범위</label>
+                            <div class="value">팀 공개</div>
+                        </li>
+                    </ul>
+                
+                    <div class="btn_frame2">
+                        <button type="button" class="button2" onclick="history.back()">뒤로가기</button>
+                        <button type="button" class="button1">수정하기</button>
+                    </div>
+                </div>
+			</div>
+        </div>
+        
+    </body>
+</html>
