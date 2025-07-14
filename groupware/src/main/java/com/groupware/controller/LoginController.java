@@ -14,7 +14,7 @@ import com.groupware.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/login")
+@RequestMapping("login")
 public class LoginController {
 
 	//서비스설정
@@ -23,7 +23,7 @@ public class LoginController {
 	@GetMapping
 	public String login() {
 		
-	   return "login";
+	   return "/login/login";
 	}
 	
 	
