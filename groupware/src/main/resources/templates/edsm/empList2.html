@@ -2,48 +2,98 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>공유자 선택창</title>
+        <title>조직도(공유자)</title>
         <link rel="stylesheet" href="/css/style.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
     </head>
 	<style>
-        .org_tree ul {
-            padding-left: 20px;
-            list-style: none;
-            position: relative;
-        }
+	.org_tree ul {
+    padding-left: 20px;
+    list-style: none;
+    position: relative;
+	}
 
-        .org_tree ul::before {
-            content: '';
-            border-left: 1px solid #ccc;
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 10px;
-        }
+	.org_tree ul::before {
+		content: '';
+		border-left: 1px solid #ccc;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 10px;
+	}
 
-        .org_tree li {
-            margin: 0;
-            padding: 10px 0 0 20px;
-            position: relative;
-        }
+	.org_tree li {
+		margin: 0;
+		padding: 10px 0 0 20px;
+		position: relative;
+	}
 
-        .org_tree li::before {
-            content: '';
-            border-top: 1px solid #ccc;
-            position: absolute;
-            top: 15px;
-            left: 0;
-            width: 10px;
-            height: 0;
-        }
+	.org_tree li::before {
+		content: '';
+		border-top: 1px solid #ccc;
+		position: absolute;
+		top: 15px;
+		left: 0;
+		width: 10px;
+		height: 0;
+	}
 
-        .employees {
-            margin-left: 20px;
-        }
-    </style>
+/* 모달 폭 제한 및 스타일 유지 */
+#empModal {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  max-height: 80%;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 8px;
+}
 
+/* 내부 요소 폭 제한 */
+#empModal * {
+  box-sizing: border-box;
+}
+
+/* 폼 라벨과 입력 필드를 flex로 한 줄에 배치 */
+#empModal .form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* 라벨 스타일 */
+#empModal .form-row label {
+  width: 80px;       /* 라벨 고정 폭 */
+  flex-shrink: 0;    /* 줄어들지 않게 */
+  font-weight: bold;
+}
+
+/* 입력, 버튼 폭 100% */
+#empModal .form-row input,
+#empModal .form-row textarea,
+#empModal .form-row select {
+  flex: 1;           /* 남은 공간 모두 차지 */
+}
+
+/* 닫기 버튼 */
+#closeModal {
+  float: right;
+  cursor: pointer;
+  font-size: 18px;
+  background: transparent;
+  border: none;
+  font-weight: bold;
+}
+
+	</style>
     <body>
         <!-- header 시작 -->
         <header th:insert="fragments/header"></header>
@@ -57,48 +107,64 @@
 
             <section class="contents">
 				<h3 class="tit_h3">조직도</h3>
-				
-					<div class="org_tree">
-						<ul>
-							<!-- 개발부 -->
-							<li>
-								<label><input type="checkbox" name="department" value="dev"> <strong>개발부</strong></label>
-								<ul class="employees">
-									<li><label><input type="checkbox" name="employee" value="홍길동"> 팀장: 홍길동</label></li>
-									<li><label><input type="checkbox" name="employee" value="김개발"> 과장: 김개발</label></li>
-									<li><label><input type="checkbox" name="employee" value="이코드"> 대리: 이코드</label></li>
-									<li><label><input type="checkbox" name="employee" value="박테스트"> 사원: 박테스트</label></li>
-								</ul>
-							</li>
-							
-							<!-- 인사부 -->
-							<li>
-								<label><input type="checkbox" name="department" value="hr"> <strong>인사부</strong></label>
-								<ul class="employees">
-									<li><label><input type="checkbox" name="employee" value="최인사"> 팀장: 최인사</label></li>
-									<li><label><input type="checkbox" name="employee" value="윤채용"> 과장: 윤채용</label></li>
-									<li><label><input type="checkbox" name="employee" value="정복지"> 대리: 정복지</label></li>
-									<li><label><input type="checkbox" name="employee" value="오인턴"> 사원: 오인턴</label></li>
-								</ul>
-							</li>
-							
-							<!-- 홍보부 -->
-							<li>
-								<label><input type="checkbox" name="department" value="pr"> <strong>홍보부</strong></label>
-								<ul class="employees">
-									<li><label><input type="checkbox" name="employee" value="장홍보"> 팀장: 장홍보</label></li>
-									<li><label><input type="checkbox" name="employee" value="백마케팅"> 과장: 백마케팅</label></li>
-									<li><label><input type="checkbox" name="employee" value="심콘텐츠"> 대리: 심콘텐츠</label></li>
-									<li><label><input type="checkbox" name="employee" value="조신입"> 사원: 조신입</label></li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-		            <div class="btn_frame2">
-						<button type="button" class="button1">추가</button>
-						<button type="button" class="button2">닫기</button>
-	                </div>
-	        </section>
+
+				<div class="org_tree">
+					<ul>
+					    <li th:each="entry : ${deptMap}">
+					        <strong th:each="result2 : ${list2}"
+					        		th:if="${result2.ucode == entry.key}"
+					        		th:text="${result2.ncode}">부서명</strong>
+					        <ul>
+					        	<th:block th:each="result2 : ${list2}">
+					        		<li th:each="emp : ${entry.value}" 
+					        			th:if="${result2.ucode == emp.position && emp.state != 'N'}">
+					        			<a  href="#" 
+					        				th:data-url="@{|/emp/detail/${emp.empno}|}"
+					        				th:text="${result2.ncode + ' : ' + emp.name}"></a>
+					                </li>
+					        	</th:block>
+					            
+					        </ul>
+					    </li>
+					</ul>
+				</div>
+			</section>
+			
+			<!-- 모달 배경 -->
+			<div id="modalBg"></div>
+			
+			<!-- 모달 창 -->
+			<div id="empModal">
+				<button id="closeModal">X</button>
+				<div id="modalContent">로딩중...</div>
+			</div>
+			
         </div>
+	<script>
+	$(document).ready(function(){
+		$('.org_tree a').click(function(e){
+			e.preventDefault();
+			var url = $(this).attr('data-url');
+			if (!url) return;
+			
+			$('#modalContent').html('로딩중...');
+			
+			$('#empModal').show();
+			$('#modalBg').show();
+			
+			$('#modalContent').load(url, function(response, status, xhr){
+				if(status == "error") {
+					$('#modalContent').html("페이지를 불러오는 데 실패했습니다.");
+				}
+			});
+		});
+		
+		$('#closeModal, #modalBg').click(function(){
+			$('#empModal').hide();
+			$('#modalBg').hide();
+			$('#modalContent').html('');
+		});
+	});
+	</script>
     </body>
 </html>

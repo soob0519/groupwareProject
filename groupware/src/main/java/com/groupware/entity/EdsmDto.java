@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import jakarta.persistence.Transient;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -68,4 +69,12 @@ public class EdsmDto {
 	//반려의견
 	@Column(length=1000)
 	private String edcomment;
+	
+	//임시보관 구분
+	@Column(length = 1)
+	private String isdraft;
+	
+	@Transient
+	private String approverIds;
+	
 }

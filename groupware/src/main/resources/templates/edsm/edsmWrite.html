@@ -29,7 +29,11 @@
                                 <th>휴가일자</th>
                                 <td>
 									<div class="flex_between">
-										<input type="date" value="2025-08-18" /> &nbsp;&nbsp;&nbsp; <input type="date" value="2025-08-30" />
+										<input type="date" name="svacFull" />
+										<input type="hidden" name="svac" id="svac">
+										 &nbsp;&nbsp;&nbsp; 
+										<input type="date" name="evacFull"/>
+										<input type="hidden" name="evac" id="evac">
 									</div>
 								</td>
                             </tr>
@@ -37,38 +41,48 @@
                                 <th>구분</th>
                                 <td>
 									<ul class="flex_start" style="gap: 20px;">
-										<li><input type="radio" id="" name= "" value="1" /> 연차</li>
-										<li><input type="radio" id="" name= "" value="1" /> 반차</li>
-										<li><input type="radio" id="" name= "" value="1" /> 공가</li>
-										<li><input type="radio" id="" name= "" value="1" /> 병가</li>
+										<li><input type="radio" name="vtype" value="D40001" /> 연차</li>
+										<li><input type="radio" name="vtype" value="D40002" /> 오전반차</li>
+										<li><input type="radio" name="vtype" value="D40003" /> 오후반차</li>
+										<li><input type="radio" name="vtype" value="D40004" /> 공가</li>
+										<li><input type="radio" name="vtype" value="D40005" /> 병가</li>
                                     </ul>
 								</td>
                             </tr>
                             <tr class="form-row">
                                 <th>제목</th>
-                                <td><input type="text" placeholder="제목을 입력하세요" /></td>
+                                <td><input type="text" name="edtitle" placeholder="제목을 입력하세요" /></td>
                             </tr>
                             <tr class="form-row">
 								<th>결재자</th>
 								<td>
 									<div class="approvers flex_start">
-										<input type="text" name="approvers" value="조수빈" class="input1"/>
 										<button class="button1" type="button">즐겨찾기</button>
-										<button class="button1" type="button" onclick="addApprover()">+ 결재자 추가</button>
+										<button id="openOrgBtn" class="button1" type="button">+ 결재자 추가</button>
 									</div>
-									<div id="approverList" class="flex_start">
-                                        <input type="text" name="approvers" placeholder="결재자 이름 입력" class="input1"/>
-                                        <button class="button1" type="button" onclick="removeApprover(this)">삭제</button>
+									<div id="approverList"
+										style="display: flex;
+										flex-direction: column;
+										gap: 10px;
+										margin-top: 10px;">
+										<th:block th:each="emp : ${list1}">
+											<div th:if="${emp.userid} == ${user}" class="approver-item flex_start" style="gap:5px; align-items:center;">
+												<input type="text" name="approvers" class="input1"
+													th:value="${emp.name}" 
+													th:attr="data-empno=${emp.empno}" readonly />
+												<button class="button1 remove-btn" type="button" disabled>삭제</button>
+											</div>
+										</th:block>
 									</div>
 								</td>
 							</tr>
                             <tr class="form-row">
                                 <th>수신자</th>
-                                <td><input type="text" placeholder="수신자" /></td>
+                                <td><input type="text" name="viewer1" placeholder="수신자" /></td>
                             </tr>
                             <tr class="form-row">
                                 <th>공유자</th>
-                                <td><input type="text" placeholder="공유자" /></td>
+                                <td><input type="text" name="viewer2" placeholder="공유자" /></td>
                             </tr>
 							<tr class="form-row">
                                 <th>첨부문서</th>
@@ -82,13 +96,13 @@
                             </tr>
                             <tr class="form-row">
                                 <th>기안내용</th>
-                                <td><textarea placeholder="기안내용을 입력하세요."></textarea></td>
+                                <td><textarea name="edcont" placeholder="기안내용을 입력하세요."></textarea></td>
                             </tr>
                         </table>
 
                         <div class="btn_frame2">
-							<button type="button" class="button1">임시보관함</button>
-                            <button type="button" class="button1">기안 상신</button>
+							<button type="button" id="btn_isdraft" class="button1">임시보관함</button>
+                            <button type="button" id="btn_submit" class="button1">기안 상신</button>
                             <button type="button" class="button2">닫기</button>
                         </div>
                             
@@ -97,5 +111,163 @@
 
             </section>
         </div>
+        
+        <div th:insert="edsm/empList1 :: orgModal"></div>
+        
+        <script>
+        $(function () {
+        	  $('#btn_submit').on('click', function () {
+
+        	    // 날짜 시간 가공해서 hidden에 넣기
+        	    const svacDate = $('input[name="svacFull"]').val();
+        	    const evacDate = $('input[name="evacFull"]').val();
+        	    $('#svac').val(svacDate ? svacDate + ' 00:00:00' : '');
+        	    $('#evac').val(evacDate ? evacDate + ' 23:59:59' : '');
+
+        	    // 결재자 번호들을 하나의 문자열로 만들어 hidden에 담기
+        	    let approverIds = [];
+        	    $('#approverList input[name="approvers"]').each(function () {
+        	      const empno = $(this).data('empno');
+        	      if (empno) approverIds.push(empno);
+        	    });
+
+        	    // 만약 서버가 ',' 구분 문자열로 받는다면 hidden에 추가
+        	    if ($('#approverIds').length === 0) {
+        	      $('#frm').append(`<input type="hidden" id="approverIds" name="approverIds">`);
+        	    }
+        	    $('#approverIds').val(approverIds.join(','));
+
+        	    // 전송
+        	    const form = $('#frm').serialize();
+        	    $.ajax({
+        	      type: 'POST',
+        	      url: '/edsm/edsmSave',
+        	      data: form,
+        	      dataType: 'text',
+        	      success: function (data) {
+        	        alert('저장 성공');
+        	        location.href = '/edsm';
+        	      },
+        	      error: function () {
+        	        alert('전송 실패');
+        	      }
+        	    });
+        	  });
+        	});
+		</script>
+		
+		<script>
+        $(function () {
+        	  $('#btn_isdraft').on('click', function () {
+
+        	    // 날짜 시간 가공해서 hidden에 넣기
+        	    const svacDate = $('input[name="svacFull"]').val();
+        	    const evacDate = $('input[name="evacFull"]').val();
+        	    $('#svac').val(svacDate ? svacDate + ' 00:00:00' : '');
+        	    $('#evac').val(evacDate ? evacDate + ' 23:59:59' : '');
+
+        	    // 결재자 번호들을 하나의 문자열로 만들어 hidden에 담기
+        	    let approverIds = [];
+        	    $('#approverList input[name="approvers"]').each(function () {
+        	      const empno = $(this).data('empno');
+        	      if (empno) approverIds.push(empno);
+        	    });
+
+        	    // 만약 서버가 ',' 구분 문자열로 받는다면 hidden에 추가
+        	    if ($('#approverIds').length === 0) {
+        	      $('#frm').append(`<input type="hidden" id="approverIds" name="approverIds">`);
+        	    }
+        	    $('#approverIds').val(approverIds.join(','));
+
+        	    // 전송
+        	    const form = $('#frm').serialize();
+        	    $.ajax({
+        	      type: 'POST',
+        	      url: '/edsm/edsmIsdraft',
+        	      data: form,
+        	      dataType: 'text',
+        	      success: function (data) {
+        	        alert('저장 성공');
+        	        location.href = '/edsm';
+        	      },
+        	      error: function () {
+        	        alert('전송 실패');
+        	      }
+        	    });
+        	  });
+        	});
+		</script>
+        
+        <script>
+		$(function () {
+		  const MAX_APPROVERS = 4;	
+		
+		  // 초기 상태 설정
+		  updateRemoveButtons();
+		
+		  // 결재자 추가 버튼 이벤트
+		  $('#openOrgBtn').on('click', function () {
+		    $('#orgChartModal').css('display', 'flex');
+		  });
+		
+		  // 모달 닫기 버튼 이벤트
+		  $('#closeOrgBtn').on('click', function () {
+		    $('#orgChartModal').hide();
+		  });
+		
+		  // 조직도 내 사용자 클릭 이벤트
+		  $(document).on('click', '.org-user-btn', function (e) {
+			  e.preventDefault();
+			  const name = $(this).data('name');
+			  const empno = $(this).data('empno');
+			  const list = $('#approverList');
+			  
+			  const duplicate = Array.from(list.find('input[name="approvers"]'))
+			    .some(input => input.value === name);
+
+			  if (duplicate) {
+			    alert("이미 선택된 결재자입니다.");
+			    return;
+			  }
+
+			  const approverCount = list.find('input[name="approvers"]').length;
+			  if (approverCount >= MAX_APPROVERS) {
+			    alert(`최대 ${MAX_APPROVERS}명까지만 추가 가능합니다.`);
+			    return;
+			  }
+
+			  const newItem = $(`
+			    <div class="approver-item flex_start" style="gap:5px; align-items:center;">
+			      <input type="text" name="approvers" class="input1" value="${name}" data-empno="${empno}" readonly/>
+			      <button class="button1 remove-btn" type="button" onclick="removeApprover(this)">삭제</button>
+			    </div>
+			  `);
+
+			  list.append(newItem);
+			  $('#orgChartModal').hide();
+			  updateRemoveButtons();
+			});
+		});
+		
+		// 결재자 삭제
+		 function removeApprover(btn) {
+			    const items = document.querySelectorAll('#approverList .approver-item');
+			    if (items.length <= 1) {
+			      alert('최소 한 명의 결재자는 남아 있어야 합니다.');
+			      return;
+			    }
+			    btn.closest('.approver-item').remove();
+			    updateRemoveButtons();
+			  }
+		 
+		// 삭제 버튼 상태 갱신
+		  function updateRemoveButtons() {
+			  const btns = document.querySelectorAll('#approverList .remove-btn');
+			  btns.forEach((btn, idx) => {
+			    btn.disabled = (idx === 0); // 첫 번째 삭제버튼만 비활성화
+			  });
+			}
+		
+		</script>
     </body>
 </html>

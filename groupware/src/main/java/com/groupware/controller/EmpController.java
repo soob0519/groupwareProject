@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,8 @@ import com.groupware.entity.CodeDto;
 import com.groupware.entity.EmpDto;
 import com.groupware.service.CodeService;
 import com.groupware.service.EmpService;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/emp")
@@ -36,16 +39,23 @@ public class EmpController {
 	 * 사원 등록 처리
 	 */
 	@GetMapping("/empWrite")
-	public ModelAndView empWrite(@RequestParam(defaultValue = "0") int page,
+	public ModelAndView empWrite(HttpSession session,
+								Model model,
+								@RequestParam(defaultValue = "0") int page,
 								@RequestParam(defaultValue = "10") int size) {
 		
-		ModelAndView model = new ModelAndView();
+		String dept = (String) session.getAttribute("dept");
+		if (dept == null || !dept.equals("B20003")) {
+	        return new ModelAndView("redirect:/homepage");
+	    }		
+		
+		ModelAndView model1 = new ModelAndView();
 		List<CodeDto> result2 = codeService.list();
 		
-		model.addObject("list2", result2);
-		model.setViewName("/admin/empWrite");
+		model1.addObject("list2", result2);
+		model1.setViewName("/admin/empWrite");
 		
-		return model;
+		return model1;
 	}
 
 	/**
@@ -66,12 +76,17 @@ public class EmpController {
 	 * 사원 목록
 	 */
 	@GetMapping("/empList")
-	public ModelAndView empList(@RequestParam(defaultValue = "0") int page, 
+	public ModelAndView empList(HttpSession session,
+								@RequestParam(defaultValue = "0") int page, 
 								@RequestParam(defaultValue = "10") int size,
-								@RequestParam(required = false) String searchType,
-								@RequestParam(required = false) String keyword,
-								@RequestParam(required = false) String state) {
+								@RequestParam(required = false, defaultValue = "") String searchType,
+								@RequestParam(required = false, defaultValue = "") String keyword,
+								@RequestParam(required = false, defaultValue = "") String state) {
 		
+		String dept = (String) session.getAttribute("dept");
+		if (dept == null || !dept.equals("B20003")) {
+	        return new ModelAndView("redirect:/homepage");
+	    }
 		
 		Page<EmpDto> result;
 
@@ -131,11 +146,15 @@ public class EmpController {
 	 * 사원 상세정보
 	 */
 	@GetMapping("/{empno}")
-	public ModelAndView findById(@PathVariable Integer empno,
+	public ModelAndView findById(HttpSession session,
+								@PathVariable Integer empno,
 								 @RequestParam(defaultValue = "0") int page,
 								 @RequestParam(defaultValue = "10") int size) {
 		
-		
+		String dept = (String) session.getAttribute("dept");
+		if (dept == null || !dept.equals("B20003")) {
+	        return new ModelAndView("redirect:/homepage");
+	    }
 		ModelAndView model = new ModelAndView();
 		EmpDto dto = empService.getFindById(empno);
 		model.setViewName("/admin/empModify");
