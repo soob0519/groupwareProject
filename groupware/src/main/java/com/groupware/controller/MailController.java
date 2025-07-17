@@ -1,0 +1,1141 @@
+// MailController.java
+package com.groupware.controller;
+
+
+import com.Pro.entity.BlockDto;
+import com.Pro.entity.CodeDto;
+import com.Pro.entity.EmpDto;
+import com.Pro.entity.MailDto;
+import com.Pro.repository.BlockRepository;
+import com.Pro.repository.CodeRepository;
+import com.Pro.repository.EmpRepository;
+import com.Pro.repository.MailRepository;
+import com.Pro.service.MailService;
+import com.groupware.dto.MailListDto;
+
+import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpSession;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
+
+
+@Controller  
+@RequestMapping("/mail")
+public class MailController {
+
+
+	@Autowired
+    private BlockRepository blockRepository;
+    @Autowired
+    private EmpRepository empRepository;
+    
+    @Autowired
+    private MailRepository mailRepository;
+
+    @Autowired
+    private CodeRepository codeRepository;
+    private final MailService mailService;
+
+    public MailController(MailService mailService,MailRepository mailRepository) {
+    	this.mailService = mailService;
+    	this.mailRepository = mailRepository;
+    }
+    //전체메일함
+    @GetMapping
+    public ModelAndView maillist(
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "") String searchType,
+        @RequestParam(defaultValue = "1") int indexpage,
+        HttpSession session
+    ) {
+        ModelAndView model = new ModelAndView();
+
+        // 세션에서 로그인된 사용자 아이디 꺼내기 (실제 배포용)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1";  // 테스트용 하드코딩
+        String name = "테스트";
+
+        Page<MailDto> mailPage;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            switch (searchType) {
+                case "sendername":
+                    mailPage = mailService.searchBySenderName(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "receivername":
+                    mailPage = mailService.searchByReceiverName(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "subject":
+                    mailPage = mailService.searchBySubject(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "content":
+                    mailPage = mailService.searchByContent(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "date":
+                    mailPage = mailService.searchByDate(userId, keyword, indexpage - 1, 10);
+                    break;
+                default:
+                    mailPage = mailService.search(userId, keyword, indexpage - 1, 10);
+            }
+        } else {
+            mailPage = mailService.listWithName(userId, indexpage - 1, 10);
+        }
+
+        // mailPage -> mailListDto 변환
+        Page<MailListDto> page = mailService.convertToMailListDto(mailPage, userId);
+
+        int startPageRownum = (int) (page.getTotalElements() - page.getNumber() * 10);
+        int pageBlockSize = 10;
+        int startBlockPage = ((indexpage - 1) / pageBlockSize) * pageBlockSize + 1;
+        int endBlockPage = Math.min(startBlockPage + pageBlockSize - 1, page.getTotalPages());
+
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("plist", page.getContent());
+        model.addObject("startPageRownum", startPageRownum);
+        model.addObject("ptotal", page.getTotalElements());
+        model.addObject("ptotalPage", page.getTotalPages());
+        model.addObject("currentPage", indexpage);
+        model.addObject("keyword", keyword);
+        model.addObject("searchType", searchType);
+        model.addObject("userId", userId);
+        model.addObject("name", name);
+
+        model.setViewName("mail/maillist");
+        return model;
+    }
+    
+    
+    // 메일 디테일 
+    @GetMapping("/maildetail/{mailno}")
+    public ModelAndView mailDetail(@PathVariable Long mailno, HttpSession session) {
+        ModelAndView model = new ModelAndView();
+
+        // 실제 배포 시 세션 처리 주석 해제
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용 하드코딩
+
+        try {
+            MailDto mail = mailService.findByIdAndUserId(mailno, userId);
+            model.addObject("mail", mail);
+
+            EmpDto senderEmp = empRepository.findByUserid(mail.getSenderId()).orElse(null);
+            EmpDto receiverEmp = empRepository.findByUserid(mail.getReceiverId()).orElse(null);
+
+            String senderDeptName = "-";
+            if (senderEmp != null && senderEmp.getDept() != null) {
+                CodeDto code = codeRepository.findById(senderEmp.getDept()).orElse(null);
+                if (code != null && "Y".equals(code.getState()) && code.getNcode() != null) {
+                    senderDeptName = code.getNcode();
+                }
+            }
+
+            String receiverDeptName = "-";
+            if (receiverEmp != null && receiverEmp.getDept() != null) {
+                CodeDto code = codeRepository.findById(receiverEmp.getDept()).orElse(null);
+                if (code != null && "Y".equals(code.getState()) && code.getNcode() != null) {
+                    receiverDeptName = code.getNcode();
+                }
+            }
+
+            
+     
+            model.addObject("senderEmp", senderEmp);
+            model.addObject("senderDeptName", senderDeptName);
+            model.addObject("receiverEmp", receiverEmp);
+            model.addObject("receiverDeptName", receiverDeptName);
+
+            String formattedSentAt = mail.getSentAt() != null
+                    ? mail.getSentAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                    : "시간 정보 없음";
+            model.addObject("formattedSentAt", formattedSentAt);
+
+            // 내가 보낸 메일인지 받은 메일인지 구분하는 기준 예시 (mail.getSenderId() == userId가 내 발신인지)
+            boolean isSentMail = userId.equals(mail.getSenderId());
+            model.addObject("isSentMail", isSentMail);
+
+            boolean isBlocked;
+            if (isSentMail) {
+                isBlocked = blockRepository.existsByBlockerIdAndBlockedId(userId, mail.getReceiverId());
+            } else {
+                isBlocked = blockRepository.existsByBlockerIdAndBlockedId(userId, mail.getSenderId());
+            }
+            model.addObject("isBlocked", isBlocked);
+
+            model.setViewName("mail/maildetail");
+        } catch (RuntimeException e) {
+            model.addObject("errorMessage", e.getMessage());
+            model.setViewName("error/errorPage");
+        }
+
+        return model;
+    }
+
+
+
+    //전체 메일 단일삭제 (휴지통 이동)
+    @PostMapping("/delete")
+    public String deleteMail(@RequestParam("mailno") Long mailno, HttpSession session) {
+        
+        // 세션에서 로그인된 사용자 아이디 꺼내기 (실제 배포용)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+    	
+    	// 세션에서 userId 꺼내기 (하드코딩 테스트용)
+        String userId = "test1";
+
+        // 현재 로그인 사용자가 발신자인지 수신자인지 확인 후 soft delete
+        mailService.softDeleteByUser(mailno, userId);
+
+        return "redirect:/mail"; // 삭제 후 전체메일 목록으로 이동
+    }
+
+
+    //전체메일 다중삭제 (휴지통 이동)
+    @PostMapping("/deleteSelected")
+    @ResponseBody
+    public String deleteSelected(@RequestParam("mailIds") List<Long> mailIds, HttpSession session) {
+        // 세션에서 로그인된 사용자 아이디 꺼내기 (실제 배포용)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+    	
+    	// 세션에서 userId 꺼내기 (하드코딩 테스트용)
+        String userId = "test1";
+
+        mailService.deleteMailsByIds(mailIds, userId);
+        return "ok";
+    }
+
+
+    
+    //전체메일 전체삭제 (휴지통 이동)
+    @PostMapping("/deleteAllToTrash")
+    public String deleteAllToTrash(HttpSession session) {
+
+    	// 세션에서 로그인된 사용자 아이디 꺼내기 (실제 배포용)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+    	
+    	// 세션에서 userId 꺼내기 (하드코딩 테스트용)
+        String userId = "test1";
+
+        mailService.moveAllMailsToTrash(userId);
+        return "redirect:/mail";
+    }
+
+    
+    //수신메일함
+    @GetMapping("/mailin")
+    public ModelAndView receivedList(
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "") String searchType,
+        @RequestParam(defaultValue = "1") int indexpage,
+        HttpSession session
+    ) {
+        ModelAndView model = new ModelAndView();
+
+        
+        // 세션에서 로그인된 사용자 아이디 꺼내기
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+         
+        // 실제로는 세션에서 꺼내야함
+        
+        String userId = "test1";  
+        String name = "테스트";
+
+        Page<MailListDto> page;
+        
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            switch (searchType) {
+                
+	            case "sendername":
+	                page = mailService.searchReceivedBySenderName(userId, keyword, indexpage - 1, 10);
+	                break;
+                case "subject":
+                    page = mailService.searchReceivedBySubject(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "content":
+                    page = mailService.searchReceivedByContent(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "date":
+                    page = mailService.searchReceivedByDate(userId, keyword, indexpage - 1, 10);
+                    break;
+                default:
+                    page = mailService.searchReceived(userId, keyword, indexpage - 1, 10);
+            }
+        } else {
+        	page = mailService.receivedListWithName(userId, indexpage - 1, 10);
+
+        }
+
+        int startPageRownum = (int) (page.getTotalElements() - page.getNumber() * 10);
+        int pageBlockSize = 10;
+        int startBlockPage = ((indexpage - 1) / pageBlockSize) * pageBlockSize + 1;
+        int endBlockPage = Math.min(startBlockPage + pageBlockSize - 1, page.getTotalPages());
+
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("plist", page.getContent());
+        model.addObject("startPageRownum", startPageRownum);
+        model.addObject("ptotal", page.getTotalElements());
+        model.addObject("ptotalPage", page.getTotalPages());
+        model.addObject("currentPage", indexpage);
+        model.addObject("keyword", keyword);
+        model.addObject("searchType", searchType);
+        model.addObject("userId", userId);
+        model.addObject("name", name);
+
+        model.setViewName("mail/mailin");
+        return model;
+    }
+    
+    
+    // 수신메일 다중삭제 (휴지통 이동)
+    @PostMapping("/deleteSelectedReceived")
+    @ResponseBody
+    public String deleteSelectedReceived(@RequestParam("mailIds") List<Long> mailIds, HttpSession session) {
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) return "unauthorized";
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용
+
+        mailService.deleteReceivedMailsByIds(userId, mailIds);
+        return "ok";
+    }
+
+    
+    //수신메일 전체삭제 (휴지통 이동)
+    @PostMapping("/deleteAllReceived")
+    @ResponseBody
+    public ResponseEntity<String> deleteAllReceived(HttpSession session) {
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
+        // String userId = loginMember.getUserid();
+        String userId = "test1"; // 테스트용
+        try {
+            mailService.moveAllReceivedMailsToTrash(userId);
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+        }
+    }
+
+    
+	// 발신메일함
+    @GetMapping("/mailout")
+    public ModelAndView sendList(
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "") String searchType,
+        @RequestParam(defaultValue = "1") int indexpage,
+        HttpSession session
+    ) {
+        ModelAndView model = new ModelAndView();
+
+        // 세션에서 로그인된 사용자 아이디 꺼내기
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+
+        // 실제로는 세션에서 꺼내야 함
+        String userId = "test1"; 
+        String name = "테스트";   
+
+        Page<MailListDto> page;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            switch (searchType) {
+                case "receivername":
+                    page = mailService.searchSendByReceiverName(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "subject":
+                    page = mailService.searchSendBySubject(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "content":
+                    page = mailService.searchSendByContent(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "date":
+                    page = mailService.searchSendByDate(userId, keyword, indexpage - 1, 10);
+                    break;
+                default:
+                    page = mailService.searchSend(userId, keyword, indexpage - 1, 10);
+            }
+        } else {
+            page = mailService.sendListWithName(userId, indexpage - 1, 10);
+        }
+
+        int startPageRownum = (int) (page.getTotalElements() - page.getNumber() * 10);
+        int pageBlockSize = 10;
+        int startBlockPage = ((indexpage - 1) / pageBlockSize) * pageBlockSize + 1;
+        int endBlockPage = Math.min(startBlockPage + pageBlockSize - 1, page.getTotalPages());
+
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("plist", page.getContent());
+        model.addObject("startPageRownum", startPageRownum);
+        model.addObject("ptotal", page.getTotalElements());
+        model.addObject("ptotalPage", page.getTotalPages());
+        model.addObject("currentPage", indexpage);
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("keyword", keyword);
+        model.addObject("searchType", searchType);
+        model.addObject("userId", userId);
+        model.addObject("name", name);
+
+        model.setViewName("mail/mailout");
+        return model;
+    }
+
+    
+
+   //발신메일 다중삭제 (휴지통 이동)
+    @PostMapping("/deleteSelectedSent")
+    @ResponseBody
+    public String deleteSelectedSent(@RequestParam("mailIds") List<Long> mailIds, HttpSession session) {
+        // 세션에서 로그인된 사용자 아이디 꺼내기
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) return "unauthorized";
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용
+
+        mailService.deleteSentMailsByIds(userId, mailIds);
+        return "ok";
+    }
+
+    //발신메일 전체삭제 (휴지통 이동)
+    @PostMapping("/deleteAllSent")
+    @ResponseBody
+    public ResponseEntity<String> deleteAllSent(HttpSession session) {
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) return "redirect:/login";
+        // String userId = loginMember.getUserid();
+    	String userId = "test1"; // 테스트용
+        try {
+            mailService.moveAllSentMailsToTrash(userId);
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+        }
+    }
+    
+
+    // 메일 휴지통 
+    @GetMapping("/mailtrash")
+    public ModelAndView trashList(
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "") String searchType,
+        @RequestParam(defaultValue = "1") int indexpage,
+        HttpSession session
+    ) {
+        ModelAndView model = new ModelAndView();
+
+        // 실제 배포용 (로그인된 사용자 세션에서 꺼내기)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1";  // 테스트용 하드코딩
+        String name = "테스트";
+
+        Page<MailListDto> page;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            switch (searchType) {
+                case "sendername":
+                    page = mailService.searchTrashBySenderName(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "receivername":
+                    page = mailService.searchTrashByReceiverName(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "subject":
+                    page = mailService.searchTrashBySubject(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "content":
+                    page = mailService.searchTrashByContent(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "date":
+                    page = mailService.searchTrashByDate(userId, keyword, indexpage - 1, 10);
+                    break;
+                default:
+                    page = mailService.trashList(userId, indexpage - 1, 10);
+            }
+        } else {
+            page = mailService.trashList(userId, indexpage - 1, 10);
+        }
+
+        int startPageRownum = (int) (page.getTotalElements() - page.getNumber() * 10);
+        int pageBlockSize = 10;
+        int startBlockPage = ((indexpage - 1) / pageBlockSize) * pageBlockSize + 1;
+        int endBlockPage = Math.min(startBlockPage + pageBlockSize - 1, page.getTotalPages());
+
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("plist", page.getContent());
+        model.addObject("startPageRownum", startPageRownum);
+        model.addObject("ptotal", page.getTotalElements());
+        model.addObject("ptotalPage", page.getTotalPages());
+        model.addObject("currentPage", indexpage);
+        model.addObject("keyword", keyword);
+        model.addObject("searchType", searchType);
+        model.addObject("userId", userId);
+        model.addObject("name", name);
+
+        model.setViewName("mail/mailtrash");
+        return model;
+    }
+
+
+
+    
+    // 휴지통 선택복구
+    @PostMapping("/trash/restoreSelected")
+    @ResponseBody
+    public String restoreSelected(@RequestParam("mailIds") List<Long> mailIds,HttpSession session) {
+    	
+    	 /*String userId = (String) session.getAttribute("loginUserId");
+        if (userId == null) {
+            return "redirect:/login";
+        }*/
+    	String userId ="test1"; // 임시아이디 
+    	mailService.restoreMails(mailIds, userId);
+        return "ok";
+    }
+    
+
+    // 휴지통 선택삭제
+    @PostMapping("/trash/deleteSelected")
+    @ResponseBody
+    public String deleteSelectedFromTrash(@RequestParam List<Long> mailIds,HttpSession session) {
+    	
+    	 /*String userId = (String) session.getAttribute("loginUserId");
+        if (userId == null) {
+            return "redirect:/login";
+        }*/
+    	String userId ="test1"; // 임시아이디 
+    	mailService.deleteMails(mailIds, userId);
+        return "ok";
+    }
+    
+    
+
+    // 휴지통 전체 복구 (검색 조건 포함, 페이징 없이 전체)
+    @PostMapping("/trash/restoreAll")
+    public String restoreAll(
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "") String searchType,
+        HttpSession session
+    ) {
+        // String userId = (String) session.getAttribute("loginUserId");
+        // if (userId == null) return "redirect:/login";
+        String userId = "test1"; // 임시
+
+        mailService.restoreAll(userId, keyword, searchType);
+        return "redirect:/mail/mailtrash?keyword=" + keyword + "&searchType=" + searchType;
+    }
+
+    // 휴지통 전체 삭제 (검색 조건 포함, 페이징 없이 전체)
+    @PostMapping("/trash/deleteAllPermanent")
+    public String deleteAllPermanent(
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "") String searchType,
+        HttpSession session
+    ) {
+        // String userId = (String) session.getAttribute("loginUserId");
+        // if (userId == null) return "redirect:/login";
+        String userId = "test1"; // 임시
+
+        mailService.deleteAll(userId, keyword, searchType);
+        return "redirect:/mail/mailtrash?keyword=" + keyword + "&searchType=" + searchType;
+    }
+
+
+    // 메일 작성 폼
+    @GetMapping("/mailwrite")
+    public ModelAndView mailWriteForm(HttpSession session) {
+        // 실제 배포용 (세션 로그인 체크)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용 하드코딩
+
+        MailDto draft = new MailDto();
+        draft.setSenderId(userId); // 혹시 몰라 미리 세팅
+
+        ModelAndView mv = new ModelAndView("mail/mailwrite");
+        mv.addObject("draft", draft);
+        mv.addObject("replyMode", false); 
+        return mv;
+    }
+
+    
+
+    // 메일 전송 
+ // 메일 전송 
+    @PostMapping("/send")
+    public String sendMail(@ModelAttribute MailDto mailDto, HttpSession session,
+                           @RequestParam(required = false) Boolean sendToSelf) {
+
+        // 실제 배포용 (세션 로그인 체크)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return "redirect:/login";
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용 하드코딩
+
+        mailDto.setSenderId(userId);
+        mailDto.setMailSender(userId + "@example.com"); // 발신자 이메일 무조건 세션 기반으로 설정
+
+        if (Boolean.TRUE.equals(sendToSelf)) {
+            mailDto.setReceiverId(userId);
+            mailDto.setMailReceiver(userId + "@example.com"); // 자기 자신일 경우 임시 이메일 처리
+        } else {
+            String receiverEmail = mailDto.getReceiverId(); // 사용자가 입력한 전체 이메일
+
+            mailDto.setMailReceiver(receiverEmail); // 전체 이메일 저장
+
+            if (receiverEmail != null && receiverEmail.contains("@")) {
+                String receiverId = receiverEmail.substring(0, receiverEmail.indexOf("@"));
+                mailDto.setReceiverId(receiverId); // 아이디만 따로 저장 (emp 조회용)
+            } else {
+                mailDto.setReceiverId(receiverEmail);
+            }
+        }
+
+        if (mailDto.getMailno() != null) {
+            // 기존 임시저장된 메일을 발송으로 업데이트
+            MailDto existingMail = mailService.getMailById(mailDto.getMailno());
+            if (existingMail != null && existingMail.getSenderId().equals(userId)) {
+                existingMail.setSubject(mailDto.getSubject());
+                existingMail.setContent(mailDto.getContent());
+                existingMail.setReceiverId(mailDto.getReceiverId());
+                existingMail.setMailReceiver(mailDto.getMailReceiver());
+                existingMail.setMailDraft("N"); // 임시저장 -> 발송 상태로 변경
+                existingMail.setSentAt(LocalDateTime.now());
+                // 필요시 기타 필드 업데이트
+                mailService.updateMail(existingMail);
+            } else {
+                // 권한 없거나 메일 없으면 새 메일 저장 (예외처리 등 필요)
+                mailDto.setMailDraft("N");
+                mailDto.setSentAt(LocalDateTime.now());
+                mailService.sendMail(mailDto);
+            }
+        } else {
+            // 새로 작성해서 보내기
+            mailDto.setMailDraft("N");
+            mailDto.setSentAt(LocalDateTime.now());
+            mailService.sendMail(mailDto);
+        }
+
+        return "redirect:/mail";
+    }
+
+
+
+
+
+	// 내게 쓴 메일함
+    @GetMapping("/mailtome")
+    public ModelAndView myList(
+        @RequestParam(defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "") String searchType,
+        @RequestParam(defaultValue = "1") int indexpage,
+        HttpSession session
+    ) {
+        ModelAndView model = new ModelAndView();
+
+        // 실제 세션에서 로그인한 사용자 아이디 받아야 함
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; 
+        String name = "테스트";   
+
+        Page<MailListDto> page;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            switch (searchType) {               
+                case "subject":
+                    page = mailService.searchMailToMeBySubject(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "content":
+                    page = mailService.searchMailToMeByContent(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "date":
+                    page = mailService.searchMailToMeByDate(userId, keyword, indexpage - 1, 10);
+                    break;
+                default:
+                    page = mailService.searchMailToMe(userId, keyword, indexpage - 1, 10);
+            }
+        } else {
+            page = mailService.mailToMeListWithName(userId, indexpage - 1, 10);
+        }
+
+        int startPageRownum = (int) (page.getTotalElements() - page.getNumber() * 10);
+        int pageBlockSize = 10;
+        int startBlockPage = ((indexpage - 1) / pageBlockSize) * pageBlockSize + 1;
+        int endBlockPage = Math.min(startBlockPage + pageBlockSize - 1, page.getTotalPages());
+
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("plist", page.getContent());
+        model.addObject("startPageRownum", startPageRownum);
+        model.addObject("ptotal", page.getTotalElements());
+        model.addObject("ptotalPage", page.getTotalPages());
+        model.addObject("currentPage", indexpage);
+        model.addObject("keyword", keyword);
+        model.addObject("searchType", searchType);
+        model.addObject("userId", userId);
+        model.addObject("name", name);
+
+        model.setViewName("mail/mailtome");
+        return model;
+    }
+
+
+    
+    
+    // 내게 쓴 메일함 전체삭제 (휴지통 이동)
+    @PostMapping("/mailtome/deleteAllToTrash")
+    public String deleteAllMailToMeToTrash(HttpSession session) {
+        // 세션에서 로그인된 사용자 아이디 꺼내기 (배포 시 주석 해제)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return "redirect:/login";
+        // }
+        // String userId = loginMember.getUserid();
+
+        // 테스트용 하드코딩
+        String userId = "test1";
+
+        mailService.deleteAllMailToMe(userId);
+        return "redirect:/mail/mailtome";
+    }
+
+
+	 // 메일 임시보관
+	    @PostMapping("/draft")
+	    public ResponseEntity<?> saveDraft(@RequestBody MailDto dto, HttpSession session) {
+	        // 세션에서 로그인된 사용자 아이디 꺼내기 (배포 시 주석 해제)
+	        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+	        // if (loginMember == null) {
+	        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
+	        // }
+	        // String userId = loginMember.getUserid();
+	
+	        // 테스트용 하드코딩
+	        String userId = "test1";
+	        String userEmail = "test1@example.com"; // 테스트용 이메일
+	
+	        //  보내는 사람 정보 세팅
+	        dto.setSenderId(userId);
+	        dto.setMailSender(userEmail);
+	
+	      
+		     // 클라이언트가 receiverId 비었으면 mailReceiver에서 userid 추출 시도
+		        if ((dto.getReceiverId() == null || dto.getReceiverId().trim().isEmpty()) && dto.getMailReceiver() != null) {
+		            // mailReceiver가 있으면 userid 추출
+		            String mailReceiver = dto.getMailReceiver();
+		            String userIdPart = mailReceiver.split("@")[0];
+		            dto.setReceiverId(userIdPart);
+		        } else if (dto.getReceiverId() != null && !dto.getReceiverId().trim().isEmpty()) {
+		            String receiver = dto.getReceiverId().trim();
+		            if (!receiver.contains("@")) {
+		                dto.setMailReceiver(receiver + "@example.com");
+		            } else {
+		                dto.setMailReceiver(receiver);
+		            }
+		        }
+
+	        try {
+	            mailService.saveDraft(dto, userId);
+	            return ResponseEntity.ok().build();
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+	        }
+	    }
+
+     
+    // 임시보관함 메일 리스트
+    @GetMapping("/maildrafts")
+    public ModelAndView getDraftMails(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "") String searchType,
+            @RequestParam(defaultValue = "1") int indexpage,
+            HttpSession session
+    ) {
+        ModelAndView model = new ModelAndView();
+
+        // 실제 배포 시 주석 해제
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserId();
+
+        String userId = "test1"; // 테스트용
+        String name = "테스트";
+
+        Page<MailDto> mailPage;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            switch (searchType) {
+                case "receiver":
+                    mailPage = mailService.searchDraftMailByReceiver(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "subject":
+                    mailPage = mailService.searchDraftMailBySubject(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "content":
+                    mailPage = mailService.searchDraftMailByContent(userId, keyword, indexpage - 1, 10);
+                    break;
+                case "date":
+                    mailPage = mailService.searchDraftMailByDate(userId, keyword, indexpage - 1, 10);
+                    break;
+                default:
+                    mailPage = mailService.searchDraftMail(userId, keyword, indexpage - 1, 10);
+            }
+        } else {
+            mailPage = mailService.getDraftMailsPaged(userId, indexpage - 1, 10);
+        }
+
+        // 이름 포함된 MailListDto로 변환
+        Page<MailListDto> page = mailService.convertToMailListDto(mailPage, userId);
+
+        int startPageRownum = (int) (page.getTotalElements() - page.getNumber() * 10);
+        int pageBlockSize = 10;
+        int startBlockPage = ((indexpage - 1) / pageBlockSize) * pageBlockSize + 1;
+        int endBlockPage = Math.min(startBlockPage + pageBlockSize - 1, page.getTotalPages());
+
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("plist", page.getContent());
+        model.addObject("startPageRownum", startPageRownum);
+        model.addObject("ptotal", page.getTotalElements());
+        model.addObject("ptotalPage", page.getTotalPages());
+        model.addObject("currentPage", indexpage);
+        model.addObject("keyword", keyword);
+        model.addObject("searchType", searchType);
+        model.addObject("userId", userId);
+        model.addObject("name", name);
+
+        model.setViewName("mail/maildrafts");
+        return model;
+    }
+
+    
+    
+
+    // 임시보관함 전체삭제 (휴지통 이동)
+    @PostMapping("/maildrafts/deleteAllToTrash")
+    public String deleteAllDraftsToTrash(HttpSession session) {
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return "redirect:/login";
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1";
+
+        mailService.moveAllDraftsToTrash(userId);
+        return "redirect:/mail/mailtrash";
+    }
+    
+    //임시보관함 메일쓰기
+    @GetMapping("/maildrafts/reply/{mailno}")
+    public ModelAndView editReplyDraft(@PathVariable Long mailno, HttpSession session) {
+        // 실제 배포 시 세션 처리 주석 해제
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용
+
+        MailDto draft = mailService.findByIdAndSenderId(mailno, userId);
+ 
+        if (draft == null || !"Y".equals(draft.getMailDraft())) {
+            return new ModelAndView("redirect:/maildrafts");
+        }
+
+        ModelAndView model = new ModelAndView("mail/mailwrite"); // mailwrite.jsp(.html)
+        model.addObject("draft", draft);
+        return model;
+    }
+
+ 
+   // 메일 차단 (차단할 사용자 ID를 PathVariable로 받음)
+    @PostMapping("/block/{blockedId}")
+    public String blockUser(@PathVariable String blockedId, HttpSession session) {
+        // 실제 배포 시 세션 처리 주석 해제
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return "redirect:/login";
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용 하드코딩
+
+        mailService.blockUser(userId, blockedId);
+
+        return "redirect:/mail";  // 차단 후 메일함으로 이동
+    }
+    
+    
+    
+    // 단일 차단 해제
+    @PostMapping("/unblock/{blockedId}")
+    public String unblockUser(@PathVariable String blockedId, HttpSession session) {
+        // 실제 배포 시 세션에서 로그인 사용자 ID 가져오기
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return "redirect:/login";
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용 하드코딩
+
+        mailService.unblockUser(userId, blockedId);
+
+        return "redirect:/mail/mailblock";  // 차단 목록 화면으로 리다이렉트
+    }
+
+    // 선택한 메일 발신자 기준 여러 차단 해제
+    @PostMapping("/unblock/selected")
+    public ResponseEntity<?> unblockSelected(@RequestParam List<Long> mailIds, HttpSession session) {
+        // 실제 배포 시 세션에서 로그인 사용자 ID 가져오기
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용
+
+        try {
+            for(Long mailno : mailIds) {
+                MailDto mail = mailRepository.findById(mailno).orElse(null);
+                if(mail != null) {
+                    mailService.unblockUser(userId, mail.getSenderId());
+                }
+            }
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+	 // 전체 차단 해제 
+	    @PostMapping("/unblock/all")
+	    public ResponseEntity<?> unblockAll(HttpSession session) {
+	        // 실제 배포 시 세션 처리 주석 해제
+	        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+	        // if (loginMember == null) {
+	        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	        // }
+	        // String userId = loginMember.getUserid();
+	
+	        String userId = "test1"; // 테스트용 하드코딩
+	
+	        try {
+	            mailService.unblockAll(userId);
+	            return ResponseEntity.ok().build();
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+	        }
+	    }
+	    
+	    //차단목록 전체삭제(휴지통이동)
+	  
+
+	    @PostMapping("/mailblock/deleteAllToTrash")
+	    public ResponseEntity<?> moveAllBlockedMailsToTrash(HttpSession session) {
+	        String userId = "test1"; // 실제는 세션에서 받아오기
+
+	        try {
+	            mailService.moveBlockedMailsToTrash(userId);
+	            return ResponseEntity.ok().build();
+	        } catch(Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("휴지통 이동 실패");
+	        }
+	    }
+
+    
+    // 차단 목록 화면 (차단 리스트 출력)
+    @GetMapping("/mailblock")
+    public ModelAndView getBlockedMails(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "1") int indexpage,
+            HttpSession session
+    ) {
+        ModelAndView model = new ModelAndView();
+
+        // 실제 배포 시 주석 해제
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserId();
+
+        String userId = "test1"; // 테스트용
+        String name = "테스트";
+
+        Page<MailDto> mailPage;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            mailPage = mailService.searchBlockedMails(userId, keyword, indexpage - 1, 10);
+        } else {
+            mailPage = mailService.getBlockedMailsPaged(userId, indexpage - 1, 10);
+        }
+
+        // 이름 포함된 MailListDto로 변환
+        Page<MailListDto> page = mailService.convertToMailListDto(mailPage, userId);
+
+        int startPageRownum = (int) (page.getTotalElements() - page.getNumber() * 10);
+        int pageBlockSize = 10;
+        int startBlockPage = ((indexpage - 1) / pageBlockSize) * pageBlockSize + 1;
+        int endBlockPage = Math.min(startBlockPage + pageBlockSize - 1, page.getTotalPages());
+
+        model.addObject("startBlockPage", startBlockPage);
+        model.addObject("endBlockPage", endBlockPage);
+        model.addObject("plist", page.getContent());
+        model.addObject("startPageRownum", startPageRownum);
+        model.addObject("ptotal", page.getTotalElements());
+        model.addObject("ptotalPage", page.getTotalPages());
+        model.addObject("currentPage", indexpage);
+        model.addObject("keyword", keyword);
+        model.addObject("userId", userId);
+        model.addObject("name", name);
+
+        model.setViewName("mail/mailblock");
+        return model;
+    }
+
+
+    // 회신
+    @GetMapping("/reply")
+    public ModelAndView reply(@RequestParam String receiverId,
+                              @RequestParam String subject,
+                              HttpSession session) {
+    	
+    	   // 실제 배포 시 세션 처리 주석 해제
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     return new ModelAndView("redirect:/login");
+        // }
+        // String userId = loginMember.getUserid();
+        String userId = "test1";
+
+        // 아이디 => 이메일 주소 변환 로직 (필요시)
+        String receiverEmail = receiverId + "@example.com";
+
+        if (!subject.toLowerCase().startsWith("re:")) {
+            subject = "RE: " + subject;
+        }
+
+        MailDto draft = new MailDto();
+        draft.setReceiverId(receiverEmail);  // 이메일 주소로 세팅
+        draft.setSubject(subject);
+        draft.setSenderId(userId);
+
+        ModelAndView mv = new ModelAndView("mail/mailwrite");
+        mv.addObject("draft", draft);
+        mv.addObject("replyMode", true);
+
+        return mv;
+    }
+
+    // 임시보관함 -> 메일쓰기 이동 
+    @GetMapping("/maildrafts/{mailno}")
+    public ModelAndView openDraftMailForm(@PathVariable Long mailno, HttpSession session) {
+        ModelAndView mv = new ModelAndView();
+
+        // 세션에서 로그인한 사용자 ID (배포 시 주석 해제)
+        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        // if (loginMember == null) {
+        //     mv.setViewName("redirect:/login");
+        //     return mv;
+        // }
+        // String userId = loginMember.getUserid();
+
+        String userId = "test1"; // 테스트용 하드코딩
+
+        MailDto mail = mailService.getMailById(mailno);
+
+        if (mail == null || !mail.getSenderId().equals(userId) || !"Y".equals(mail.getMailDraft())) {
+            mv.setViewName("redirect:/mail/maildrafts");
+            return mv;
+        }
+
+        mv.addObject("draft", mail);
+        mv.addObject("replyMode", false);  // 이 부분 꼭 추가해야 템플릿 오류 안남
+        mv.setViewName("mail/mailwrite"); // 메일쓰기 폼 뷰
+
+        return mv;
+    }
+
+
+   
+   
+    
+    
+}
