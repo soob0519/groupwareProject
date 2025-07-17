@@ -10,7 +10,7 @@ import com.groupware.entity.EdsmlineDto;
 
 public interface EdsmlineRepository extends JpaRepository<EdsmlineDto,Integer> {
 	
-	 // 여러 건용
+	 // 여러 건용1
     List<EdsmlineDto> findByEdsmnoIn(List<Integer> edsmnos);
 
     // 단건용 (상세조회용)

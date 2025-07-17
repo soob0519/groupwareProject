@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ViewerDto {
 
-	@Id  // 기본키 설정
+	@Id  // 기본키 설정1
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int viewno;
 	

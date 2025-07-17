@@ -36,7 +36,7 @@ public class EmpController {
 	}
 	
 	/**
-	 * 사원 등록 처리
+	 * 사원 등록 처리1
 	 */
 	@GetMapping("/empWrite")
 	public ModelAndView empWrite(HttpSession session,

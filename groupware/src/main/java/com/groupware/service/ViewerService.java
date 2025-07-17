@@ -15,6 +15,7 @@ public class ViewerService {
 		this.viewerRepository = viewerRepository;
 	
 	}
+	//1
 	public List<ViewerDto> findByEdsmno(int edsmno) {
 		return viewerRepository.findByEdsmno(edsmno);
 	}

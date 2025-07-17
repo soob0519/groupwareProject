@@ -11,7 +11,7 @@ import com.groupware.entity.CodeDto;
 
 public interface CodeRepository extends JpaRepository<CodeDto,String> {
 	
-	// 부서명으로 코드값 가져오기
+	// 부서명으로 코드값 가져오기1
 	@Query("SELECT c.ucode FROM CodeDto c WHERE c.ncode = :deptName AND c.pcode = 'B200'")
 	String findUcodeByNcode(@Param("deptName") String deptName);
 	

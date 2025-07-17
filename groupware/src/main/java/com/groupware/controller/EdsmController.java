@@ -74,7 +74,7 @@ public class EdsmController {
 
 	
 	/**
-	 * 기안작성
+	 * 기안작성1
 	 */
 	@GetMapping("/edsmWrite")
 	public ModelAndView edsmWrite(HttpSession session,

@@ -12,7 +12,7 @@ import com.groupware.entity.EdsmDto;
 
 public interface EdsmRepository extends JpaRepository<EdsmDto,Integer> {
 		
-		// 그냥 페이징
+		// 그냥 페이징1
 		@Query("SELECT e FROM EdsmDto e "
 				+ " WHERE e.isdraft = 'N' "
 				+ "   AND (e.empno = :empno "

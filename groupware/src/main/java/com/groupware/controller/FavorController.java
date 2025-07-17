@@ -34,7 +34,7 @@ public class FavorController {
         }
     }
 
-    /** 내가 즐겨찾기한 사원번호 리스트 반환 */
+    /** 내가 즐겨찾기한 사원번호 리스트 반환1 */
     @GetMapping("/list")
     public ResponseEntity<List<Integer>> getMyFavorites(HttpSession session) {
         int empno = (int) session.getAttribute("empno");       
