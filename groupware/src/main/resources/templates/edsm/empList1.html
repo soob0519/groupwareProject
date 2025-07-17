@@ -17,7 +17,7 @@
       <button id="closeOrgBtn"
               style="position:absolute; top:10px; right:10px;">✕</button>
               
-      <h3 class="tit_h3">조직도</h3>
+      <h3 class="tit_h3">결재자 선택</h3>
 
       <div class="org_tree">
 		  <ul>
@@ -26,7 +26,7 @@
 		              th:if="${code.ucode} == ${entry.key}"
 		              th:text="${code.ncode}">부서</strong>
 		      <ul>
-		        <li th:each="emp : ${entry.value}" style="position:relative;">
+		        <li th:each="emp : ${entry.value.?[state!='N']}" style="position:relative;">
 		          <a href="#"
 		             class="org-user-btn"
 		             th:attr="data-name=${emp.name},data-empno=${emp.empno}"

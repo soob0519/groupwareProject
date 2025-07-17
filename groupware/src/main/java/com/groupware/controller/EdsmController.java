@@ -129,7 +129,7 @@ public class EdsmController {
 	    
 		ModelAndView model = new ModelAndView();
 		
-		List<EmpDto> empList = empService.findAll();
+		List<EmpDto> empList = empService.findAll();		
 	    List<CodeDto> result2 = codeService.list();
 
 	    //부서별 그룹핑
