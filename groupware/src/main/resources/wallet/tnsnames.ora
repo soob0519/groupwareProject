@@ -1,0 +1,12 @@
+x1mhyvzc7ba27sap_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=gfe76a9125b5a9e_x1mhyvzc7ba27sap_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+x1mhyvzc7ba27sap_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=gfe76a9125b5a9e_x1mhyvzc7ba27sap_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+x1mhyvzc7ba27sap_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=gfe76a9125b5a9e_x1mhyvzc7ba27sap_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+x1mhyvzc7ba27sap_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=gfe76a9125b5a9e_x1mhyvzc7ba27sap_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+x1mhyvzc7ba27sap_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=gfe76a9125b5a9e_x1mhyvzc7ba27sap_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+
