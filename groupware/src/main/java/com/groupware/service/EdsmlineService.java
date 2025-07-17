@@ -25,4 +25,9 @@ public class EdsmlineService {
 		return edsmlineRepository.findByEdsmno(edsmno);
 	}
 	
+	public void deleteByEdsmno(int edsmno) {
+		edsmlineRepository.deleteByEdsmno(edsmno);  // 결재선 먼저 삭제
+		
+	}
+	
 }

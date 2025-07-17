@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ import com.groupware.service.ViewerService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/edsm")
@@ -291,7 +293,7 @@ public class EdsmController {
 							        @RequestParam(required = false) String toDate) {
 	    
 		int empno = (int) session.getAttribute("empno");
-	   
+		
 	    // 페이징 + 상태필터 + 검색(제목/기안자) 호출
 	    Pageable pageable = PageRequest.of(page, size, Sort.by("wdate").descending());
 	    Page<EdsmDto> pageResult =
@@ -327,6 +329,14 @@ public class EdsmController {
 	                   .filter(d -> status.equals(d.getEdst()))
 	                   .collect(Collectors.toList());
 	    }
+	    
+	    // 회수 상태 필터링
+	    list = list.stream()
+	               .filter(d ->
+	                   !"F60004".equals(d.getEdst())
+	                   || d.getEmpno() == empno
+	               )
+	               .collect(Collectors.toList());
 	    
 	    // Collections.reverse(list);
 	    List<Integer> edsmnos = list.stream().map(EdsmDto::getEdsmno).toList();
@@ -496,6 +506,23 @@ public class EdsmController {
 
 	    return model;
 	}
+	
+	
+	/**
+	 * 임시보관함 목록에서 삭제
+	 */	
+	@PostMapping("/deleteDraft/{edsmno}")
+	@ResponseBody
+	@Transactional
+	public ResponseEntity<String> deleteDraft(@PathVariable int edsmno) {
+		// 연관 결재선 삭제
+	    edsmlineService.deleteByEdsmno(edsmno);
+	    // 문서 삭제
+	    edsmService.deleteDraft(edsmno);
+
+	    return ResponseEntity.ok("삭제 완료");
+	}
+	
 	
 	/**
 	 * 임시보관함 상세보기

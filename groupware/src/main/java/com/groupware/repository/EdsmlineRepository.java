@@ -15,4 +15,7 @@ public interface EdsmlineRepository extends JpaRepository<EdsmlineDto,Integer> {
 
     // 단건용 (상세조회용)
     List<EdsmlineDto> findByEdsmno(int edsmno);
+    
+    // 결재선 삭제
+	void deleteByEdsmno(int edsmno);
 }

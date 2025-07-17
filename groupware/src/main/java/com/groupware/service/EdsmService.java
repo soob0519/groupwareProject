@@ -54,6 +54,11 @@ public class EdsmService {
         }
         return edsmRepository.findDocsByEmpnoAndEdst(empno, status, pageable);
     }
+
+	public void deleteDraft(int edsmno) {
+        edsmRepository.deleteById(edsmno);
+		
+	}
 	
 	
 }

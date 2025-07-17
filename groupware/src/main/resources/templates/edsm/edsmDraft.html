@@ -48,6 +48,7 @@
 	                            <th>기안자</th>
 	                            <th>결재자</th>
 	                            <th>작성날짜</th>
+	                            <th>삭제</th>
 	                        </tr>
 	                    </thead>
 	                    <tbody>
@@ -59,14 +60,40 @@
 	                            <td th:if="${approverMap[doc.edsmno] != null}" th:text="${approverMap[doc.edsmno]}">결재자</td>
 								<td th:unless="${approverMap[doc.edsmno] != null}">-</td>
 	                            <td th:text="${#dates.format(doc.wdate, 'yyyy/MM/dd')}">2025/07/08</td>
+	                            <td>
+                                	<button type="button" class="in_tbl_btn1 btn_delete"
+                                			 th:attr="data-edsmno=${doc.edsmno}">삭제</button>
+                             	</td>
 	                        </tr>
+	                        
 	                        <tr th:if="${#lists.isEmpty(list)}">
 	                            <td colspan="4" style="text-align:center;">임시보관 문서가 없습니다.</td>
 	                        </tr>
+	                        
 	                    </tbody>
 	                </table>
 	            </div>
 	        </section>
         </div>
+    	
     </body>
+		<script>
+		$(".btn_delete").click(function () {
+		    const edsmno = $(this).data("edsmno");
+	
+		    if (confirm("정말 삭제하시겠습니까?")) {
+		        $.ajax({
+		            url: "/edsm/deleteDraft/" + edsmno,
+		            type: "POST",  // ← 여기만 POST로 맞춰주세요
+		            success: function () {
+		                alert("삭제되었습니다.");
+		                location.reload();
+		            },
+		            error: function () {
+		                alert("삭제 중 오류가 발생했습니다.");
+		            }
+		        });
+		    }
+		});
+		</script>
 </html>
