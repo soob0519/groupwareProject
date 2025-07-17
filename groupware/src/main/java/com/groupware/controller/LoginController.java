@@ -57,7 +57,7 @@ public class LoginController {
 			session.setAttribute("empno",user.getEmpno());		  // 해당 사용자 사원번호 불러오기
 			session.setAttribute("userid",user.getUserid()); 	  // 해당 사용자 아이디 불러오기
 			session.setAttribute("name",user.getName());      	  // 해당 사용자 이름 불러오기	
-			session.setAttribute("dept",ucode);					  // 해당 사용자 부서 불러오기
+			session.setAttribute("dept",user.getDept());					  // 해당 사용자 부서 불러오기
 			session.setAttribute("position",user.getPosition());  // 해당 사용자 직급 불러오기
 			
 			return "ok";

@@ -44,10 +44,9 @@ public class EmpController {
 								@RequestParam(defaultValue = "0") int page,
 								@RequestParam(defaultValue = "10") int size) {
 		
-		//String dept = (String) session.getAttribute("dept");
-		String dept = "B20003";
+		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
-	        return new ModelAndView("redirect:/login");
+	        return new ModelAndView("redirect:/login/login");
 	    }		
 		
 		ModelAndView model1 = new ModelAndView();
@@ -84,10 +83,9 @@ public class EmpController {
 								@RequestParam(required = false, defaultValue = "") String keyword,
 								@RequestParam(required = false, defaultValue = "") String state) {
 		
-		//String dept = (String) session.getAttribute("dept");
-		String dept = "B20003";
+		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
-	        return new ModelAndView("redirect:/login");
+	        return new ModelAndView("redirect:/login/login");
 	    }
 		
 		Page<EmpDto> result;
@@ -153,10 +151,9 @@ public class EmpController {
 								 @RequestParam(defaultValue = "0") int page,
 								 @RequestParam(defaultValue = "10") int size) {
 		
-		//String dept = (String) session.getAttribute("dept");
-		String dept = "B20003";
+		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
-	        return new ModelAndView("redirect:/login");
+	        return new ModelAndView("redirect:/login/login");
 	    }
 		ModelAndView model = new ModelAndView();
 		EmpDto dto = empService.getFindById(empno);
