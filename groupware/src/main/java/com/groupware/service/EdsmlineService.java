@@ -26,7 +26,7 @@ public class EdsmlineService {
 	}
 	
 	public void deleteByEdsmno(int edsmno) {
-		edsmlineRepository.deleteByEdsmno(edsmno);  // 결재선 먼저 삭제
+		edsmlineRepository.deleteByEdsmno(edsmno);  // 결재선 먼저 삭제1
 		
 	}
 	

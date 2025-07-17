@@ -28,7 +28,7 @@ public class EmpService {
 	}
 	
 	/**
-	 *   등록 처리
+	 *   등록 처리1
 	 */
 	public EmpDto save(EmpDto dto) {
 		

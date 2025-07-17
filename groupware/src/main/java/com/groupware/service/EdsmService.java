@@ -23,7 +23,7 @@ public class EdsmService {
 		return edsmRepository.save(dto);
 	}
 	
-	// 임시보관함 목록
+	// 임시보관함 목록1
 	public List<EdsmDto> findDraftsByEmpno(int empno) {
 	    return edsmRepository.findDraftsByEmpno(empno);
 	}

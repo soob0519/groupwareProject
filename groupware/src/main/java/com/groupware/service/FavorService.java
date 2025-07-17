@@ -20,7 +20,7 @@ private final FavorRepository favorRepository;
 	}
 
 	/**
-	 * 내가 즐겨찾기한 fempno 리스트 반환
+	 * 내가 즐겨찾기한 fempno 리스트 반환1
 	 */
 	public List<Integer> getFavorites(int empno) {
 	    return favorRepository.findByEmpno(empno).stream()
