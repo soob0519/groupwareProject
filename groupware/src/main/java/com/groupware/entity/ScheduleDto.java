@@ -2,6 +2,8 @@ package com.groupware.entity;
 
 import java.util.Date;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,69 +16,54 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="SCHEDULE")
+@Table(name = "SCHEDULE")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ScheduleDto {
-	
-	// 일정고유번호
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int scheno;
 
-	// 일정구분
-	@Column(nullable=false)
-	private int sche_chk;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int scheno;
 
-	// 캘린더구분
-	@Column(nullable=false)
-	private int cal_chk;
+    @Column(nullable = false)
+    private int sche_chk;
 
-	// 제목
-	@Column(nullable=false, length=200)
-	private String schetitle;
+    @Column(nullable = false)
+    private int cal_chk;
 
-	// 상세내용
-	@Column(nullable=false, length=4000)
-	private String schecont;
+    @Column(nullable = false, length = 200)
+    private String schetitle;
 
-	// 시작날짜
-	@Column(nullable=false, length=20)
-	private String startdate;
-	
-	// 종료날짜
-	@Column(nullable=false, length=20)
-	private String enddate;
-	
-	// 시작시간
-	@Column(length=20)
-	private String starttime;
+    @Column(length = 4000)
+    private String schecont;
 
-	// 종료시간
-	@Column(length=20)
-	private String endtime;
+    @Column(length = 20)
+    private String startdate;
 
-	// 등록일
-	@Column
-	private Date rdate;
-	
-	// 작성자
-	@Column(nullable=false)
-	private int wrtnm;
-	
-	// 참여자
-	@Column()
-	private int participant;
-	
-	// 공유자
-	@Column()
-	private int sharer;
-	
-	
-}
-							
+    @Column(length = 20)
+    private String enddate;
+
+    @Column(length = 20)
+    private String starttime;
+
+    @Column(length = 20)
+    private String endtime;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private Date rdate;
+
+    @Column(nullable = false)
+    private String wrtnm;
+
+    @Column
+    private Integer participant;
+
+    @Column
+    private Integer sharer;
+}							
 							
 							
 							

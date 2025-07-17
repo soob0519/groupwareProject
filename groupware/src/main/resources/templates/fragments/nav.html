@@ -16,10 +16,10 @@
                     <span class="arr_btm"></span>
                 </a>
                 <ul class="sub">
-                    <li><a th:href="@{/edsm/edsmWrite}">기안</a></li>
-                    <li><a th:href="@{/edsm/edsmDraft}">임시보관함</a></li>
-                    <li><a th:href="@{/edsm?status=F60002}">결재진행중</a></li>
-                    <li><a th:href="@{/edsm}">결재목록</a></li>
+                    <li><a href="#">기안</a></li>
+                    <li><a href="#">임시보관함</a></li>
+                    <li><a href="#">결재진행중</a></li>
+                    <li><a href="#">결재목록</a></li>
                 </ul>
             </li>
             <li>
@@ -64,7 +64,10 @@
                     <span class="arr_btm"></span>
                 </a>
                 <ul class="sub">
-                    <li><a th:href="@{/emp/empList}">사원관리</a></li>
+                    <li><a th:href="@{/emp/empWrite}">WRITE</a></li>
+                    <li><a th:href="@{/emp/empList}">LIST</a></li>
+                    <li><a href="#">사원관리</a></li>
+                    <li><a href="#">조직도관리</a></li>
                     <li><a href="#">공지사항관리</a></li>
                     <li><a href="#">근태관리</a></li>
                 </ul>

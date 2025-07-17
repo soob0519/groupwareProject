@@ -1,0 +1,228 @@
+<!-- scheduleWrite -->
+        <div class="modal_schedule_write">
+        	<div class="schedule_wrap" id="modal_1">
+                <div class="modal_header flex_end">
+                    <span class="modal_close_btn close_modal">✖</span>
+                </div>
+                <div class="modal_contents">
+                    <h3 class="tit_h3">일정 등록</h3>
+                    <form id="frm" name="frm">
+                    	
+                    	<ul>
+	                        <li class="form_list">
+	                            <label for="schetitle">제목</label>
+	                            <input type="text" id="schetitle" name="schetitle" required class="right">
+	                        </li>
+
+	                        <li class="form_list">
+	                            <label for="sche_chk">구분</label>
+	                            <select id="sche_chk" name="sche_chk" required>
+	                                <option value="">-- 선택 --</option>
+	                                <option value="1">휴가</option>
+	                                <option value="2">외근</option>
+	                                <option value="3">휴가</option>
+	                            </select>
+	                        </li>
+	        				
+	                        <li class="form_list">
+	                            <label for="startdate">시작일</label>
+	                            <input type="date" id="startdate" name="startdate" required class="right">
+	                        </li>
+	        
+	                        <li class="form_list">
+	                            <label for="enddate">종료일</label>
+	                            <input type="date" id="enddate" name="enddate" class="right">
+	                        </li>
+	                        <li class="form_list">
+	                            <label for="starttime">시작시간</label>
+	                            <input type="time" id="starttime" name="starttime" class="right">
+	                        </li>
+	        
+	                        <li class="form_list">
+	                            <label for="endtime">종료시간</label>
+	                            <input type="time" id="endtime" name="endtime" class="right">
+	                        </li>
+	        				 
+	                        <li class="form_list">
+	                            <label for="wrtnm">작성자</label>
+	                            <input type="text" id="wrtnm" name="wrtnm" placeholder="작성자 성함을 입력하세요." class="right">
+	                        </li>
+
+	                        <li class="form_list">
+	                            <label for="schecont">설명</label>
+	                            <textarea id="schecont" name="schecont"></textarea>
+	                        </li>
+
+	                        <li class="form_list">
+	                            <label for="cal_chk">공개범위</label>
+	                            <select id="cal_chk" name="cal_chk">
+	                                <option value="1">개인</option>
+	                                <option value="2">전체공유</option>
+	                                <option value="3">팀공유</option>
+	                            </select>
+	                        </li>
+
+        				</ul>
+                        <div class="btn_frame2">
+                            <button type="reset" class="button2">취소</button>
+                            <button type="button" class="button1" id="btn_submit">등록</button>
+                        </div>
+                    </form>
+                </div>
+	        </div>
+        </div>
+
+
+
+<!-- scheduleDetail -->
+        <div class="modal_sd_detail">
+			<div class="schedule_wrap" id="modal_2" >
+                <div class="modal_header flex_end">
+                    <span class="modal_close_btn close_modal">✖</span>
+                </div>
+
+                <div class="modal_contents">
+                    <h3 class="tit_h3">일정 상세보기</h3>
+                    <ul>
+                        <li class="form_list">
+                            <label>제목</label>
+                            <div class="value">test1</div>
+                        </li>
+                        
+                        <li class="form_list">
+                            <label>구분</label>
+                            <div class="value">휴가</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>시작일</label>
+                            <div class="value">2025-07-16</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>종료일</label>
+                            <div class="value">2025-07-17</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>시작시간</label>
+                            <div class="value">10:00</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>종료시간</label>
+                            <div class="value">11:30</div>
+                        </li>
+                        
+                        <li class="form_list">
+                            <label>작성자</label>
+                            <div class="value">홍길동</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>설명</label>
+                            <div class="value">병결 / 외근 / 회의 등..</div>
+                        </li>
+                
+                        <li class="form_list">
+                            <label>공개범위</label>
+                            <div class="value">팀 공개</div>
+                        </li>
+                    </ul>
+                
+                    <div class="btn_frame2">
+                        <button type="button" class="button1">수정하기</button>
+                    </div>
+                </div>
+			</div>
+        </div>
+
+
+
+<!-- scheduleModify -->
+<div class="modal_schedule_modify">
+  <div class="schedule_wrap" id="modal_3">
+    <div class="modal_header flex_end">
+      <span class="modal_close_btn close_modal">✖</span>
+    </div>
+
+    <div class="modal_contents">
+      <h3 class="tit_h3">일정 수정</h3>
+      <form id="frm_modify" name="frm_modify">
+        <ul>
+          <li class="form_list">
+            <label for="edit_schetitle">제목</label>
+            <input type="text" id="edit_schetitle" name="schetitle" class="right" required>
+          </li>
+
+          <li class="form_list">
+            <label for="edit_sche_chk">구분</label>
+            <select id="edit_sche_chk" name="sche_chk" required>
+              <option value="">-- 선택 --</option>
+              <option value="1">휴가</option>
+              <option value="2">외근</option>
+              <option value="3">출장</option>
+            </select>
+          </li>
+
+          <li class="form_list">
+            <label for="edit_startdate">시작일</label>
+            <input type="date" id="edit_startdate" name="startdate" required class="right">
+          </li>
+
+          <li class="form_list">
+            <label for="edit_enddate">종료일</label>
+            <input type="date" id="edit_enddate" name="enddate" class="right">
+          </li>
+
+          <li class="form_list">
+            <label for="edit_starttime">시작시간</label>
+            <input type="time" id="edit_starttime" name="starttime" class="right">
+          </li>
+
+          <li class="form_list">
+            <label for="edit_endtime">종료시간</label>
+            <input type="time" id="edit_endtime" name="endtime" class="right">
+          </li>
+
+          <li class="form_list">
+            <label for="edit_wrtnm">작성자</label>
+            <input type="text" id="edit_wrtnm" name="wrtnm" class="right">
+          </li>
+
+          <li class="form_list">
+            <label for="edit_schecont">설명</label>
+            <textarea id="edit_schecont" name="schecont"></textarea>
+          </li>
+
+          <li class="form_list">
+            <label for="edit_cal_chk">공개범위</label>
+            <select id="edit_cal_chk" name="cal_chk">
+              <option value="1">개인</option>
+              <option value="2">전체공유</option>
+              <option value="3">팀공유</option>
+            </select>
+          </li>
+        </ul>
+
+        <div class="btn_frame2">
+          <button type="button" class="button2 close_modal">취소</button>
+          <button type="button" class="button1" id="btn_update">수정</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
