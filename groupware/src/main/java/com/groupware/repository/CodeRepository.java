@@ -1,13 +1,22 @@
 package com.groupware.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-import com.Pro.entity.CodeDto;
-
-
+import com.groupware.entity.CodeDto;
 
 
 public interface CodeRepository extends JpaRepository<CodeDto,String> {
-
-
+	
+	// 부서명으로 코드값 가져오기
+	@Query("SELECT c.ucode FROM CodeDto c WHERE c.ncode = :deptName AND c.pcode = 'B200'")
+	String findUcodeByNcode(@Param("deptName") String deptName);
+	
+	// 부서 목록 가져오기
+	@Query("SELECT c FROM CodeDto c WHERE c.pcode = 'B200' ORDER BY c.dorder ASC")
+	List<CodeDto> findAllActiveDepartments();
+	
 }

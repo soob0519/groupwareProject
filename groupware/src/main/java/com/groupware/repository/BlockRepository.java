@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.Pro.entity.BlockDto;
+import com.groupware.entity.BlockDto;
 
 import jakarta.transaction.Transactional;
 

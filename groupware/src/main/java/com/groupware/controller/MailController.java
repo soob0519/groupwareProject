@@ -2,15 +2,15 @@
 package com.groupware.controller;
 
 
-import com.Pro.entity.BlockDto;
-import com.Pro.entity.CodeDto;
-import com.Pro.entity.EmpDto;
-import com.Pro.entity.MailDto;
-import com.Pro.repository.BlockRepository;
-import com.Pro.repository.CodeRepository;
-import com.Pro.repository.EmpRepository;
-import com.Pro.repository.MailRepository;
-import com.Pro.service.MailService;
+import com.groupware.entity.BlockDto;
+import com.groupware.entity.CodeDto;
+import com.groupware.entity.EmpDto;
+import com.groupware.entity.MailDto;
+import com.groupware.repository.BlockRepository;
+import com.groupware.repository.CodeRepository;
+import com.groupware.repository.EmpRepository;
+import com.groupware.repository.MailRepository;
+import com.groupware.service.MailService;
 import com.groupware.dto.MailListDto;
 
 import ch.qos.logback.core.model.Model;

@@ -12,8 +12,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.Pro.dto.MailListDto;
-import com.Pro.entity.MailDto;
+import com.groupware.dto.MailListDto;
+import com.groupware.entity.MailDto;
 
 import jakarta.transaction.Transactional;
 
