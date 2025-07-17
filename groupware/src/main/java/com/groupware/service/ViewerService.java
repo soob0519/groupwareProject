@@ -19,4 +19,12 @@ public class ViewerService {
 		return viewerRepository.findByEdsmno(edsmno);
 	}
 	
+	public ViewerDto save(ViewerDto dto) {
+        return viewerRepository.save(dto);
+    }
+	
+	public List<ViewerDto> findByEmpno(int empno) {
+        return viewerRepository.findByEmpno(empno);
+    }
+	
 }

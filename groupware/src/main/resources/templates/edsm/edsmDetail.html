@@ -59,13 +59,27 @@
 		                        </td>
 		                    </tr>
 							<tr class="form-row">
-							    <th>공유자</th>
+    							<th>공유자</th>
 							    <td>
-							        <span th:each="v : ${viewerList}" th:if="${v.viewtype == 'S'}">
-							            <span th:text="${empNameMap[v.empno]}">공유자</span>&nbsp;
-							        </span>
+							      <!-- 공유자 목록이 있을 때 -->
+							      <ul
+							        th:if="${viewerList != null and !#lists.isEmpty(viewerList)}"
+							        style="display:flex; gap:8px; padding:0; margin:0; list-style:none;"
+							      >
+							        <li th:each="viewer : ${viewerList}">
+							          <span class="viewer-tag"
+							                th:text="${empNameMap[viewer.empno]}">
+							            <!-- 이름 자리 -->
+							          </span>
+							        </li>
+							      </ul>
+							
+							      <!-- 공유자 없을 때 -->
+							      <span th:if="${viewerList == null or #lists.isEmpty(viewerList)}">
+							        없음
+							      </span>
 							    </td>
-							</tr>
+							  </tr>
 		                    <tr class="form-row">
 		                        <th>첨부문서</th>
 		                        <td><input type="text" th:value="${edsm.attachment}" readonly /></td>

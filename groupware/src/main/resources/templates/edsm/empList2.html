@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <!-- 공유자 전용 뷰어 모달 (empList2) -->
+    <div th:fragment="viewerModal">
+      <div class="viewer-modal"
+	       style="display:none;
+	              position:fixed;
+	              top:0; left:0; right:0; bottom:0;
+	              background:rgba(0,0,0,0.5);
+	              justify-content:center;
+	              align-items:center;
+	              z-index:9999;">
+	    <div style="background:white;
+	                width:600px;
+	                max-height:80vh;
+	                overflow:auto;
+	                padding:20px;
+	                position:relative;">
+          <!-- 닫기 버튼 -->
+          <button class="btn-close-viewer"
+                  style="position:absolute; top:10px; right:10px;">✕</button>
+
+          <h3 class="tit_h3">공유자 선택</h3>
+
+          <!-- 사원 목록: approver modal과 동일한 data-attributes 적용 -->
+          <ul>
+            <li th:each="emp : ${list1}" style="margin-bottom:8px;">
+              <a href="#"
+                 class="org-user-btn"
+                 th:attr="data-name=${emp.name},data-empno=${emp.empno}"
+                 th:text="${emp.name}">이름</a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

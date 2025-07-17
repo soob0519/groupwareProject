@@ -181,8 +181,15 @@ public class EmpController {
 	 * 사원 조직도
 	 */
 	@GetMapping("/empOrgani")
-	public ModelAndView empOrgani(@RequestParam(defaultValue = "0") int page,
+	public ModelAndView empOrgani(HttpSession session,
+								@RequestParam(defaultValue = "0") int page,
 								@RequestParam(defaultValue = "10") int size) {
+		int empno = (int)session.getAttribute("empno");
+		EmpDto emp = empService.findById(empno);
+	    if (emp == null || "N".equals(emp.getState())) {
+	        session.invalidate();
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		
 		ModelAndView model = new ModelAndView();
 		
@@ -204,8 +211,7 @@ public class EmpController {
 	 * 사원 상세정보
 	 */
 	@GetMapping("/detail/{empno}")
-	public ModelAndView detail(@PathVariable Integer empno) {
-		
+	public ModelAndView detail(HttpSession session,@PathVariable Integer empno) {
 		
 		ModelAndView model = new ModelAndView();
 		EmpDto dto = empService.getFindById(empno);

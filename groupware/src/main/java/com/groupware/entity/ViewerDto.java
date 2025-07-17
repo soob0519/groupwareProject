@@ -32,13 +32,4 @@ public class ViewerDto {
 	@Column(nullable=false)
 	private int empno;
 	
-	// 부서 코드테이블
-	@Column(length=200,nullable=false)
-	private String dept;
-	
-	// 수신자 공유자 구분 코드테이블
-	@Column(length=200,nullable=false)
-	private String viewtype;
-
-	
 }

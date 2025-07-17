@@ -139,6 +139,10 @@ public class EmpService {
 		return empRepository.findAll();
 	}
 
+	public EmpDto findById(int empno) {
+		return empRepository.findById(empno).orElse(null);
+	}
+
 
 	
 }

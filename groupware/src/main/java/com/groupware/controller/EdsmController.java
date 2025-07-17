@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -156,11 +157,52 @@ public class EdsmController {
 	    return model;
 	}
 	
+	/**
+	 * 사원 조직도 공유자 선택창
+	 */
+	@GetMapping("/empOrgani2")
+	public ModelAndView empOrgani2(HttpSession session,
+									@RequestParam(defaultValue = "0") int page,
+									@RequestParam(defaultValue = "10") int size) {
+		
+		int empno = (int)session.getAttribute("empno");
+	    
+		ModelAndView model = new ModelAndView();
+		
+		List<EmpDto> empList = empService.findAll();
+	    List<CodeDto> result2 = codeService.list();
+
+	    //부서별 그룹핑
+	    Map<String, List<EmpDto>> deptMap = empList.stream()
+	        .collect(Collectors.groupingBy(EmpDto::getDept));
+	    
+	    // 즐겨찾기
+	    List<Integer> favList = favorService.findFavoritesByEmpno(empno);
+	    
+	    if(favList == null) {
+	        favList = new ArrayList<>();
+	    }
+	    
+	    //직급별 정리
+	    deptMap.values().forEach(list ->
+	        list.sort(Comparator.comparing(EmpDto::getPosition))
+	    );
+
+	    model.addObject("deptMap", deptMap);
+	    model.addObject("list", empList);
+	    model.addObject("list2", result2);
+	    model.addObject("favList", favList);
+	    model.setViewName("/edsm/empList2");
+
+	    return model;
+	}
+	
+	
 	// 결재자 즐겨찾기
 	@GetMapping("/favorList")
 	public ModelAndView favorList(HttpSession session) {
 		
-	    int empno = (int) session.getAttribute("empno");
+		int empno = (int)session.getAttribute("empno");
 	    
 	    List<EmpDto> empList = empService.findAll();
 	    List<CodeDto> codeList = codeService.list();
@@ -190,7 +232,9 @@ public class EdsmController {
 	 */
 	@PostMapping("/edsmSave")
 	@ResponseBody
-	public String submitDocument(EdsmDto dto, HttpSession session) {
+	@Transactional
+	public String submitDocument(EdsmDto dto, HttpSession session,
+								@RequestParam(value = "viewerIds", required = false) String viewerIds) {
 	    
 		int empno = (int) session.getAttribute("empno");
 
@@ -229,6 +273,21 @@ public class EdsmController {
 	        edsmlineService.save(line);
 	        order++;
 	    }
+	    
+		 //  공유자(뷰어) 라인
+	    if (StringUtils.hasText(viewerIds)) {
+	        String[] viewers = viewerIds.split(",");
+	        for (String v : viewers) {
+	            int viewerEmpno = Integer.parseInt(v.trim());
+	            ViewerDto viewer = ViewerDto.builder()
+	                    .edsmno(saved.getEdsmno())
+	                    .empno(viewerEmpno)
+	                    .build();
+	            viewerService.save(viewer);
+	        }
+	    }
+
+	    
 
 	    return "1";
 	}
@@ -238,7 +297,8 @@ public class EdsmController {
 	 */
 	@PostMapping("/edsmIsdraft")
 	@ResponseBody
-	public String isdraftDocument(EdsmDto dto, HttpSession session) {
+	public String isdraftDocument(EdsmDto dto, HttpSession session,
+									@RequestParam(value = "viewerIds", required = false) String viewerIds) {
 		int empno = (int) session.getAttribute("empno");
 
 	    dto.setEmpno(empno);
@@ -275,7 +335,20 @@ public class EdsmController {
 	        edsmlineService.save(line);
 	        order++;
 	    }
-
+	    
+	    //  공유자(뷰어) 라인
+	    if (StringUtils.hasText(viewerIds)) {
+	        String[] viewers = viewerIds.split(",");
+	        for (String v : viewers) {
+	            int viewerEmpno = Integer.parseInt(v.trim());
+	            ViewerDto viewer = ViewerDto.builder()
+	                    .edsmno(saved.getEdsmno())
+	                    .empno(viewerEmpno)
+	                    .build();
+	            viewerService.save(viewer);
+	        }
+	    }	    
+	    
 	    return "1";
 	}
 	
@@ -292,7 +365,12 @@ public class EdsmController {
 							        @RequestParam(required = false) String fromDate,
 							        @RequestParam(required = false) String toDate) {
 	    
-		int empno = (int) session.getAttribute("empno");
+		int empno = (int)session.getAttribute("empno");
+		EmpDto emp = empService.findById(empno);
+	    if (emp == null || "N".equals(emp.getState())) {
+	        session.invalidate();
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		
 	    // 페이징 + 상태필터 + 검색(제목/기안자) 호출
 	    Pageable pageable = PageRequest.of(page, size, Sort.by("wdate").descending());
@@ -339,8 +417,30 @@ public class EdsmController {
 	               .collect(Collectors.toList());
 	    
 	    // Collections.reverse(list);
-	    List<Integer> edsmnos = list.stream().map(EdsmDto::getEdsmno).toList();
+	    
+	    
+	 // --- 공유자(viewer) 문서 중 '승인 완료(F60002)' 인 것만 추가 ---
+	    List<ViewerDto> viewers = viewerService.findByEmpno(empno);
+	    for (ViewerDto v : viewers) {
+	        boolean already = list.stream()
+	                              .anyMatch(d -> d.getEdsmno() == v.getEdsmno());
+	        if (!already) {
+	            EdsmDto doc = edsmService.findById(v.getEdsmno());
+	            if ("F60003".equals(doc.getEdst())) {
+	                list.add(doc);
+	            }
+	        }
+	    }
+	    // 추가된 문서들도 포함해서, wdate 역순으로 정렬
+	    list.sort(Comparator.comparing(EdsmDto::getWdate).reversed());
+
+	    // 스트림으로 edsmno 리스트 만들기
+	    List<Integer> edsmnos = list.stream()
+	                                 .map(EdsmDto::getEdsmno)
+	                                 .collect(Collectors.toList()); // Java 8~11
+	    // edsmno 로 결재선 조회
 	    List<EdsmlineDto> lines = edsmlineService.findByEdsmnos(edsmnos);
+	       
 	    List<EmpDto> empList = empService.findAll();
 	    List<CodeDto> codeList = codeService.list();
 	    
@@ -415,6 +515,11 @@ public class EdsmController {
 	public ModelAndView viewDetail(@PathVariable int edsmno, HttpSession session) {
 		
 		int empno = (int) session.getAttribute("empno");
+		EmpDto emp = empService.findById(empno);
+	    if (emp == null || "N".equals(emp.getState())) {
+	        session.invalidate();
+	        return new ModelAndView("redirect:/login/login");
+	    }
 
 	    EdsmDto edsm = edsmService.findById(edsmno);
 	    List<EdsmlineDto> lines = edsmlineService.findByEdsmno(edsmno);
@@ -462,6 +567,11 @@ public class EdsmController {
 										@RequestParam(required = false) String keyword) {
 		
 		int empno = (int) session.getAttribute("empno");
+		EmpDto emp = empService.findById(empno);
+	    if (emp == null || "N".equals(emp.getState())) {
+	        session.invalidate();
+	        return new ModelAndView("redirect:/login/login");
+	    }
 
 	    List<EdsmDto> list = edsmService.findDraftsByEmpno(empno);
 		if (keyword != null && !keyword.isBlank()) {
@@ -530,6 +640,11 @@ public class EdsmController {
 	@GetMapping("/edsmDraftDetail/{edsmno}")
 	public ModelAndView viewDraftDetail(@PathVariable int edsmno,HttpSession session) {
 		int empno = (int) session.getAttribute("empno");
+		EmpDto emp1 = empService.findById(empno);
+	    if (emp1 == null || "N".equals(emp1.getState())) {
+	        session.invalidate();
+	        return new ModelAndView("redirect:/login/login");
+	    }
 	    
 	    ModelAndView model = new ModelAndView("edsm/edsmDraftDetail");
 	    
@@ -537,7 +652,8 @@ public class EdsmController {
 	    List<EdsmlineDto> lines = edsmlineService.findByEdsmno(edsmno);
 	    List<EmpDto> empList = empService.findAll();
 	    List<CodeDto> codeList = codeService.list();
-
+	    List<ViewerDto> viewerList = viewerService.findByEdsmno(edsmno);
+	    
 	    Map<Integer, String> empNameMap = empList.stream()
 	        .collect(Collectors.toMap(EmpDto::getEmpno, EmpDto::getName));
 
@@ -562,7 +678,9 @@ public class EdsmController {
 	    model.addObject("empNameMap", empNameMap);
 	    model.addObject("codeList", codeList);
 	    model.addObject("loginEmpno", empno);
-
+	    
+	    model.addObject("viewerList", viewerList);
+	    model.addObject("list1", empList);
 	    // 모달
 	    model.addObject("deptMap", deptMap);
 	    model.addObject("list2", codeList);
