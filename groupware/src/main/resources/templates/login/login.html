@@ -26,10 +26,9 @@
 				success  : function(data) { // data변수 : 실제 받은 데이터 값
 					if(data == "ok") { 		// data변수 값이 "ok" 라면 저장 성공으로 판단함
 						alert("로그인성공!");
-						// location = "/mainpage/index";
-						location = "/emp/empOrgani";
+						location = "/index";
 					}
-					else alert("아이디와 로그인이 일치하지 않습니다.");
+					else 			   alert("아이디와 로그인이 일치하지 않습니다.");
 				},
 				error	 : function() {alert("오류발생!");}
 			});
