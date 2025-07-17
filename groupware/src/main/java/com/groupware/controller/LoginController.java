@@ -8,11 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-
 import com.groupware.entity.EmpDto;
 import com.groupware.service.LoginService;
-
-
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -42,29 +39,27 @@ public class LoginController {
 	@ResponseBody
 	public String login(@RequestParam String userid,@RequestParam String pass,HttpSession session) {
 		
-		String msg = "";
-		
-		// 사용자조회
-		EmpDto user = loginService.login(userid,pass);
-		
-		// 로그인 성공 -> 세션 저장
-		if(user != null) {	
-			
-			// 부서명으로 code테이블 ucode에 조회
-			String ucode = loginService.getDeptCode(user.getDept());
-			
-			// 로그인된 사용자정보불러오기
-			session.setAttribute("empno",user.getEmpno());		  // 해당 사용자 사원번호 불러오기
-			session.setAttribute("userid",user.getUserid()); 	  // 해당 사용자 아이디 불러오기
-			session.setAttribute("name",user.getName());      	  // 해당 사용자 이름 불러오기	
-			session.setAttribute("dept",user.getDept());					  // 해당 사용자 부서 불러오기
-			session.setAttribute("position",user.getPosition());  // 해당 사용자 직급 불러오기
-			
-			return "ok";
-		}
-		
-		// 로그인 실패할 시
-		else return "fail";
+		// 사용자 조회
+	    EmpDto user = loginService.login(userid, pass);
+	    
+	    // 로그인 실패한 경우 (아이디나 비밀번호 틀림 또는 일치하지 않음)
+	    if (user == null) return "3";
+	    
+	    // 해당 사용자가 퇴사 상태일 경우
+	    else if ("N".equals(user.getState())) return "2";
+	    
+	    // 로그인 성공
+	    else { 
+	    	
+		    // 로그인 성공 -> 세션 저장
+		    session.setAttribute("empno",   user.getEmpno());     // 해당 사용자 사원번호 불러오기
+		    session.setAttribute("userid",  user.getUserid());    // 해당 사용자 아이디 불러오기
+		    session.setAttribute("name",    user.getName());      // 해당 사용자 이름 불러오기
+		    session.setAttribute("dept",    user.getDept());      // 해당 사용자 부서 불러오기
+		    session.setAttribute("position",user.getPosition());  // 해당 사용자 직급 불러오기
+	    }
+	    
+	    return "1"; 
 	}
 	
 	// 로그아웃 처리

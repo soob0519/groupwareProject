@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 import com.groupware.entity.EmpDto;
-
 public class LoginInterceptor implements HandlerInterceptor {
 
 	@Override
@@ -34,7 +33,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
             // 인사팀장이 아닐 경우 응답 메시지 출력
         	// B20003 : 인사부 U코드
-        	if (!("B20003".equals(dept) && "팀장".equals(position))) { 
+        	if (!("B20003".equals(dept) && "A10001".equals(position))) { 
                 
             	// uri 화면 종류 (관리자가 아닌 사용자 들어올시 백지처리)
             	response.setContentType("text/html; charset=UTF-8");

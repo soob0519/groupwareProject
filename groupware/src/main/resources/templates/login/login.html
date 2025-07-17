@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>최종 프로젝트</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <script src="https://kit.fontawesome.com/a7926a1c4d.js" crossorigin="anonymous"></script>
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="/js/script.js"></script>
@@ -24,11 +24,12 @@
 				data     : form,   //전송데이터
 				dataType : "text", //받는 데이터 타입
 				success  : function(data) { // data변수 : 실제 받은 데이터 값
-					if(data == "ok") { 		// data변수 값이 "ok" 라면 저장 성공으로 판단함
+					if(data == "1") { 		// data변수 값이 "ok" 라면 저장 성공으로 판단함
 						alert("로그인성공!");
 						location = "/index";
 					}
-					else 			   alert("아이디와 로그인이 일치하지 않습니다.");
+          else if (data == "2") alert("퇴사한 사원은 로그인 할 수 없습니다.");
+					else 			            alert("아이디와 로그인이 일치하지 않습니다.");
 				},
 				error	 : function() {alert("오류발생!");}
 			});
