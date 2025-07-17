@@ -21,23 +21,39 @@ $(document).ready(function () {
   });
   
   
-  // 모달 열기
-  $('.date_click').click(function () {
+  // 일정 등록 모달 열기
+    $('.date_click').click(function (e) {
+      e.preventDefault();
+      e.stopPropagation(); // 이벤트 전파 차단
+
+      // 다른 모달 닫기
+      $('.modal_schedule_write, .modal_sd_detail').hide();
+
+      // 현재 모달 열기
       $('.modal_schedule_write').show();
       $('#modal_1').css({
-          top: '80px',
-          left: '50%',
-          transform: 'translateX(-50%)'
+        top: '80px',
+        left: '50%',
+        transform: 'translateX(-50%)'
       });
-  });
-  $('#testbtn').click(function () {
+    });
+
+    // 일정 상세 모달 열기
+    $('.scheList').click(function (e) {
+      e.preventDefault();
+      e.stopPropagation(); // 이벤트 전파 차단
+
+      // 다른 모달 닫기
+      $('.modal_schedule_write, .modal_sd_detail').hide();
+
+      // 현재 모달 열기
       $('.modal_sd_detail').show();
       $('#modal_2').css({
-          top: '80px',
-          left: '50%',
-          transform: 'translateX(-50%)'
+        top: '80px',
+        left: '50%',
+        transform: 'translateX(-50%)'
       });
-  });
+    });
 
 
   // 모달 닫기

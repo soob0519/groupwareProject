@@ -1,30 +1,37 @@
 package com.groupware.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.groupware.entity.ScheduleDto;
 import com.groupware.service.ScheduleService;
 
-@RestController
-@RequestMapping("/schedule")
-public class ScheduleController {
+@Controller
+@RequestMapping("/index")
+public class MainpageController {
 	
 	public final ScheduleService scheduleService;
-	public ScheduleController(ScheduleService scheduleService) {
+	public MainpageController(ScheduleService scheduleService) {
 		this.scheduleService = scheduleService;
 	}
 	
 	
 	/**
-	 * 일정등록화면
+	 * 메인화면 출력
 	 */
-	@GetMapping("/list")
+	@GetMapping
 	public ModelAndView index(String year, String month) {
 		
 		ModelAndView model = new ModelAndView();
@@ -56,7 +63,7 @@ public class ScheduleController {
 		
 		List<Map> list = scheduleService.calList(yy+"-"+(mm+1));
 		
-		model.setViewName("/schedule/calendar");
+		model.setViewName("/index/index");
 		
 		model.addObject("menu","schedule");
 		model.addObject("list",list);
@@ -73,7 +80,38 @@ public class ScheduleController {
 	}
 	
 	
+	/**
+	 * 일정 저장
+	 */
+	@PostMapping("/scheSave")
+	@ResponseBody
+	public String scheSave(ScheduleDto dto) {
+	    try {
+	        ScheduleDto dto1 = scheduleService.save(dto);
+	        if(dto1 == null) {
+	            return "2"; // 저장 실패
+	        }
+	        return "1"; // 저장 성공
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 서버 로그 확인용
+	        return "0"; // 예외 발생
+	    }
+	}
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

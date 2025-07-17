@@ -6,12 +6,12 @@
         <link rel="stylesheet" href="/css/style.css">
         <link rel="stylesheet" href="/css/jquery-ui.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
-		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
         <script src="/js/script.js"></script>
         
         <script>
 	    	$(document).ready(function(){
-	    		$("#btn_submit").click(function(){
+	    		$("#btn_submit").click(function(e){
+	    			e.preventDefault();
 	    			if($("#schetitle").val() == "") {
 	    				alert("제목을 입력하세요.");
 	    				$("#schetitle").focus();
@@ -20,21 +20,23 @@
 	    			
 	    			let form = $("#frm").serialize();
 	    			$.ajax({
-	    				type:"post",
-	    				url:"/index/scheSave",
-	    				data:form,
-	    				dataType:"text",
-	    				success:function(data) {
-	    					if(data == "1") {
-	    						alert("저장완료");
-	    						location="/index";
-	    					} else {
-	    						alert("저장실패");
-	    					}
-	    				},
-	    				error:function() {
-	    					alert("전송실패");
-	    				}
+	    			    type: "post",
+	    			    url: "/index/scheSave",
+	    			    data: $("#frm").serialize(),
+	    			    dataType: "text",
+	    			    success: function(data) {
+	    			        if (data === "1") {
+	    			            alert("저장완료");
+	    			            location.reload();
+	    			        } else if (data === "2") {
+	    			            alert("저장실패: 데이터 저장 실패");
+	    			        } else {
+	    			            alert("저장실패: 서버 오류 발생");
+	    			        }
+	    			    },
+	    			    error: function(xhr, status, error) {
+	    			        console.error("전송실패:", status, error);
+	    			    }
 	    			});
 	    		});
 	    		
@@ -64,6 +66,17 @@
         			}
         		}
         		location = "/index?year="+send_yy+"&month="+send_mm;
+        	}
+        	
+        	
+        	function fn_action(yy, mm, dd) {
+        		const month = String(mm+1).padStart(2, '0');
+        		const day = String(dd).padStart(2, '0');
+        		
+        		const selectedDate = `${yy}-${month}-${day}`;
+        		
+        		document.getElementById("startdate").value = selectedDate;
+        		
         	}
         	
         </script>
@@ -124,9 +137,7 @@
                                     	</th:block>
                                     	
                                     	<!-- 반복문(날짜출력) -->
-					        			<td style="cursor: pointer;"
-					        				th:each="dd:${#numbers.sequence(1,lastDay)}"
-					        				th:with="bg='pink'"
+					        			<td th:each="dd:${#numbers.sequence(1,lastDay)}"
 					        				th:onClick="|fn_action(${yy},${mm},${dd})|"
 					        				class="date_click">
 					        			
@@ -153,7 +164,22 @@
 						        					<span th:text="${dd}"></span>
 						        				</th:block>
 					        				</th:block>
+					        				<!-- 예약정보 목록 -->
+				
+											<div style="font-size:10px;text-align:left;height:60px;">
+												<!-- 예약일 포함하여 예약정보 목록 -->
+												<th:block th:each="result : ${list}"
+														  th:with="num1=${#numbers.formatInteger(result.dd,2)},
+																   num2=${#numbers.formatInteger(dd,2)}">
+													<th:block th:if="${num1==num2}">
+														<ul>
+													   		<li th:utext="${result.schetitle} + ${result.schecont}" class="scheList"></li>
+													   	</ul>
+													</th:block> 
+												</th:block>
+											</div>
 					        				
+					        				<!-- 한줄(7칸) 다 채웠을 경우 세팅 -->
 					        				<th:block th:if="${(dd+cnt)%7 == 0}" th:utext="${newline}"></th:block>
 					        			</td>
                                     	
@@ -464,136 +490,20 @@
             </section>
         </div>
         
-        
-        <!-- modal_write -->
-        <div class="modal_schedule_write">
-        	<div class="schedule_wrap" id="modal_1">
-                <div class="modal_header flex_end">
-                    <span class="modal_close_btn close_modal">✖</span>
-                </div>
-                <div class="modal_contents">
-                    <h3 class="tit_h3">일정 등록</h3>
-                    <form id="frm">
-                    	<ul>
-	                        <li class="form_list">
-	                            <label for="schetitle">제목</label>
-	                            <input type="text" id="schetitle" name="schetitle" required class="right">
-	                        </li>
-	                        
-	                        <li class="form_list">
-	                            <label for="sche_chk">구분</label>
-	                            <select id="sche_chk" name="sche_chk" required>
-	                                <option value="">-- 선택 --</option>
-	                                <option value="1">휴가</option>
-	                                <option value="2">외근</option>
-	                                <option value="3">휴가</option>
-	                            </select>
-	                        </li>
-	        
-	                        <li class="form_list">
-	                            <label for="startdate">시작일</label>
-	                            <input type="date" id="startdate" name="startdate" required class="right">
-	                        </li>
-	        
-	                        <li class="form_list">
-	                            <label for="enddate">종료일</label>
-	                            <input type="date" id="enddate" name="enddate" class="right">
-	                        </li>
-	                        <li class="form_list">
-	                            <label for="starttime">시작시간</label>
-	                            <input type="time" id="starttime" name="starttime" class="right">
-	                        </li>
-	        
-	                        <li class="form_list">
-	                            <label for="endtime">종료시간</label>
-	                            <input type="time" id="endtime" name="endtime" class="right">
-	                        </li>
-	        
-	                        <li class="form_list">
-	                            <label for="wrtnm">작성자</label>
-	                            <input type="text" id="wrtnm" name="wrtnm" placeholder="작성자 성함을 입력하세요." class="right">
-	                        </li>
-	        
-	                        <li class="form_list">
-	                            <label for="schecont">설명</label>
-	                            <textarea id="schecont" name="schecont"></textarea>
-	                        </li>
-	        
-	                        <li class="form_list">
-	                            <label for="cal_chk">공개범위</label>
-	                            <select id="cal_chk" name="cal_chk">
-	                                <option value="1">개인</option>
-	                                <option value="2">전체공유</option>
-	                                <option value="3">팀공유</option>
-	                            </select>
-	                        </li>
-        				</ul>
-                        <div class="btn_frame2">
-                            <button type="reset" class="button2">취소</button>
-                            <button type="submit" class="button1" id="btn_submit">등록</button>
-                        </div>
-                    </form>
-                </div>
-	        </div>
-        </div>
-        
-        <!-- modal_detail -->
-        <div class="modal_sd_detail">
-			<div class="schedule_wrap" id="modal_2" >
-                <div class="modal_header flex_end">
-                    <span class="modal_close_btn close_modal">✖</span>
-                </div>
-
-                <div class="modal_contents">
-                    <h3 class="tit_h3">일정 상세보기</h3>
-                    <ul>
-                        <li class="form_list">
-                            <label>제목</label>
-                            <div class="value">주간 회의</div>
-                        </li>
-                        
-                        <li class="form_list">
-                            <label>구분</label>
-                            <div class="value">휴가</div>
-                        </li>
-                
-                        <li class="form_list">
-                            <label>날짜</label>
-                            <div class="value">2025-06-21</div>
-                        </li>
-                
-                        <li class="form_list">
-                            <label>시작시간</label>
-                            <div class="value">10:00</div>
-                        </li>
-                
-                        <li class="form_list">
-                            <label>종료시간</label>
-                            <div class="value">11:30</div>
-                        </li>
-                        
-                        <li class="form_list">
-                            <label>작성자</label>
-                            <div class="value">홍길동</div>
-                        </li>
-                
-                        <li class="form_list">
-                            <label>설명</label>
-                            <div class="value">병결 유급휴가..</div>
-                        </li>
-                
-                        <li class="form_list">
-                            <label>공개범위</label>
-                            <div class="value">팀 공개</div>
-                        </li>
-                    </ul>
-                
-                    <div class="btn_frame2">
-                        <button type="button" class="button1">수정하기</button>
-                    </div>
-                </div>
-			</div>
-        </div>
-        
+        <!-- modal 시작 -->
+        <span th:insert="schedule/modal"></span>
+        <!-- modal 종료 -->
     </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
