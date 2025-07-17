@@ -36,14 +36,16 @@
 		
 		          <!-- 별 아이콘: favList에 있으면 full, 없으면 empty -->
 		          <img src="/images/star_full.png"
-		               class="star"
-		               th:if="${favList.contains(emp.empno)}"
-		               th:attr="data-empno=${emp.empno}" />
+		          		width="20" height="20"
+						class="star"
+						th:if="${favList.contains(emp.empno)}"
+						th:attr="data-empno=${emp.empno}" />
 		
 		          <img src="/images/star_empty.png"
-		               class="star"
-		               th:unless="${favList.contains(emp.empno)}"
-		               th:attr="data-empno=${emp.empno}" />
+						width="20" height="20"
+						class="star"
+						th:unless="${favList.contains(emp.empno)}"
+						th:attr="data-empno=${emp.empno}" />
 		        </li>
 		      </ul>
 		    </li>

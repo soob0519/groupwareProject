@@ -8,8 +8,7 @@
         <script src="/js/script.js"></script>
     </head>
 
-    <body>
-        <!-- header 시작 -->
+    <body><!-- header 시작 -->
         <header th:insert="fragments/header"></header>
         <!-- header 종료 -->
 
@@ -21,7 +20,7 @@
 
             <section class="contents">
 
-                <h3 class="tit_h3">내 결재 관리</h3>
+	            <h3 class="tit_h3">내 결제 관리</h3>
 
                 <div class="flex_between">
                     <div>
@@ -93,6 +92,7 @@
                 <div class="table_box2">
                     <table class="table1">
                         <colgroup>
+                        	<col width="20%"/>
                             <col width="10%"/>
                             <col width="*"/>
                             <col width="8%"/>
@@ -102,6 +102,7 @@
                         </colgroup>
                         <thead>
                             <tr>
+                            	<th></th>
                                 <th>기안일자</th>
                                 <th>제목</th>
                                 <th>기안자</th>
@@ -112,6 +113,7 @@
                         </thead>
 						<tbody>
 							<tr th:each="dto : ${list}">
+								<td></td>
 								<td th:text="${#dates.format(dto.wdate, 'yyyy/MM/dd')}"></td>
 								<td>
 								    <a th:href="@{|/edsm/edsmDetail/${dto.edsmno}|}" th:text="${dto.edtitle}"></a>
@@ -130,26 +132,27 @@
 							</tr>
 						</tbody>
                     </table>
-                    <div>
-					  <ul class="paging">
-					    <li th:if="${!page.first}">
-					      <button th:onclick="|location.href='@{/edsm(status=${selectedStatus},page=${page.number-1},size=${page.size})}'|">
-					        이전
-					      </button>
-					    </li>
-					    <li th:each="i : ${#numbers.sequence(0, page.totalPages-1)}">
-					      <button th:classappend="${i == page.number} ? ' active' : ''"
-					              th:onclick="|location.href='@{/edsm(status=${selectedStatus},page=${i},size=${page.size})}'|"
-					              th:text="${i+1}">1</button>
-					    </li>
-					    <li th:if="${!page.last}">
-					      <button th:onclick="|location.href='@{/edsm(status=${selectedStatus},page=${page.number+1},size=${page.size})}'|">
-					        다음
-					      </button>
-					    </li>
-					  </ul>
-					</div>
+                    
                 </div>
+                <div>
+				  <ul class="paging">
+				    <li th:if="${!page.first}">
+				      <button th:onclick="|location.href='@{/edsm(status=${selectedStatus},page=${page.number-1},size=${page.size})}'|">
+				        이전
+				      </button>
+				    </li>
+				    <li th:each="i : ${#numbers.sequence(0, page.totalPages-1)}">
+				      <button th:classappend="${i == page.number} ? ' active' : ''"
+				              th:onclick="|location.href='@{/edsm(status=${selectedStatus},page=${i},size=${page.size})}'|"
+				              th:text="${i+1}">1</button>
+				    </li>
+				    <li th:if="${!page.last}">
+				      <button th:onclick="|location.href='@{/edsm(status=${selectedStatus},page=${page.number+1},size=${page.size})}'|">
+				        다음
+				      </button>
+				    </li>
+				  </ul>
+				</div>
             </section>
         </div>
     </body>
