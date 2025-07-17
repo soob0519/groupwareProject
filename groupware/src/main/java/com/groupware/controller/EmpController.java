@@ -47,7 +47,16 @@ public class EmpController {
 		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
 	        return new ModelAndView("redirect:/login/login");
-	    }		
+	    }
+		Integer empno = (Integer)session.getAttribute("empno");
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
+		EmpDto emp = empService.findById(empno);
+	    if (emp == null || "N".equals(emp.getState())) {
+	        session.invalidate();
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		
 		ModelAndView model1 = new ModelAndView();
 		List<CodeDto> result2 = codeService.list();
@@ -85,6 +94,15 @@ public class EmpController {
 		
 		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
+		Integer empno = (Integer)session.getAttribute("empno");
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
+		EmpDto emp = empService.findById(empno);
+	    if (emp == null || "N".equals(emp.getState())) {
+	        session.invalidate();
 	        return new ModelAndView("redirect:/login/login");
 	    }
 		
@@ -155,6 +173,15 @@ public class EmpController {
 		if (dept == null || !dept.equals("B20003")) {
 	        return new ModelAndView("redirect:/login/login");
 	    }
+		
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
+		EmpDto emp = empService.findById(empno);
+	    if (emp == null || "N".equals(emp.getState())) {
+	        session.invalidate();
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		ModelAndView model = new ModelAndView();
 		EmpDto dto = empService.getFindById(empno);
 		model.setViewName("/admin/empModify");
@@ -184,7 +211,10 @@ public class EmpController {
 	public ModelAndView empOrgani(HttpSession session,
 								@RequestParam(defaultValue = "0") int page,
 								@RequestParam(defaultValue = "10") int size) {
-		int empno = (int)session.getAttribute("empno");
+		Integer empno = (Integer)session.getAttribute("empno");
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		EmpDto emp = empService.findById(empno);
 	    if (emp == null || "N".equals(emp.getState())) {
 	        session.invalidate();

@@ -74,7 +74,7 @@ public class EdsmController {
 
 	
 	/**
-	 * 기안작성1
+	 * 기안작성
 	 */
 	@GetMapping("/edsmWrite")
 	public ModelAndView edsmWrite(HttpSession session,
@@ -85,7 +85,7 @@ public class EdsmController {
 		int empno = (int) session.getAttribute("empno");
 	    if (userId == null || userId.equals("")) {
 	        return new ModelAndView("redirect:/login/login");
-	    }
+	    }	    
 
 	    ModelAndView model = new ModelAndView("/edsm/edsmWrite");
 	    model.addObject("user", userId);
@@ -365,7 +365,10 @@ public class EdsmController {
 							        @RequestParam(required = false) String fromDate,
 							        @RequestParam(required = false) String toDate) {
 	    
-		int empno = (int)session.getAttribute("empno");
+		Integer empno = (Integer)session.getAttribute("empno");
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		EmpDto emp = empService.findById(empno);
 	    if (emp == null || "N".equals(emp.getState())) {
 	        session.invalidate();
@@ -514,7 +517,10 @@ public class EdsmController {
 	@GetMapping("/edsmDetail/{edsmno}")
 	public ModelAndView viewDetail(@PathVariable int edsmno, HttpSession session) {
 		
-		int empno = (int) session.getAttribute("empno");
+		Integer empno = (Integer)session.getAttribute("empno");
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		EmpDto emp = empService.findById(empno);
 	    if (emp == null || "N".equals(emp.getState())) {
 	        session.invalidate();
@@ -566,7 +572,10 @@ public class EdsmController {
 	public ModelAndView edsmDraftList(HttpSession session,
 										@RequestParam(required = false) String keyword) {
 		
-		int empno = (int) session.getAttribute("empno");
+		Integer empno = (Integer)session.getAttribute("empno");
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		EmpDto emp = empService.findById(empno);
 	    if (emp == null || "N".equals(emp.getState())) {
 	        session.invalidate();
@@ -639,7 +648,10 @@ public class EdsmController {
 	 */	
 	@GetMapping("/edsmDraftDetail/{edsmno}")
 	public ModelAndView viewDraftDetail(@PathVariable int edsmno,HttpSession session) {
-		int empno = (int) session.getAttribute("empno");
+		Integer empno = (Integer)session.getAttribute("empno");
+		if (empno == null) {
+	        return new ModelAndView("redirect:/login/login");
+	    }
 		EmpDto emp1 = empService.findById(empno);
 	    if (emp1 == null || "N".equals(emp1.getState())) {
 	        session.invalidate();
