@@ -78,12 +78,10 @@ public class EdsmController {
 								  @RequestParam(defaultValue = "0") int page,
 								  @RequestParam(defaultValue = "10") int size) {
 		
-		//String userId = (String) session.getAttribute("user");
-		//int empno = (int) session.getAttribute("empno");
-		String userId = "devleader"; // 테스트용 하드코딩
-	    int empno = 2;
+		String userId = (String) session.getAttribute("userid");
+		int empno = (int) session.getAttribute("empno");
 	    if (userId == null || userId.equals("")) {
-	        return new ModelAndView("redirect:/login");
+	        return new ModelAndView("redirect:/login/login");
 	    }
 
 	    ModelAndView model = new ModelAndView("/edsm/edsmWrite");
@@ -120,10 +118,11 @@ public class EdsmController {
 	 * 사원 조직도 결재자 선택창
 	 */
 	@GetMapping("/empOrgani1")
-	public ModelAndView empOrgani(@RequestParam(defaultValue = "0") int page,
-								@RequestParam(defaultValue = "10") int size) {
-		// int empno = (int) session.getAttribute("empno");
-	    int empno = 2;
+	public ModelAndView empOrgani(HttpSession session,
+									@RequestParam(defaultValue = "0") int page,
+									@RequestParam(defaultValue = "10") int size) {
+		
+		int empno = (int)session.getAttribute("empno");
 	    
 		ModelAndView model = new ModelAndView();
 		
@@ -158,8 +157,9 @@ public class EdsmController {
 	// 결재자 즐겨찾기
 	@GetMapping("/favorList")
 	public ModelAndView favorList(HttpSession session) {
-	    // int empno = (int) session.getAttribute("empno");
-	    int empno = 2; // 테스트용 하드코딩
+		
+	    int empno = (int) session.getAttribute("empno");
+	    
 	    List<EmpDto> empList = empService.findAll();
 	    List<CodeDto> codeList = codeService.list();
 
@@ -189,8 +189,9 @@ public class EdsmController {
 	@PostMapping("/edsmSave")
 	@ResponseBody
 	public String submitDocument(EdsmDto dto, HttpSession session) {
-	    // int empno = (int) session.getAttribute("empno");
-	    int empno = 2;
+	    
+		int empno = (int) session.getAttribute("empno");
+
 	    dto.setEmpno(empno);
 	    dto.setEdst("F60001");     // 결재 진행 중
 	    dto.setIsdraft("N");       // 임시보관 아님
@@ -236,8 +237,8 @@ public class EdsmController {
 	@PostMapping("/edsmIsdraft")
 	@ResponseBody
 	public String isdraftDocument(EdsmDto dto, HttpSession session) {
-	    // int empno = (int) session.getAttribute("empno");
-	    int empno = 2;
+		int empno = (int) session.getAttribute("empno");
+
 	    dto.setEmpno(empno);
 	    dto.setEdst("F60001");     // 결재 진행 중
 	    dto.setIsdraft("Y");       // 임시보관
@@ -289,8 +290,7 @@ public class EdsmController {
 							        @RequestParam(required = false) String fromDate,
 							        @RequestParam(required = false) String toDate) {
 	    
-		//int empno = (int) session.getAttribute("empno");
-	    int empno = 2;
+		int empno = (int) session.getAttribute("empno");
 	   
 	    // 페이징 + 상태필터 + 검색(제목/기안자) 호출
 	    Pageable pageable = PageRequest.of(page, size, Sort.by("wdate").descending());
@@ -403,8 +403,8 @@ public class EdsmController {
 	 */
 	@GetMapping("/edsmDetail/{edsmno}")
 	public ModelAndView viewDetail(@PathVariable int edsmno, HttpSession session) {
-	    //int empno = (int) session.getAttribute("empno");
-	    int empno = 2;
+		
+		int empno = (int) session.getAttribute("empno");
 
 	    EdsmDto edsm = edsmService.findById(edsmno);
 	    List<EdsmlineDto> lines = edsmlineService.findByEdsmno(edsmno);
@@ -450,8 +450,8 @@ public class EdsmController {
 	@GetMapping("/edsmDraft")
 	public ModelAndView edsmDraftList(HttpSession session,
 										@RequestParam(required = false) String keyword) {
-	    //int empno = (int) session.getAttribute("empno");
-	    int empno = 2;
+		
+		int empno = (int) session.getAttribute("empno");
 
 	    List<EdsmDto> list = edsmService.findDraftsByEmpno(empno);
 		if (keyword != null && !keyword.isBlank()) {
@@ -502,8 +502,7 @@ public class EdsmController {
 	 */	
 	@GetMapping("/edsmDraftDetail/{edsmno}")
 	public ModelAndView viewDraftDetail(@PathVariable int edsmno,HttpSession session) {
-		 //int empno = (int) session.getAttribute("empno");
-	    int empno = 2;
+		int empno = (int) session.getAttribute("empno");
 	    
 	    ModelAndView model = new ModelAndView("edsm/edsmDraftDetail");
 	    
@@ -550,15 +549,13 @@ public class EdsmController {
 	 * 결재 문서 승인
 	 */	
 	@PostMapping("/approve")
-	public void submitApproval(
-	        @RequestParam int edsmno,
-	        @RequestParam String action,
-	        @RequestParam(required=false) String comment,
-	        HttpSession session,
-	        HttpServletResponse response) throws IOException {
-
-	    //int empno = (int) session.getAttribute("empno");
-		int empno = 2;
+	public void submitApproval(@RequestParam int edsmno,
+								@RequestParam String action,
+								@RequestParam(required=false) String comment,
+								HttpSession session,
+								HttpServletResponse response) throws IOException {
+		
+		int empno = (int) session.getAttribute("empno");
 		
 		List<EdsmlineDto> lines = edsmlineService.findByEdsmno(edsmno);
 		
@@ -602,8 +599,9 @@ public class EdsmController {
     public void submitRetrieve(@RequestParam int edsmno,
 						            HttpSession session, 
 						            HttpServletResponse response) throws IOException {
-        // int empno = (int) session.getAttribute("empno");
-        int empno = 2;
+
+    	int empno = (int) session.getAttribute("empno");
+        
         EdsmDto edsm = edsmService.findById(edsmno);
         if (edsm.getEmpno() == empno) {
             edsm.setEdst("F60004");  // F60004: 회수
