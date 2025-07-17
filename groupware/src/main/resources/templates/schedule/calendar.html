@@ -44,11 +44,11 @@ function fn_next(n) {
 	location = "/schedule?year="+send_yy+"&month="+send_mm;
 }
 
-function fn_action(y,m,d) {
-	let parm = "y="+y+"&m="+m+"&d="+d;
-	let url  = "/schedule/write?"+parm;
-	window.open(url,"schedule","width=400,height=400");
-}
+//function fn_action(y,m,d) {
+//	let parm = "y="+y+"&m="+m+"&d="+d;
+//	let url  = "/schedule/write?"+parm;
+//	window.open(url,"schedule","width=400,height=400");
+//}
 
 </script>
     </head>
@@ -93,7 +93,6 @@ function fn_action(y,m,d) {
                    				<li><a href="#none">11월</a></li>
                    				<li><a href="#none">12월</a></li>
                    			</ul>
-                   			<a href="#none">오늘</a>
                    		</div>
                    	</div>
 
@@ -107,7 +106,6 @@ function fn_action(y,m,d) {
                                     <span id="span_month" th:text="${mm+1}"></span>월
                                     <button type="button" onclick="fn_next(2)"  class="button1">다음</button>
                                     <button type="button" onclick="location='/index'" class="button1">오늘</button>
-                                    <button type="button" id="testbtn">test</button>
                                 </div>
                                 <table class="calendar">
 	                                <colgroup>
@@ -139,7 +137,8 @@ function fn_action(y,m,d) {
                                     	<!-- 반복문(날짜출력) -->
 					        			<td th:each="dd:${#numbers.sequence(1,lastDay)}"
 					        				th:onClick="|fn_action(${yy},${mm},${dd})|"
-					        				class="date_click">
+					        				class="date_click"
+					        				style="height: 110px;">
 					        			
 					        				<th:block th:if="${(tyy>yy) || 
 					        								   (tyy==yy && tmm>mm) || 

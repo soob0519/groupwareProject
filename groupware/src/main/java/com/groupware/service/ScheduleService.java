@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.ZEC_Project.entity.ScheduleDto;
-import com.ZEC_Project.repository.ScheduleRepository;
+import com.groupware.entity.ScheduleDto;
+import com.groupware.repository.ScheduleRepository;
 
 @Service
 public class ScheduleService {
