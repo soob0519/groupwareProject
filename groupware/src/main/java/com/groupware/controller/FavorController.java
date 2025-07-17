@@ -22,8 +22,9 @@ public class FavorController {
     @PostMapping("/toggle")
     @ResponseBody
     public String toggleFavorite(HttpSession session, @RequestParam int fempno) {
-        Integer empno = (Integer) session.getAttribute("empno");
-        if(empno == null) empno = 2002; // 테스트용
+        // 테스트~
+    	Integer empno = (Integer) session.getAttribute("empno");
+        if(empno == null) empno = 2;
 
         boolean isFav = favorService.isFavorite(empno, fempno);
         if(isFav) {
@@ -39,7 +40,7 @@ public class FavorController {
     @GetMapping("/list")
     public ResponseEntity<List<Integer>> getMyFavorites(HttpSession session) {
         // int empno = (int) session.getAttribute("empno");
-        int empno = 2002;
+        int empno = 2;
 
         List<Integer> favs = favorService.getFavorites(empno);
         return ResponseEntity.ok(favs);

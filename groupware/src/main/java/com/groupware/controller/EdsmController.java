@@ -80,8 +80,8 @@ public class EdsmController {
 		
 		//String userId = (String) session.getAttribute("user");
 		//int empno = (int) session.getAttribute("empno");
-		String userId = "parkdh"; // 테스트용 하드코딩
-	    int empno = 2002;
+		String userId = "devleader"; // 테스트용 하드코딩
+	    int empno = 2;
 	    if (userId == null || userId.equals("")) {
 	        return new ModelAndView("redirect:/login");
 	    }
@@ -123,7 +123,7 @@ public class EdsmController {
 	public ModelAndView empOrgani(@RequestParam(defaultValue = "0") int page,
 								@RequestParam(defaultValue = "10") int size) {
 		// int empno = (int) session.getAttribute("empno");
-	    int empno = 2002;
+	    int empno = 2;
 	    
 		ModelAndView model = new ModelAndView();
 		
@@ -159,7 +159,7 @@ public class EdsmController {
 	@GetMapping("/favorList")
 	public ModelAndView favorList(HttpSession session) {
 	    // int empno = (int) session.getAttribute("empno");
-	    int empno = 2002; // 테스트용 하드코딩
+	    int empno = 2; // 테스트용 하드코딩
 	    List<EmpDto> empList = empService.findAll();
 	    List<CodeDto> codeList = codeService.list();
 
@@ -190,7 +190,7 @@ public class EdsmController {
 	@ResponseBody
 	public String submitDocument(EdsmDto dto, HttpSession session) {
 	    // int empno = (int) session.getAttribute("empno");
-	    int empno = 2002;
+	    int empno = 2;
 	    dto.setEmpno(empno);
 	    dto.setEdst("F60001");     // 결재 진행 중
 	    dto.setIsdraft("N");       // 임시보관 아님
@@ -237,7 +237,7 @@ public class EdsmController {
 	@ResponseBody
 	public String isdraftDocument(EdsmDto dto, HttpSession session) {
 	    // int empno = (int) session.getAttribute("empno");
-	    int empno = 2002;
+	    int empno = 2;
 	    dto.setEmpno(empno);
 	    dto.setEdst("F60001");     // 결재 진행 중
 	    dto.setIsdraft("Y");       // 임시보관
@@ -290,7 +290,7 @@ public class EdsmController {
 							        @RequestParam(required = false) String toDate) {
 	    
 		//int empno = (int) session.getAttribute("empno");
-	    int empno = 2014;
+	    int empno = 2;
 	   
 	    // 페이징 + 상태필터 + 검색(제목/기안자) 호출
 	    Pageable pageable = PageRequest.of(page, size, Sort.by("wdate").descending());
@@ -404,7 +404,7 @@ public class EdsmController {
 	@GetMapping("/edsmDetail/{edsmno}")
 	public ModelAndView viewDetail(@PathVariable int edsmno, HttpSession session) {
 	    //int empno = (int) session.getAttribute("empno");
-	    int empno = 2014;
+	    int empno = 2;
 
 	    EdsmDto edsm = edsmService.findById(edsmno);
 	    List<EdsmlineDto> lines = edsmlineService.findByEdsmno(edsmno);
@@ -451,7 +451,7 @@ public class EdsmController {
 	public ModelAndView edsmDraftList(HttpSession session,
 										@RequestParam(required = false) String keyword) {
 	    //int empno = (int) session.getAttribute("empno");
-	    int empno = 2002;
+	    int empno = 2;
 
 	    List<EdsmDto> list = edsmService.findDraftsByEmpno(empno);
 		if (keyword != null && !keyword.isBlank()) {
@@ -503,7 +503,7 @@ public class EdsmController {
 	@GetMapping("/edsmDraftDetail/{edsmno}")
 	public ModelAndView viewDraftDetail(@PathVariable int edsmno,HttpSession session) {
 		 //int empno = (int) session.getAttribute("empno");
-	    int empno = 2002;
+	    int empno = 2;
 	    
 	    ModelAndView model = new ModelAndView("edsm/edsmDraftDetail");
 	    
@@ -558,7 +558,7 @@ public class EdsmController {
 	        HttpServletResponse response) throws IOException {
 
 	    //int empno = (int) session.getAttribute("empno");
-		int empno = 2014;
+		int empno = 2;
 		
 		List<EdsmlineDto> lines = edsmlineService.findByEdsmno(edsmno);
 		
@@ -603,7 +603,7 @@ public class EdsmController {
 						            HttpSession session, 
 						            HttpServletResponse response) throws IOException {
         // int empno = (int) session.getAttribute("empno");
-        int empno = 2002;
+        int empno = 2;
         EdsmDto edsm = edsmService.findById(edsmno);
         if (edsm.getEmpno() == empno) {
             edsm.setEdst("F60004");  // F60004: 회수

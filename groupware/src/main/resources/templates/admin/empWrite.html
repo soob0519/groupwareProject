@@ -27,7 +27,22 @@
 				$("#name").focus();
 				return false;
    			}
-   			
+   			if ($("#jdate_date").val() == "") {
+   		        alert("입사일을 선택하세요.");
+   		        $("#jdate_date").focus();
+   		        return false;
+   		    }
+   		    if ($("select[name='dept']").val() == "부서") {
+   		        alert("부서를 선택하세요.");
+   		        $("select[name='dept']").focus();
+   		        return false;
+   		    }
+   		    if ($("select[name='position']").val() == "직급") {
+   		        alert("직급을 선택하세요.");
+   		        $("select[name='position']").focus();
+   		        return false;
+   		    }
+   		    
    			// 시간 붙이기
 			const dateVal = $("#jdate_date").val();
 	        if (dateVal) {
