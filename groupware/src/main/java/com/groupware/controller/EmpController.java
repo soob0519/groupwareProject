@@ -46,7 +46,7 @@ public class EmpController {
 		
 		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
-	        return new ModelAndView("redirect:/homepage");
+	        return new ModelAndView("redirect:/login");
 	    }		
 		
 		ModelAndView model1 = new ModelAndView();
@@ -85,7 +85,7 @@ public class EmpController {
 		
 		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
-	        return new ModelAndView("redirect:/homepage");
+	        return new ModelAndView("redirect:/login");
 	    }
 		
 		Page<EmpDto> result;
@@ -153,7 +153,7 @@ public class EmpController {
 		
 		String dept = (String) session.getAttribute("dept");
 		if (dept == null || !dept.equals("B20003")) {
-	        return new ModelAndView("redirect:/homepage");
+	        return new ModelAndView("redirect:/login");
 	    }
 		ModelAndView model = new ModelAndView();
 		EmpDto dto = empService.getFindById(empno);
@@ -209,6 +209,7 @@ public class EmpController {
 		
 		ModelAndView model = new ModelAndView();
 		EmpDto dto = empService.getFindById(empno);
+		
 		model.setViewName("/admin/empList2Detail");
 		model.addObject("dto", dto);
 		

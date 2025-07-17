@@ -34,11 +34,11 @@ public class EdsmDto {
 	@Column(length=200,nullable=false)
 	private String edtitle;
 	
-	@Column(length=4000,nullable=false)
+	@Column(length=4000)
 	private String edcont;
 	
 	//휴가종류 코드테이블
-	@Column(length=200,nullable=false)
+	@Column(length=200)
 	private String vtype;
 	
 	//결재상태 코드테이블
@@ -69,6 +69,10 @@ public class EdsmDto {
 	//반려의견
 	@Column(length=1000)
 	private String edcomment;
+	
+	//첨부문서
+	@Column(length=4000)
+	private String attachment;
 	
 	//임시보관 구분
 	@Column(length = 1)

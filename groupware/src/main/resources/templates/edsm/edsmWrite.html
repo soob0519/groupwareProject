@@ -57,7 +57,7 @@
 								<th>결재자</th>
 								<td>
 									<div class="approvers flex_start">
-										<button class="button1" type="button">즐겨찾기</button>
+										<button class="button1" id="openFavBtn" type="button">즐겨찾기</button>
 										<button id="openOrgBtn" class="button1" type="button">+ 결재자 추가</button>
 									</div>
 									<div id="approverList"
@@ -70,19 +70,14 @@
 												<input type="text" name="approvers" class="input1"
 													th:value="${emp.name}" 
 													th:attr="data-empno=${emp.empno}" readonly />
-												<button class="button1 remove-btn" type="button" disabled>삭제</button>
 											</div>
 										</th:block>
 									</div>
 								</td>
 							</tr>
                             <tr class="form-row">
-                                <th>수신자</th>
-                                <td><input type="text" name="viewer1" placeholder="수신자" /></td>
-                            </tr>
-                            <tr class="form-row">
                                 <th>공유자</th>
-                                <td><input type="text" name="viewer2" placeholder="공유자" /></td>
+                                <td><input type="text" name="viewer" placeholder="공유자" /></td>
                             </tr>
 							<tr class="form-row">
                                 <th>첨부문서</th>
@@ -103,7 +98,7 @@
                         <div class="btn_frame2">
 							<button type="button" id="btn_isdraft" class="button1">임시보관함</button>
                             <button type="button" id="btn_submit" class="button1">기안 상신</button>
-                            <button type="button" class="button2">닫기</button>
+                            <button type="button" class="button2" onclick="history.back()">닫기</button>
                         </div>
                             
                     </div>
@@ -113,11 +108,46 @@
         </div>
         
         <div th:insert="edsm/empList1 :: orgModal"></div>
+        <div th:insert="edsm/favorList :: favModal"></div>
         
         <script>
         $(function () {
         	  $('#btn_submit').on('click', function () {
-
+       		    const sv = $('input[name="svacFull"]').val().trim();
+       		    if (!sv) {
+       		      alert('휴가 시작일을 선택하세요.');
+       		      $('input[name="svacFull"]').focus();
+       		      return;
+       		    }
+       		    const ev = $('input[name="evacFull"]').val().trim();
+       		    if (!ev) {
+       		      alert('휴가 종료일을 선택하세요.');
+       		      $('input[name="evacFull"]').focus();
+       		      return;
+       		    }
+       		    const title = $('input[name="edtitle"]').val().trim();
+       		    if (!title) {
+       		      alert('제목을 입력하세요.');
+       		      $('input[name="edtitle"]').focus();
+       		      return;
+       		    }
+       		    const vtypeChecked = $('input[name="vtype"]:checked').length;
+       		    if (!vtypeChecked) {
+       		      alert('휴가 구분을 선택하세요.');
+       		      $('input[name="vtype"]').first().focus();
+       		      return;
+       		    }
+       		    const content = $('textarea[name="edcont"]').val().trim();
+       		    if (!content) {
+       		      alert('기안내용을 입력하세요.');
+       		      $('textarea[name="edcont"]').focus();
+       		      return;
+       		    }
+	       		 const approverCount = $('#approverList input[name="approvers"]').length;
+	       	    if (approverCount < 2) {
+	       	      alert('결재자는 본인 외에 최소 한 명 이상 있어야 합니다.');
+	       	      return false;
+	       	    }
         	    // 날짜 시간 가공해서 hidden에 넣기
         	    const svacDate = $('input[name="svacFull"]').val();
         	    const evacDate = $('input[name="evacFull"]').val();
@@ -159,7 +189,25 @@
 		<script>
         $(function () {
         	  $('#btn_isdraft').on('click', function () {
-
+				const sv = $('input[name="svacFull"]').val().trim();
+       		    if (!sv) {
+       		      alert('휴가 시작일을 선택하세요.');
+       		      $('input[name="svacFull"]').focus();
+       		      return;
+       		    }
+       		    const ev = $('input[name="evacFull"]').val().trim();
+       		    if (!ev) {
+       		      alert('휴가 종료일을 선택하세요.');
+       		      $('input[name="evacFull"]').focus();
+       		      return;
+       		    }
+				const title = $('input[name="edtitle"]').val().trim();
+				if (!title) {
+					alert('제목을 입력하세요.');
+					$('input[name="edtitle"]').focus();
+					return;
+				}
+        		  
         	    // 날짜 시간 가공해서 hidden에 넣기
         	    const svacDate = $('input[name="svacFull"]').val();
         	    const evacDate = $('input[name="evacFull"]').val();
@@ -188,7 +236,7 @@
         	      dataType: 'text',
         	      success: function (data) {
         	        alert('저장 성공');
-        	        location.href = '/edsm';
+        	        location.href = '/edsm/edsmDraft';
         	      },
         	      error: function () {
         	        alert('전송 실패');
@@ -261,13 +309,79 @@
 			  }
 		 
 		// 삭제 버튼 상태 갱신
-		  function updateRemoveButtons() {
-			  const btns = document.querySelectorAll('#approverList .remove-btn');
-			  btns.forEach((btn, idx) => {
-			    btn.disabled = (idx === 0); // 첫 번째 삭제버튼만 비활성화
-			  });
-			}
+		function updateRemoveButtons() {
+		  // 각 approver-item 요소를 순회하면서
+		  document.querySelectorAll('#approverList .approver-item')
+		    .forEach((item, idx) => {
+		      const btn = item.querySelector('.remove-btn');
+		      if (btn) {
+		        // 0번 아이템(기안자)만 비활성화, 나머지는 활성화
+		        btn.disabled = (idx === 0);
+		      }
+		    });
+		}
 		
+		</script>
+		<script>
+		$(function(){
+		  // 별 클릭 시 즐겨찾기 토글
+		  $(document).on('click', '.org_tree .star', function(e){
+		    e.preventDefault();
+		    const $img   = $(this);
+		    const fempno = $img.data('empno');
+		    console.log("별 클릭됨", fempno); // 디버깅용
+		    const url    = '/favor/toggle';
+		    $.post(url, { fempno })
+		      .done(function(resp){
+		        if(resp === "added"){
+		          $img.attr('src','/images/star_full.png');
+		        } else if(resp === "removed"){
+		          $img.attr('src','/images/star_empty.png');
+		        }
+		      })
+		      .fail(function(){
+		        alert('즐겨찾기 토글에 실패했습니다.');
+		      });
+		  });
+		});
+		</script>
+		<script>
+		$(function() {
+		  // 모달 오픈
+		  $('#openFavBtn').on('click', function () {
+		    $('#favModal').css('display', 'flex');
+		  });
+		  // 모달 닫기
+		  $('#closeFavBtn').on('click', function () {
+		    $('#favModal').hide();
+		  });
+		
+		  // 이름 클릭해서 결재자 추가
+		  $(document).on('click', '.fav-user-btn', function (e) {
+		    e.preventDefault();
+		    const name = $(this).data('name');
+		    const empno = $(this).data('empno');
+		    const list = $('#approverList');
+		    // 중복 방지
+		    const duplicate = Array.from(list.find('input[name="approvers"]'))
+		      .some(input => input.value === name);
+		    if (duplicate) {
+		      alert("이미 선택된 결재자입니다."); return;
+		    }
+		    if (list.find('input[name="approvers"]').length >= 4) {
+		      alert('최대 4명까지만 추가 가능합니다.'); return;
+		    }
+		    const newItem = $(`
+		      <div class="approver-item flex_start" style="gap:5px; align-items:center;">
+		        <input type="text" name="approvers" class="input1" value="${name}" data-empno="${empno}" readonly/>
+		        <button class="button1 remove-btn" type="button" onclick="removeApprover(this)">삭제</button>
+		      </div>
+		    `);
+		    list.append(newItem);
+		    $('#favModal').hide();
+		    updateRemoveButtons && updateRemoveButtons();
+		  });
+		});
 		</script>
     </body>
 </html>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>결재진행중 상세페이지</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+
+    <body>
+        <!-- header 시작 -->
+        <header th:insert="fragments/header"></header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <aside th:insert="fragments/nav"></aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+            
+		        <form id="frm" name="frm" method="post">
+		        <input type="hidden" id="edsmnoHidden" th:value="${edsm.edsmno}" />
+		            <div class="upload-wrapper">
+		                <h3 class="tit_h3">결재 상세보기</h3>
+		
+		                <table>
+		                    <tr class="form-row">
+		                        <th>휴가일자</th>
+		                        <td>
+		                            <div class="flex_between">
+										<input type="date" th:value="${#dates.format(edsm.svac, 'yyyy-MM-dd')}" readonly />
+										&nbsp;&nbsp;&nbsp;
+		                                <input type="date" th:value="${#dates.format(edsm.evac, 'yyyy-MM-dd')}" readonly />
+		                            </div>
+		                        </td>
+		                    </tr>
+		                    <tr class="form-row">
+		                        <th>제목</th>
+		                        <td><input type="text" th:value="${edsm.edtitle}" readonly /></td>
+		                    </tr>
+		                    <tr class="form-row">
+		                        <th>결재자</th>
+		                        <td>
+		                            <div id="approverList">
+		                                <div class="flex_between" th:each="line : ${lines}">
+		                                    <input type="text" th:value="${empNameMap[line.empno]}" readonly />
+		                                    &nbsp;
+		                                    <th:block th:each="code : ${codeList}">
+		                                    <input type="text"
+		                                    		th:if="${code.ucode} == ${line.edst}"
+		                                          	th:value="${code.ncode}"
+		                                           readonly />
+		                                    </th:block>
+		                                </div>
+		                            </div>
+		                        </td>
+		                    </tr>
+							<tr class="form-row">
+							    <th>공유자</th>
+							    <td>
+							        <span th:each="v : ${viewerList}" th:if="${v.viewtype == 'S'}">
+							            <span th:text="${empNameMap[v.empno]}">공유자</span>&nbsp;
+							        </span>
+							    </td>
+							</tr>
+		                    <tr class="form-row">
+		                        <th>첨부문서</th>
+		                        <td><input type="text" th:value="${edsm.attachment}" readonly /></td>
+		                    </tr>
+		                    <tr class="form-row">
+		                        <th>기안내용</th>
+		                        <td><textarea readonly th:text="${edsm.edcont}"></textarea></td>
+		                    </tr>
+		                    <tr class="form-row" th:if="${edsm.edcomment}">
+							  <th>반려의견</th>
+							  <td>
+							    <textarea readonly rows="3"
+							              style="width:100%;"
+							              th:text="${edsm.edcomment}">
+							    </textarea>
+							  </td>
+							</tr>
+		                </table>
+		
+						<!-- 버튼 영역 -->
+						<div th:if="${edsm.edst == 'F60001'}" class="btn_frame2">
+						  <!-- 현재 결재자일 때만 (승인·반려) -->
+						  <div th:if="${isCurrentApprover}">
+						    <button type="button" class="button1" onclick="openRejectModal()">반려</button>
+						    <button type="button" class="button1" onclick="submitApproval('approve')">승인</button>
+						  </div>
+						
+						  <!-- 기안자일 때만 (회수) -->
+						  <div th:if="${edsm.empno == loginEmpno}">
+						    <button type="button" class="button1"
+						            onclick="submitRetrieve(document.getElementById('edsmnoHidden').value)">
+						      회수
+						    </button>
+						  </div>
+						</div>
+						<div class="btn_frame2">
+						<button type="button" class="button2" onclick="history.back()">닫기</button>
+						</div>
+		            </div>
+		            <!-- 반려의견 모달 & 오버레이 -->
+					<div id="modalOverlay" style="display:none;
+					                            position:fixed; top:0; left:0;
+					                            width:100%; height:100%;
+					                            background:rgba(0,0,0,0.5);
+					                            z-index:999;"></div>
+					
+					<div id="rejectModal" style="display:none;
+					                            position:fixed; top:50%; left:50%;
+					                            transform:translate(-50%,-50%);
+					                            background:#fff; padding:20px;
+					                            border:1px solid #ccc;
+					                            z-index:1000; width:300px;">
+					  <h4>반려의견 입력</h4>
+					  <textarea id="rejectComment" rows="4"
+					            style="width:100%;"></textarea>
+					  <div style="text-align:right; margin-top:10px;">
+					    <button type="button" onclick="confirmReject()">확인</button>
+					    <button type="button" onclick="closeRejectModal()">취소</button>
+					  </div>
+					</div>
+		        </form>
+		    </section>
+        </div>
+        <script>
+     	// 모달 열기
+        function openRejectModal() {
+          document.getElementById('modalOverlay').style.display = 'block';
+          document.getElementById('rejectModal').style.display = 'block';
+        }
+        // 모달 닫기
+        function closeRejectModal() {
+          document.getElementById('modalOverlay').style.display = 'none';
+          document.getElementById('rejectModal').style.display = 'none';
+        }
+
+        // '회수' 버튼용
+        function submitRetrieve(edsmno) {
+          const form = document.createElement('form');
+          form.method = 'post';
+          form.action = '/edsm/retrieve';
+          const inp = document.createElement('input');
+          inp.type = 'hidden';
+          inp.name = 'edsmno';
+          inp.value = edsmno;
+          form.appendChild(inp);
+          document.body.appendChild(form);
+          form.submit();
+        }
+		  // 승인/반려 공통 함수
+		  function submitApprovalWithComment(edsmno, action, comment) {
+		    const form = document.createElement('form');
+		    form.method = 'post';
+		    form.action = '/edsm/approve';
+		    [{name:'edsmno', value:edsmno},
+		     {name:'action',  value:action},
+		     {name:'comment', value:comment}].forEach(o => {
+		      const inp = document.createElement('input');
+		      inp.type = 'hidden'; inp.name = o.name; inp.value = o.value;
+		      form.appendChild(inp);
+		    });
+		    document.body.appendChild(form);
+		    form.submit();
+		  }
+		
+		  // 승인 버튼은 숨은 필드에서 edsmno 가져오기
+		  function submitApproval(action) {
+		    const edsmno = document.getElementById('edsmnoHidden').value;
+		    submitApprovalWithComment(edsmno, action, '');
+		  }
+		
+		  // 반려 모달 확인 시
+		  function confirmReject() {
+		    const comment = document.getElementById('rejectComment').value.trim();
+		    if (!comment) {
+		      alert('반려의견을 입력해주세요.');
+		      return;
+		    }
+		    closeRejectModal();
+		    const edsmno = document.getElementById('edsmnoHidden').value;
+		    submitApprovalWithComment(edsmno, 'reject', comment);
+		  }
+		</script>
+    </body>
+    
+</html>

@@ -36,7 +36,7 @@ public class EdsmlineDto {
 	private int empno;
 	
 	@Column(length=200,nullable=false)
-	private String edpro;
+	private int edpro;
 	
 	@Column(length=200,nullable=false)
 	private String edst;

@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>기안문서 임시보관함</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+        <script src="/js/script.js"></script>
+    </head>
+
+    <body>
+        <!-- header 시작 -->
+        <header th:insert="fragments/header"></header>
+        <!-- header 종료 -->
+
+        <div class="flex_between">
+
+            <!-- nav 시작 -->
+            <aside th:insert="fragments/nav"></aside>
+            <!-- nav 종료 -->
+
+            <section class="contents">
+
+	            <h3 class="tit_h3">임시보관함</h3>
+	
+	            <div class="searchbox flex_end">
+					<form th:action="@{/edsm/edsmDraft}" method="get" class="flex_end">
+						<input type="text"
+								name="keyword"
+								th:value="${keyword}"
+								placeholder="제목 입력 후 Enter"
+								class="input_search" />
+						<button type="submit" class="button1">Search(F3)</button>
+					</form>
+				</div>
+	
+	            <div class="table_box2">
+	                <table class="table1">
+	                    <colgroup>
+	                        <col width="*" />
+	                        <col width="10%" />
+	                        <col width="10%" />
+	                        <col width="15%" />
+	                    </colgroup>
+	                    <thead>
+	                        <tr>
+	                            <th>제목</th>
+	                            <th>기안자</th>
+	                            <th>결재자</th>
+	                            <th>작성날짜</th>
+	                        </tr>
+	                    </thead>
+	                    <tbody>
+	                        <tr th:each="doc : ${list}">
+	                            <td>
+	                                <a th:href="@{|/edsm/edsmDraftDetail/${doc.edsmno}|}" th:text="${doc.edtitle}">문서제목</a>
+	                            </td>
+	                            <td th:text="${empNameMap[doc.empno]}">기안자</td>
+	                            <td th:if="${approverMap[doc.edsmno] != null}" th:text="${approverMap[doc.edsmno]}">결재자</td>
+								<td th:unless="${approverMap[doc.edsmno] != null}">-</td>
+	                            <td th:text="${#dates.format(doc.wdate, 'yyyy/MM/dd')}">2025/07/08</td>
+	                        </tr>
+	                        <tr th:if="${#lists.isEmpty(list)}">
+	                            <td colspan="4" style="text-align:center;">임시보관 문서가 없습니다.</td>
+	                        </tr>
+	                    </tbody>
+	                </table>
+	            </div>
+	        </section>
+        </div>
+    </body>
+</html>

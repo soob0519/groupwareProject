@@ -13,30 +13,68 @@
                 overflow:auto;
                 padding:20px;
                 position:relative;">
+                
       <button id="closeOrgBtn"
               style="position:absolute; top:10px; right:10px;">✕</button>
+              
       <h3 class="tit_h3">조직도</h3>
 
       <div class="org_tree">
-        <ul>
-          <li th:each="entry : ${deptMap}">
-            <strong th:each=" code : ${list2}"
-            		th:if="${code.ucode} == ${entry.key}"
-            		th:text="${code.ncode}">부서코드</strong>
-        
-            <ul>
-              <li th:each="emp : ${entry.value}">
-                <a href="#"
-                   class="org-user-btn"
-                   th:each=" code : ${list2}"
-                   th:attr="data-name=${emp.name}, data-empno=${emp.empno}"
-                   th:if="${code.ucode} == ${emp.position}"
-                   th:text="${code.ncode + ' : ' + emp.name}">이름</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+		  <ul>
+		    <li th:each="entry : ${deptMap}">
+		      <strong th:each="code : ${list2}"
+		              th:if="${code.ucode} == ${entry.key}"
+		              th:text="${code.ncode}">부서</strong>
+		      <ul>
+		        <li th:each="emp : ${entry.value}" style="position:relative;">
+		          <a href="#"
+		             class="org-user-btn"
+		             th:attr="data-name=${emp.name},data-empno=${emp.empno}"
+		             th:each="code : ${list2}"
+		             th:if="${code.ucode} == ${emp.position}"
+		             th:text="${code.ncode + ' : ' + emp.name}">이름</a>
+		
+		          <!-- 별 아이콘: favList에 있으면 full, 없으면 empty -->
+		          <img src="/images/star_full.png"
+		               class="star"
+		               th:if="${favList.contains(emp.empno)}"
+		               th:attr="data-empno=${emp.empno}" />
+		
+		          <img src="/images/star_empty.png"
+		               class="star"
+		               th:unless="${favList.contains(emp.empno)}"
+		               th:attr="data-empno=${emp.empno}" />
+		        </li>
+		      </ul>
+		    </li>
+		  </ul>
+		</div>
+		
     </div>
   </div>
 </div>
+
+<script src="/js/jquery-3.6.0.min.js"></script>
+<script>
+$(function(){
+  // 별 클릭 시 즐겨찾기 토글
+  $(document).on('click', '.org_tree .star', function(e){
+    e.preventDefault();
+    const $img     = $(this);
+    const fempno   = $img.data('empno');
+    console.log("별 클릭됨", fempno);
+    const url      = '/favor/toggle';  // 컨트롤러에 매핑된 토글 엔드포인트
+    $.post(url, { fempno })
+		.done(function(resp){
+		  	if(resp === "added"){
+		    	$img.attr('src','/images/star_full.png');
+		  	} else if(resp === "removed"){
+				$img.attr('src','/images/star_empty.png');
+		  	}
+		})
+     .fail(function(){
+       alert('즐겨찾기 토글에 실패했습니다.');
+     });
+  });
+});
+</script>

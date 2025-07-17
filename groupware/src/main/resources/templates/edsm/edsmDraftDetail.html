@@ -1,0 +1,311 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>임시보관 상세보기</title>
+        <link rel="stylesheet" href="/css/style.css">
+        <script src="/js/jquery-3.6.0.min.js"></script>
+    </head>
+    <body>
+        <header th:insert="fragments/header"></header>
+        <div class="flex_between">
+            <aside th:insert="fragments/nav"></aside>
+            <section class="contents">
+                <form id="frm" name="frm">
+                    <!-- Hidden fields -->
+                    <input type="hidden" id="edsmnoHidden" th:value="${edsm.edsmno}" />
+                    <input type="hidden" id="svac" name="svac" />
+                    <input type="hidden" id="evac" name="evac" />
+                    <input type="hidden" id="approverIds" name="approverIds" />
+
+                    <div class="upload-wrapper">
+                        <h3 class="tit_h3">임시보관 상세보기</h3>
+                        <table>
+                            <tr class="form-row">
+                                <th>휴가일자</th>
+                                <td>
+                                    <div class="flex_between">
+                                        <input type="date" name="svacFull" id="svacFull" th:value="${#dates.format(edsm.svac, 'yyyy-MM-dd')}" />
+                                        &nbsp;&nbsp;&nbsp;
+                                        <input type="date" name="evacFull" id="evacFull" th:value="${#dates.format(edsm.evac, 'yyyy-MM-dd')}" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="form-row">
+                                <th>구분</th>
+                                <td>
+                                    <ul class="flex_start" style="gap: 20px;">
+                                        <li><input type="radio" name="vtype" value="D40001" th:checked="${edsm.vtype=='D40001'}" /> 연차</li>
+                                        <li><input type="radio" name="vtype" value="D40002" th:checked="${edsm.vtype=='D40002'}" /> 오전반차</li>
+                                        <li><input type="radio" name="vtype" value="D40003" th:checked="${edsm.vtype=='D40003'}" /> 오후반차</li>
+                                        <li><input type="radio" name="vtype" value="D40004" th:checked="${edsm.vtype=='D40004'}" /> 공가</li>
+                                        <li><input type="radio" name="vtype" value="D40005" th:checked="${edsm.vtype=='D40005'}" /> 병가</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr class="form-row">
+                                <th>제목</th>
+                                <td><input type="text" name="edtitle" th:value="${edsm.edtitle}" /></td>
+                            </tr>
+                            <tr class="form-row">
+                                <th>결재자</th>
+                                <td>
+                                    <div class="approvers flex_start">
+                                        <button class="button1" id="openFavBtn" type="button">즐겨찾기</button>
+                                        <button id="openOrgBtn" class="button1" type="button">+ 결재자 추가</button>
+                                    </div>
+                                    <div id="approverList" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+											    <!-- 기안자-->
+											    <div class="approver-item flex_start" style="gap:5px; align-items:center;">
+											        <input type="text" name="approvers" class="input1"
+											               th:value="${empNameMap[edsm.empno]}"
+											               th:attr="data-empno=${edsm.empno}" readonly />
+											    </div>
+											    <!-- 결재자-->
+											    <th:block th:each="line : ${lines}" th:if="${line.edst=='C30001'}">
+											        <div class="approver-item flex_start" style="gap:5px; align-items:center;">
+											            <input type="text" name="approvers" class="input1"
+											                   th:value="${empNameMap[line.empno]}"
+											                   th:attr="data-empno=${line.empno}" readonly />
+											            <button class="button1 remove-btn" type="button" onclick="removeApprover(this)">삭제</button>
+											        </div>
+											    </th:block>
+											</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="form-row">
+                                <th>공유자</th>
+                                <td><input type="text" name="viewer" placeholder="공유자" /></td>
+                            </tr>
+                            <tr class="form-row">
+                                <th>첨부문서</th>
+                                <td><input type="text" name="attachment" th:value="${edsm.attachment}" /></td>
+                            </tr>
+                            <tr class="form-row">
+                                <th>기안내용</th>
+                                <td><textarea name="edcont" th:text="${edsm.edcont}"></textarea></td>
+                            </tr>
+                        </table>
+                        <div class="btn_frame2">
+                            <button type="button" id="btn_isdraft" class="button1">임시보관</button>
+                            <button type="button" id="btn_submit" class="button1">기안 상신</button>
+                            <button type="button" class="button2" onclick="history.back()">닫기</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+			<div th:insert="edsm/empList1 :: orgModal"></div>
+			<div th:insert="edsm/favorList :: favModal"></div>
+        <script>
+			$(function(){
+				function validateForSubmit() {
+				    const sv = $('input[name="svacFull"]').val().trim();
+				    if (!sv) { 
+						alert('휴가 시작일을 선택하세요.'); 
+						$('input[name="svacFull"]').focus(); 
+						return false; 
+					}
+				    const ev = $('input[name="evacFull"]').val().trim();
+				    if (!ev) { 
+						alert('휴가 종료일을 선택하세요.'); 
+						$('input[name="evacFull"]').focus(); 
+						return false; 
+					}
+				    const title = $('input[name="edtitle"]').val().trim();
+				    if (!title) { 
+						alert('제목을 입력하세요.'); 
+						$('input[name="edtitle"]').focus(); 
+						return false; 
+					}
+				    const vtypeChecked = $('input[name="vtype"]:checked').length;
+				    if (!vtypeChecked) { 
+						alert('휴가 구분을 선택하세요.'); 
+						$('input[name="vtype"]').first().focus(); 
+						return false; 
+					}
+				    const content = $('textarea[name="edcont"]').val().trim();
+				    if (!content) { 
+						alert('기안내용을 입력하세요.'); 
+						$('textarea[name="edcont"]').focus(); 
+						return false; 
+					}
+				    const approverCount = $('#approverList input[name="approvers"]').length;
+				    if (approverCount < 2) {
+				      alert('결재자는 본인 외에 최소 한 명 이상 있어야 합니다.');
+				      return false;
+				    }
+				    return true;
+				  }
+
+				  // 임시저장용 검증
+				  function validateForDraft() {
+				    const sv = $('input[name="svacFull"]').val().trim();
+				    if (!sv) { 
+							alert('휴가 시작일을 선택하세요.');
+							$('input[name="svacFull"]').focus();
+							return false;
+					}
+				    const ev = $('input[name="evacFull"]').val().trim();
+				    if (!ev) {
+						alert('휴가 종료일을 선택하세요.');
+						$('input[name="evacFull"]').focus();
+						return false;
+					}
+				    const title = $('input[name="edtitle"]').val().trim();
+				    if (!title) {
+						alert('제목을 입력하세요.'); 
+						$('input[name="edtitle"]').focus(); 
+						return false;
+						
+					}
+				    return true;
+				  }
+				  
+			  //날짜 hidden 필드에 채우기
+			  function fillDateFields(){
+			    const sv = $('#svacFull').val();
+			    const ev = $('#evacFull').val();
+			    $('#svac').val(sv ? sv + ' 00:00:00' : '');
+			    $('#evac').val(ev ? ev + ' 23:59:59' : '');
+			  }
+			
+			  // 결재자 ID 문자열로 수집
+			  function collectApproverIds(){
+			    return $('#approverList input[name="approvers"]').map(function(){
+			      return $(this).data('empno');
+			    }).get().join(',');
+			  }
+			
+			  //공통 폼 전송 함수
+			  function sendForm(url, redirectTo){
+				  fillDateFields();
+				  $('#approverIds').val(collectApproverIds());
+				  const data = $('#frm').serialize();
+
+				  $.post(url, data)
+				    .done(function(){
+				      alert('저장 완료');
+				      window.location.href = redirectTo;
+				    })
+				    .fail(function(){
+				      alert('저장 실패');
+				    });
+				}
+				
+			  $('#btn_submit').on('click', function(){
+				  if (!validateForSubmit()) return;
+				  sendForm('/edsm/edsmSave', '/edsm');
+				});
+				$('#btn_isdraft').on('click', function(){
+				  if (!validateForDraft()) return;
+				  sendForm('/edsm/edsmIsdraft', '/edsm/edsmDraft');
+				});
+			  
+			  
+			  //결재자 삭제 함수 (글로벌로 노출)
+			  function removeApprover(btn){
+			    const items = $('#approverList .approver-item');
+			    if(items.length <= 1){
+			      alert('최소 한 명의 결재자를 남겨두세요.');
+			      return;
+			    }
+			    $(btn).closest('.approver-item').remove();
+			  }
+			  window.removeApprover = removeApprover;
+			
+			  	
+			
+			  //모달 Open / Close
+			  $('#openOrgBtn').click(()=> $('#orgChartModal').css('display','flex'));
+			  $('#closeOrgBtn').click(()=> $('#orgChartModal').hide());
+			
+			  //조직도 내 사용자 선택 시 결재자 추가
+			  $(document).on('click', '.org-user-btn', function(e){
+			    e.preventDefault();
+			    const name  = $(this).data('name');
+			    const empno = $(this).data('empno');
+			    // 중복 체크
+			    if($('#approverList input[value="'+name+'"]').length){
+			      alert('이미 선택된 결재자입니다.'); return;
+			    }
+			    // 최대 4명 제한
+			    if($('#approverList input[name="approvers"]').length >= 4){
+			      alert('최대 4명까지만 추가할 수 있습니다.'); return;
+			    }
+			    // 새 아이템 생성
+			    const $item = $(`
+			      <div class="approver-item flex_start" style="gap:5px; align-items:center;">
+			        <input type="text" name="approvers" class="input1" readonly
+			               value="${name}" data-empno="${empno}" />
+			        <button class="button1 remove-btn" type="button" onclick="removeApprover(this)">삭제</button>
+			      </div>`);
+			    $('#approverList').append($item);
+			    $('#orgChartModal').hide();
+			  });
+			});
+			</script>
+			<script>
+		$(function(){
+		  // 별 클릭 시 즐겨찾기 토글
+		  $(document).on('click', '.org_tree .star', function(e){
+		    e.preventDefault();
+		    const $img   = $(this);
+		    const fempno = $img.data('empno');
+		    console.log("별 클릭됨", fempno); // 디버깅용
+		    const url    = '/favor/toggle';
+		    $.post(url, { fempno })
+		      .done(function(resp){
+		        if(resp === "added"){
+		          $img.attr('src','/images/star_full.png');
+		        } else if(resp === "removed"){
+		          $img.attr('src','/images/star_empty.png');
+		        }
+		      })
+		      .fail(function(){
+		        alert('즐겨찾기 토글에 실패했습니다.');
+		      });
+		  });
+		});
+		</script>
+		<script>
+		$(function() {
+		  // 모달 오픈
+		  $('#openFavBtn').on('click', function () {
+		    $('#favModal').css('display', 'flex');
+		  });
+		  // 모달 닫기
+		  $('#closeFavBtn').on('click', function () {
+		    $('#favModal').hide();
+		  });
+		
+		  // 이름 클릭해서 결재자 추가
+		  $(document).on('click', '.fav-user-btn', function (e) {
+		    e.preventDefault();
+		    const name = $(this).data('name');
+		    const empno = $(this).data('empno');
+		    const list = $('#approverList');
+		    // 중복 방지
+		    const duplicate = Array.from(list.find('input[name="approvers"]'))
+		      .some(input => input.value === name);
+		    if (duplicate) {
+		      alert("이미 선택된 결재자입니다."); return;
+		    }
+		    if (list.find('input[name="approvers"]').length >= 4) {
+		      alert('최대 4명까지만 추가 가능합니다.'); return;
+		    }
+		    const newItem = $(`
+		      <div class="approver-item flex_start" style="gap:5px; align-items:center;">
+		        <input type="text" name="approvers" class="input1" value="${name}" data-empno="${empno}" readonly/>
+		        <button class="button1 remove-btn" type="button" onclick="removeApprover(this)">삭제</button>
+		      </div>
+		    `);
+		    list.append(newItem);
+		    $('#favModal').hide();
+		    updateRemoveButtons && updateRemoveButtons();
+		  });
+		});
+		</script>
+    </body>
+</html>

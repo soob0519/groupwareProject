@@ -1,0 +1,22 @@
+package com.groupware.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.groupware.entity.ViewerDto;
+import com.groupware.repository.ViewerRepository;
+
+@Service
+public class ViewerService {
+	
+	public final ViewerRepository viewerRepository;
+	public ViewerService(ViewerRepository viewerRepository ) {
+		this.viewerRepository = viewerRepository;
+	
+	}
+	public List<ViewerDto> findByEdsmno(int edsmno) {
+		return viewerRepository.findByEdsmno(edsmno);
+	}
+	
+}

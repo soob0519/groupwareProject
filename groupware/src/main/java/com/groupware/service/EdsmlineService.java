@@ -1,5 +1,7 @@
 package com.groupware.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.groupware.entity.EdsmlineDto;
@@ -13,8 +15,14 @@ public class EdsmlineService {
 		this.edsmlineRepository = edsmlineRepository;
 	}
 	public EdsmlineDto save(EdsmlineDto line) {
-		
 		return edsmlineRepository.save(line);
+	}
+	
+	public List<EdsmlineDto> findByEdsmnos(List<Integer> edsmnos) {
+		return edsmlineRepository.findByEdsmnoIn(edsmnos);
+	}
+	public List<EdsmlineDto> findByEdsmno(int edsmno) {
+		return edsmlineRepository.findByEdsmno(edsmno);
 	}
 	
 }
