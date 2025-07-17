@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8" />
+		<title>차단메일함</title>
+		<link rel="stylesheet" href="/css/style.css">
+		<script src="/js/jquery-3.6.0.min.js"></script>
+		<script src="/js/script.js"></script>
+		<script>
+		  if (window.location.search.length > 0) {
+		    // 쿼리 스트링이 있으면 강제로 기본 주소로 리다이렉트
+		    window.history.replaceState({}, document.title, window.location.pathname);
+		  }
+		</script>
+		<script>
+			$(document).ready(function() {
+			  // 전체선택 토글
+			  $('#selectAll').change(function() {
+			    $('.mail-checkbox').prop('checked', $(this).prop('checked'));
+			  });
+			
+			  // 전체해지 버튼 클릭
+			  $('#unblockAllBtn').click(function() {
+			    if(confirm('차단한 사람을 모두 해제하시겠습니까?')) {
+			      $.post('/mail/unblock/all', function() {
+			        alert('차단한 모든 사용자가 해제되었습니다.');
+			        location.reload();
+			      }).fail(function() {
+			        alert('전체해지 중 오류가 발생했습니다.');
+			      });
+			    }
+			  });
+			
+			  // 선택해지 버튼 클릭
+			  $('#unblockSelectedBtn').click(function() {
+			    let selected = $('.mail-checkbox:checked').map(function() { return $(this).val(); }).get();
+			    if(selected.length === 0) return alert('해지할 사용자를 선택하세요.');
+			    if(confirm(selected.length + '명을 차단 해제하시겠습니까?')) {
+			      $.post('/mail/unblock/selected', { mailIds: selected }, function() {
+			        alert('선택한 사용자가 차단 해제되었습니다.');
+			        location.reload();
+			      }).fail(function() {
+			        alert('선택해지 중 오류가 발생했습니다.');
+			      });
+			    }
+			  });
+			
+			  // 전체삭제 버튼 클릭
+			  $('#deleteAllBtn').click(function() {
+  if(confirm('차단 메일을 모두 휴지통으로 이동하시겠습니까?')) {
+	  $.post('/mail/mailblock/deleteAllToTrash', function() {
+		  alert('차단 메일이 모두 휴지통으로 이동했습니다.');
+		  location.reload();
+		}).fail(function() {
+		  alert('전체삭제 중 오류가 발생했습니다.');
+		});
+
+ 
+  }
+});
+
+			
+			  // 선택삭제 버튼 클릭
+			  $('#deleteSelectedBtn').click(function() {
+			    let selected = $('.mail-checkbox:checked').map(function() { return $(this).val(); }).get();
+			    if(selected.length === 0) return alert('삭제할 메일을 선택하세요.');
+			    if(confirm(selected.length + '개의 메일을 삭제하시겠습니까?')) {
+			      $.post('/mail/deleteSelected', { mailIds: selected }, function() {
+			        alert('선택한 메일이 휴지통으로 이동했습니다.');
+			        location.reload();
+			      }).fail(function() {
+			        alert('선택삭제 중 오류가 발생했습니다.');
+			      });
+			    }
+			  });
+			});
+			</script>
+		
+
+		<script th:inline="javascript">
+		  /*<![CDATA[*/
+		  /* msg가 있으면 alert */
+		  /* ${msg}가 null이나 빈 문자열이면 alert 안 뜸 */
+		  var msg = /*[[${msg}]]*/ null;
+		  if (msg != null && msg !== '') {
+		    alert(msg);
+		  }
+		  /*]]>*/
+		</script>
+	
+
+
+	</head>
+	<body>
+
+
+
+
+  <!-- 기존 내용들 -->
+		<!-- header include -->
+		<header th:insert="fragments/header"></header>
+		<div class="flex_between">
+			<!-- nav include -->
+			<nav th:insert="fragments/nav"></nav>
+			
+			<section class="contents">
+					<!-- 메일 내용 영역 -->
+					    <div class="content">
+					      <!-- 상단 바 -->
+						<div class="top_bar">
+							<div>
+								<button id="unblockAllBtn" class="button1" type="button">전체해지</button>
+								<button id="unblockSelectedBtn" class="button1" type="button">선택해지</button>
+								<button id="deleteAllBtn" class="button1" type="button">전체삭제</button>
+								<button id="deleteSelectedBtn" class="button1" type="button">선택삭제</button>
+
+								
+								<div class="search">
+									<form th:action="@{/mail/mailblock}" method="get" class="search">
+										<select name="searchType" class="search_select">
+										  <option value="receivername" th:selected="${searchType == 'receivername'}">수신자</option>
+										</select>
+										
+									  <input type="text" name="keyword" placeholder="검색어를 입력해주세요"
+       									class="search_input" th:value="${keyword}" />
+									  
+									  <button type="submit" class="search_button">검색</button>
+									</form>
+									
+								</div>
+							</div>
+						</div>
+						<div class="data_total">
+						<span>차단 메일함</span><br>
+						<span>총 <strong th:text="${ptotal}"></strong>개의 메일</span>
+						</div>
+					    <!-- 메일 목록 테이블 -->
+					    <table class="table1">
+							  <thead>
+							    <tr>
+							      <th class="checkbox-cell"><input type="checkbox" id="selectAll"></th>
+							      <th>번호</th>
+							      <th>성명</th>
+							      <th>제목</th>
+							      <th>날짜</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							    <!-- 메일이 없을 경우 메시지 -->
+							    <tr th:if="${#lists.isEmpty(plist)}">
+							      <td colspan="6" style="text-align: center;">메일이 없습니다.</td>
+							    </tr>
+							
+							    <!-- 메일 리스트 출력 -->
+							    <tr th:each="mail, myState : ${plist}">
+							      <td>
+							        <input type="checkbox" class="mail-checkbox" name="mailIds" th:value="${mail.mailno ?: 0}" />
+							      </td>
+							      <td th:text="${startPageRownum != null ? startPageRownum - myState.index : ''}"></td> 
+							      <td th:text="${mail.name}" th:onclick="|location.href='/mail/maildetail/${mail.mailno}'|" style="cursor:pointer;"></td>
+							      <td th:text="${mail.subject ?: ''}"
+							          th:onclick="|location.href='/mail/maildetail/${mail.mailno}'|"
+							          style="cursor:pointer;"></td>
+							      <td th:text="${mail.sentAt != null ? #temporals.format(mail.sentAt, 'yyyy-MM-dd') : ''}"></td>
+							    </tr> 
+							  </tbody>
+							</table>
+												    
+
+					     	<!-- 페이지네이션 -->
+							<div class="pagination" th:if="${ptotalPage > 0}">
+							  <!-- 맨앞 페이지 -->
+							  <a th:href="@{|/mail/mailblock/mailblock?indexpage=1${!#strings.isEmpty(keyword) ? '&keyword=' + keyword : ''}${!#strings.isEmpty(searchType) ? '&searchType=' + searchType : ''}|}"
+							     th:classappend="${currentPage == 1} ? 'disabled'">&laquo;&laquo;</a>
+							
+							  <!-- 이전 페이지 -->
+							  <a th:href="@{|/mail/mailblock/mailblock?indexpage=${currentPage > 1 ? currentPage - 1 : 1}${!#strings.isEmpty(keyword) ? '&keyword=' + keyword : ''}${!#strings.isEmpty(searchType) ? '&searchType=' + searchType : ''}|}"
+							     th:classappend="${currentPage == 1} ? 'disabled'">&laquo;</a>
+							
+							  <!-- 블럭 숫자 페이징 -->
+							  <span th:each="n : ${#numbers.sequence(startBlockPage, endBlockPage)}">
+							    <a th:href="@{|/mail/mailblock/mailblock?indexpage=${n}${!#strings.isEmpty(keyword) ? '&keyword=' + keyword : ''}${!#strings.isEmpty(searchType) ? '&searchType=' + searchType : ''}|}"
+							       th:classappend="${n == currentPage} ? 'active'">
+							      <span th:text="${n}"></span>
+							    </a>
+							  </span>
+							  
+							
+							  <!-- 다음 페이지 -->
+							  <a th:href="@{|/mail/mailblock/mailblock?indexpage=${currentPage < ptotalPage ? currentPage + 1 : ptotalPage}${!#strings.isEmpty(keyword) ? '&keyword=' + keyword : ''}${!#strings.isEmpty(searchType) ? '&searchType=' + searchType : ''}|}"
+							     th:classappend="${currentPage == ptotalPage} ? 'disabled'">&raquo;</a>
+							
+							  <!-- 맨뒤 페이지 -->
+							  <a th:href="@{|/mail/mailblock/mailblock?indexpage=${ptotalPage}${!#strings.isEmpty(keyword) ? '&keyword=' + keyword : ''}${!#strings.isEmpty(searchType) ? '&searchType=' + searchType : ''}|}"
+							     th:classappend="${currentPage == ptotalPage} ? 'disabled'">&raquo;&raquo;</a>
+							</div>
+									     
+					  </div>
+			</section>
+		</div>
+	</body>
+</html>

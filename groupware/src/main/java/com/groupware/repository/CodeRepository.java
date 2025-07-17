@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import com.groupware.entity.CodeDto;
 
 
-
 public interface CodeRepository extends JpaRepository<CodeDto,String> {
 	
 	// 부서명으로 코드값 가져오기
@@ -19,5 +18,5 @@ public interface CodeRepository extends JpaRepository<CodeDto,String> {
 	// 부서 목록 가져오기
 	@Query("SELECT c FROM CodeDto c WHERE c.pcode = 'B200' ORDER BY c.dorder ASC")
 	List<CodeDto> findAllActiveDepartments();
-
+	
 }
