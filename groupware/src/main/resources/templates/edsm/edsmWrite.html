@@ -402,7 +402,16 @@
 			$(document).on('click', '.btn-close-viewer', function(){
 			  $('.viewer-modal').css('display','none');
 			});
-		
+			
+
+			// 줄겨찾기 모달 열기
+			$(document).on('click', '#openFavBtn', function() {
+			  $('#favModal').css('display', 'flex');
+			});
+			$(document).on('click', '#closeFavBtn', function() {
+			  $('#favModal').css('display', 'none');
+			});
+			
 		  // 이름 클릭해서 결재자 추가
 		  $(document).on('click', '.fav-user-btn', function (e) {
 		    e.preventDefault();
