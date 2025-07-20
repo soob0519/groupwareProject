@@ -18,4 +18,7 @@ public interface EdsmlineRepository extends JpaRepository<EdsmlineDto,Integer> {
     
     // 결재선 삭제
 	void deleteByEdsmno(int edsmno);
+	
+	// 사원이 가지고 있는 결제라인 찾는 거
+	List<EdsmlineDto> findByEmpno(int empno);
 }

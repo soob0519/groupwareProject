@@ -29,5 +29,8 @@ public class EdsmlineService {
 		edsmlineRepository.deleteByEdsmno(edsmno);  // 결재선 먼저 삭제1
 		
 	}
+	public List<EdsmlineDto> findByEmpno(int empno) {
+		return edsmlineRepository.findByEmpno(empno);
+	}
 	
 }
