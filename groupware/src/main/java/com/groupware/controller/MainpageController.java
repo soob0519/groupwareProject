@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.groupware.entity.InoticeDto;
 import com.groupware.entity.ScheduleDto;
+import com.groupware.service.InoticeService;
 import com.groupware.service.ScheduleService;
 
 @Controller
@@ -24,8 +27,11 @@ import com.groupware.service.ScheduleService;
 public class MainpageController {
 	
 	public final ScheduleService scheduleService;
-	public MainpageController(ScheduleService scheduleService) {
+	private final InoticeService inoticeService;
+	public MainpageController(ScheduleService scheduleService,
+								InoticeService inoticeService) {
 		this.scheduleService = scheduleService;
+		this.inoticeService = inoticeService;
 	}
 	
 	
@@ -33,7 +39,10 @@ public class MainpageController {
 	 * 메인화면 출력
 	 */
 	@GetMapping
-	public ModelAndView index(String year, String month) {
+	public ModelAndView index(String year, String month
+							,@RequestParam(defaultValue = "1") int indexpage, 
+		 	 				  @RequestParam(defaultValue =  "") String search,
+		 	 				  @RequestParam(defaultValue =  "") String deptno) {
 	    ModelAndView model = new ModelAndView();
 
 	    Calendar cal = Calendar.getInstance();
@@ -54,11 +63,25 @@ public class MainpageController {
 	    int lastDay = cal.getActualMaximum(Calendar.DATE);
 	    int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 
-	    // 서비스에서 DTO 리스트 받아오기
+	    
+	    // 공지관련
 	    List<ScheduleDto> list = scheduleService.findScheduleByYearMonth(yy, mm);
-
-	    model.setViewName("/index/index");
-
+ 		Long total = inoticeService.count();
+ 		int pageData = 10;  
+ 	    Page<InoticeDto> page = inoticeService.list(indexpage -1, pageData, search, deptno);
+ 		int startPageRownum = (int)(page.getTotalElements() - page.getNumber() * pageData);
+ 		
+ 		model.setViewName("/index/index");
+ 		
+ 		// 공지관련
+ 		model.addObject("search", search);
+ 		model.addObject("deptno", deptno);
+ 		model.addObject("indexpage", indexpage);
+ 		model.addObject("plist",page.getContent());
+ 		model.addObject("startPageRownum",startPageRownum);
+ 		model.addObject("ptotal",page.getTotalElements());   
+ 		
+ 		
 	    model.addObject("menu", "schedule");
 	    model.addObject("list", list);
 	    model.addObject("lastDay", lastDay);
