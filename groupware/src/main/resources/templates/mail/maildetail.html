@@ -33,9 +33,6 @@
 	}
 	</script>
 	
-
-	
-
 	<body>
 		<!-- header include -->
 		<header th:insert="fragments/header"></header>
@@ -109,10 +106,19 @@
 							      <p th:utext="${#strings.replace(mail.content != null ? mail.content : '', '\n', '<br/>')}"></p>
 							    </td>
 							  </tr>
-							  
+							  <tr th:if="${mail.mailAttachment == 'Y'}">
+							  <th>첨부파일</th>
+								<td>
+								  <a th:href="@{/upload/{file}(file=${mail.attachmentName})}" download>
+								    <img th:src="@{/img/fileicon.svg}" alt="파일 아이콘" style="width:20px; height:20px; vertical-align:middle;"/>
+								    <span>첨부파일</span>
+								  </a>
+								</td>
+															
+								</tr>
+														  
 							</table>
 					  </div>
-
 			</section>
 		</div>
 	</body>
