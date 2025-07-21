@@ -57,9 +57,10 @@
 			    border-radius: 4px;
 			  "></ul>
 			<!-- ★ 로그인된 유저 이메일 세션에서 주입할 것 ★ -->
-			<input type="hidden" id="loggedInEmail" value="test1@example.com" />
+			<!-- <input type="hidden" id="loggedInEmail" value="test1@example.com" /> -->
 			<!-- 실제 배포 시에는 아래처럼 서버에서 세션 유저 이메일 넣어줘야 함 -->
-			<!-- <input type="hidden" id="loggedInEmail" th:value="${session.user.email}" /> -->
+			<!-- 세션에서 userid 꺼내서 이메일 주소 구성 -->
+			<input type="hidden" id="loggedInEmail" th:value="${session.userid + '@example.com'}" />
 			
 			  <div class="send-to-self-wrapper" th:if="${!replyMode}" style="width: 6%; text-align: right;">
 			    <input type="checkbox" id="sendToSelf" name="sendToSelf" />
