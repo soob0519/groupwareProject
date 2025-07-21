@@ -14,17 +14,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.Pro.dto.MailListDto;
-import com.Pro.entity.BlockDto;
-import com.Pro.entity.CodeDto;
-import com.Pro.entity.EmpDto;
-import com.Pro.entity.MailDto;
-import com.Pro.entity.TeamMailDto;
-import com.Pro.repository.BlockRepository;
-import com.Pro.repository.CodeRepository;
-import com.Pro.repository.EmpRepository;
-import com.Pro.repository.MailRepository;
-import com.Pro.repository.TeamMailRepository;
+import com.groupware.dto.MailListDto;
+import com.groupware.entity.BlockDto;
+import com.groupware.entity.CodeDto;
+import com.groupware.entity.EmpDto;
+import com.groupware.entity.MailDto;
+import com.groupware.entity.TeamMailDto;
+import com.groupware.repository.BlockRepository;
+import com.groupware.repository.CodeRepository;
+import com.groupware.repository.EmpRepository;
+import com.groupware.repository.MailRepository;
+import com.groupware.repository.TeamMailRepository;
 
 import jakarta.transaction.Transactional;
 

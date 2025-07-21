@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.Pro.repository.TeamMailRepository;
+import com.groupware.repository.TeamMailRepository;
 
 @Service
 public class TeamMailService {

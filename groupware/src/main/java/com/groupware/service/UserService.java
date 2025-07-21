@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.Pro.dto.UserDto;
-import com.Pro.entity.CodeDto;
-import com.Pro.entity.EmpDto;
-import com.Pro.repository.CodeRepository;
-import com.Pro.repository.EmpRepository;
+import com.groupware.dto.UserDto;
+import com.groupware.entity.CodeDto;
+import com.groupware.entity.EmpDto;
+import com.groupware.repository.CodeRepository;
+import com.groupware.repository.EmpRepository;
 
 
 @Service

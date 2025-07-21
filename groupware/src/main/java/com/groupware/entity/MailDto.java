@@ -66,7 +66,8 @@ public class MailDto {
 	@Column(name = "MAIL_FULLY_DELETED_RECEIVER", length = 1, nullable = false)
 	private String mailFullyDeletedReceiver = "N";// 수신자가 메일을 '완전삭제'했는지 여부 기본값 N
 
-	 
+	@Column(name = "ATTACHMENT_NAME", length = 255)
+	private String attachmentName;  // 첨부파일명 또는 경로 (서버 내 상대경로 등) 
 	 
 	 
 	 

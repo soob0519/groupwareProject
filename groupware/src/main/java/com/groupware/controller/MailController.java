@@ -1,20 +1,20 @@
 // MailController.java
 package com.groupware.controller;
 
-import com.Pro.dto.MailListDto;
-import com.Pro.dto.UserDto;
-import com.Pro.entity.BlockDto;
-import com.Pro.entity.CodeDto;
-import com.Pro.entity.EmpDto;
-import com.Pro.entity.MailDto;
-import com.Pro.repository.BlockRepository;
-import com.Pro.repository.CodeRepository;
-import com.Pro.repository.EmpRepository;
-import com.Pro.repository.MailRepository;
-import com.Pro.repository.TeamMailRepository;
-import com.Pro.service.MailService;
-import com.Pro.service.TeamMailService;
-import com.Pro.service.UserService;
+import com.groupware.dto.MailListDto;
+import com.groupware.dto.UserDto;
+import com.groupware.entity.BlockDto;
+import com.groupware.entity.CodeDto;
+import com.groupware.entity.EmpDto;
+import com.groupware.entity.MailDto;
+import com.groupware.repository.BlockRepository;
+import com.groupware.repository.CodeRepository;
+import com.groupware.repository.EmpRepository;
+import com.groupware.repository.MailRepository;
+import com.groupware.repository.TeamMailRepository;
+import com.groupware.service.MailService;
+import com.groupware.service.TeamMailService;
+import com.groupware.service.UserService;
 
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpSession;
@@ -97,18 +97,17 @@ public class MailController {
         ModelAndView model = new ModelAndView();
 
         // 세션에서 로그인된 사용자 아이디 꺼내기 (실제 배포용)
-        /*
+
         String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
         }
         String name = (String) session.getAttribute("name");
-        */
-        
-        String userId = "test1";  // 테스트용 하드코딩
-        String name = "테스트";
 
-       
+        
+        //String userId = "test1";  // 테스트용 하드코딩
+        //String name = "테스트";
+
         List<String> deptEmails = teamMailService.findTeamMailsByUserId(userId);  // 유저가 속한 부서 대표메일 리스트
 
         Page<MailDto> mailPage;
@@ -168,12 +167,12 @@ public class MailController {
     public ModelAndView mailDetail(@PathVariable Long mailno, HttpSession session) {
         ModelAndView model = new ModelAndView();
 
-        /* String userId = (String) session.getAttribute("userid");
+        String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
-        }*/
+        }
 
-        String userId = "test1"; // 테스트용 하드코딩
+        //String userId = "test1"; // 테스트용 하드코딩
 
         try {
             MailDto mail = mailService.findByIdAndUserId(mailno, userId);
@@ -234,11 +233,8 @@ public class MailController {
     @PostMapping("/delete")
     public String deleteMail(@RequestParam("mailno") Long mailno, HttpSession session) {
         
-    	//String userId = (String) session.getAttribute("userid");
-        
-    	
-    	// 세션에서 userId 꺼내기 (하드코딩 테스트용)
-        String userId = "test1";
+    	String userId = (String) session.getAttribute("userid");
+        // String userId = "test1"; //하드코딩 테스트용
 
         // 현재 로그인 사용자가 발신자인지 수신자인지 확인 후 soft delete
         mailService.softDeleteByUser(mailno, userId);
@@ -246,34 +242,24 @@ public class MailController {
         return "redirect:/mail"; // 삭제 후 전체메일 목록으로 이동
     }
 
-
     //전체메일 다중삭제 (휴지통 이동)
     @PostMapping("/deleteSelected")
     @ResponseBody
     public String deleteSelected(@RequestParam("mailIds") List<Long> mailIds, HttpSession session) {
-    	//String userId = (String) session.getAttribute("userid");
-    	
-    	// 세션에서 userId 꺼내기 (하드코딩 테스트용)
-        String userId = "test1";
+    	String userId = (String) session.getAttribute("userid");
+        //String userId = "test1"; //하드코딩 테스트용
 
         mailService.deleteMailsByIds(mailIds, userId);
         return "ok";
     }
-
     
     //전체메일 전체삭제 (휴지통 이동)
     @PostMapping("/deleteAllToTrash")
     public String deleteAllToTrash(HttpSession session) {
 
-    	// 세션에서 로그인된 사용자 아이디 꺼내기 (실제 배포용)
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserid();
-    	//String userId = (String) session.getAttribute("userid");
-    	// 세션에서 userId 꺼내기 (하드코딩 테스트용)
-        String userId = "test1";
+    	String userId = (String) session.getAttribute("userid");
+    	
+        //String userId = "test1"; 하드코딩 테스트용
 
         mailService.moveAllMailsToTrash(userId);
         return "redirect:/mail";
@@ -292,16 +278,16 @@ public class MailController {
 
         
         // 세션에서 로그인된 사용자 아이디 꺼내기
-        /*String name = (String) session.getAttribute("name");
+        String name = (String) session.getAttribute("name");
         String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
-        }*/
+        }
          
-        // 실제로는 세션에서 꺼내야함
+
         
-        String userId = "test1";  
-        String name = "테스트";
+        //String userId = "test1";  하드코딩 테스트용
+        //String name = "테스트"; 하드코딩 테스트용
 
         Page<MailListDto> page;
         
@@ -355,11 +341,9 @@ public class MailController {
     @PostMapping("/deleteSelectedReceived")
     @ResponseBody
     public String deleteSelectedReceived(@RequestParam("mailIds") List<Long> mailIds, HttpSession session) {
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) return "unauthorized";
-        // String userId = loginMember.getUserid();
-    	//String userId = (String) session.getAttribute("userid");
-        String userId = "test1"; // 테스트용
+        
+    	String userId = (String) session.getAttribute("userid");
+        // String userId = "test1"; //하드코딩 테스트용
 
         mailService.deleteReceivedMailsByIds(userId, mailIds);
         return "ok";
@@ -370,11 +354,9 @@ public class MailController {
     @PostMapping("/deleteAllReceived")
     @ResponseBody
     public ResponseEntity<String> deleteAllReceived(HttpSession session) {
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
-        // String userId = loginMember.getUserid();
-    	//String userId = (String) session.getAttribute("userid");
-    	String userId = "test1"; // 테스트용
+         
+    	String userId = (String) session.getAttribute("userid");
+    	// String userId = "test1"; // 하드코딩 테스트용
         try {
             mailService.moveAllReceivedMailsToTrash(userId);
             return ResponseEntity.ok("ok");
@@ -396,19 +378,15 @@ public class MailController {
         ModelAndView model = new ModelAndView();
 
         // 세션에서 로그인된 사용자 아이디 꺼내기
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserid();
-       /* String name = (String) session.getAttribute("name");
+       
+        String name = (String) session.getAttribute("name");
         String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
-        }*/
-        // 실제로는 세션에서 꺼내야 함
-        String userId = "test1"; 
-        String name = "테스트";   
+        }
+        
+        // String userId = "test1"; 하드코딩 테스트용
+        // String name = "테스트";  하드코딩 테스트용 
 
         Page<MailListDto> page;
 
@@ -462,12 +440,10 @@ public class MailController {
     @ResponseBody
     public String deleteSelectedSent(@RequestParam("mailIds") List<Long> mailIds, HttpSession session) {
         // 세션에서 로그인된 사용자 아이디 꺼내기
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) return "unauthorized";
-        // String userId = loginMember.getUserid();
-    	/*String name = (String) session.getAttribute("name");
-        String userId = (String) session.getAttribute("userid");*/
-        String userId = "test1"; // 테스트용
+      
+    	String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+        //String userId = "test1"; // 하드코딩 테스트용
 
         mailService.deleteSentMailsByIds(userId, mailIds);
         return "ok";
@@ -477,12 +453,10 @@ public class MailController {
     @PostMapping("/deleteAllSent")
     @ResponseBody
     public ResponseEntity<String> deleteAllSent(HttpSession session) {
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) return "redirect:/login";
-        // String userId = loginMember.getUserid();String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
+     
+        String userId = (String) session.getAttribute("userid");
     	
-    	String userId = "test1"; // 테스트용
+    	//String userId = "test1"; // 하드코딩 테스트용
         try {
             mailService.moveAllSentMailsToTrash(userId);
             return ResponseEntity.ok("ok");
@@ -503,19 +477,14 @@ public class MailController {
     ) {
         ModelAndView model = new ModelAndView();
 
-        // 실제 배포용 (로그인된 사용자 세션에서 꺼내기)
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserid();
-        /*String name = (String) session.getAttribute("name");
+      
+        String name = (String) session.getAttribute("name");
         String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
-        }*/
-        String userId = "test1";  // 테스트용 하드코딩
-        String name = "테스트";
+        }
+        //String userId = "test1";  // 하드코딩 테스트용
+        //String name = "테스트"; 하드코딩 테스트용
 
         Page<MailListDto> page;
 
@@ -569,14 +538,10 @@ public class MailController {
     @ResponseBody
     public String restoreSelected(@RequestParam("mailIds") List<Long> mailIds,HttpSession session) {
     	
-    	 /*String userId = (String) session.getAttribute("loginUserId");
-        if (userId == null) {
-            return "redirect:/login";
-        }*/
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-    	String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+    	//String userId ="test1"; // 하드코딩 테스트용
+    	//String name ="테스트"; // 하드코딩 테스트용
     	mailService.restoreMails(mailIds, userId);
         return "ok";
     }
@@ -586,14 +551,10 @@ public class MailController {
     @ResponseBody
     public String deleteSelectedFromTrash(@RequestParam List<Long> mailIds,HttpSession session) {
     	
-    	 /*String userId = (String) session.getAttribute("loginUserId");
-        if (userId == null) {
-            return "redirect:/login";
-        }*/
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-    	String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+    	//String userId ="test1"; // 하드코딩 테스트용
+    	//String name ="테스트"; // 하드코딩 테스트용
     	mailService.deleteMails(mailIds, userId);
         return "ok";
     }
@@ -607,12 +568,11 @@ public class MailController {
         @RequestParam(defaultValue = "") String searchType,
         HttpSession session
     ) {
-        // String userId = (String) session.getAttribute("loginUserId");
-        // if (userId == null) return "redirect:/login";
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-    	String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+       
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+    	//String userId ="test1"; // 하드코딩 테스트용
+    	//String name ="테스트"; // 하드코딩 테스트용
 
         mailService.restoreAll(userId, keyword, searchType);
         return "redirect:/mail/mailtrash?keyword=" + keyword + "&searchType=" + searchType;
@@ -625,12 +585,11 @@ public class MailController {
         @RequestParam(defaultValue = "") String searchType,
         HttpSession session
     ) {
-        // String userId = (String) session.getAttribute("loginUserId");
-        // if (userId == null) return "redirect:/login";
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-        String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+       
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+        //String userId ="test1"; // 하드코딩 테스트용
+    	//String name ="테스트"; // 하드코딩 테스트용
 
         mailService.deleteAll(userId, keyword, searchType);
         return "redirect:/mail/mailtrash?keyword=" + keyword + "&searchType=" + searchType;
@@ -641,20 +600,17 @@ public class MailController {
     @GetMapping("/mailwrite")
     public ModelAndView mailWriteForm(HttpSession session) {
         // 실제 배포용 (세션 로그인 체크)
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserid();
-        /*String name = (String) session.getAttribute("name");
+       
+       
+        String name = (String) session.getAttribute("name");
         String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
-        }*/
+        }
 
         
-    	String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+    	//String userId ="test1"; // 하드코딩 테스트용
+    	//String name ="테스트"; //하드코딩 테스트용
 
         MailDto draft = new MailDto();
         draft.setSenderId(userId); // 혹시 몰라 미리 세팅
@@ -671,9 +627,9 @@ public class MailController {
                            HttpSession session,
                            @RequestParam(required = false) Boolean sendToSelf) throws IOException {
 
-        // String userId = (String) session.getAttribute("userId");
-        String userId = "test1";  // 임시 하드코딩
-        String senderEmail = userId + "@example.com";
+         String userId = (String) session.getAttribute("userId");
+        //String userId = "test1";  // 하드코딩 테스트용
+        String senderEmail = userId + "@example.com"; 
 
         mailDto.setSenderId(userId);
         mailDto.setMailSender(senderEmail);
@@ -792,19 +748,15 @@ public class MailController {
         ModelAndView model = new ModelAndView();
 
         // 실제 세션에서 로그인한 사용자 아이디 받아야 함
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserid();
-        /*String name = (String) session.getAttribute("name");
+       
+        String name = (String) session.getAttribute("name");
         String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
-        }*/
+        }
         
-        String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+        //String userId ="test1"; // 하드코딩 테스트용
+    	//String name ="테스트"; // 하드코딩 테스트용
 
 
         Page<MailListDto> page;
@@ -854,17 +806,12 @@ public class MailController {
     // 내게 쓴 메일함 전체삭제 (휴지통 이동)
     @PostMapping("/mailtome/deleteAllToTrash")
     public String deleteAllMailToMeToTrash(HttpSession session) {
-        // 세션에서 로그인된 사용자 아이디 꺼내기 (배포 시 주석 해제)
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return "redirect:/login";
-        // }
-        // String userId = loginMember.getUserid();
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
+       
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
 
-        String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+        //String userId ="test1"; // 하드코딩 테스트용
+    	//String name ="테스트"; // 하드코딩 테스트용
         mailService.deleteAllMailToMe(userId);
         return "redirect:/mail/mailtome";
     }
@@ -874,16 +821,12 @@ public class MailController {
     @PostMapping("/draft")
     public ResponseEntity<?> saveDraft(@RequestBody MailDto dto, HttpSession session) {
         // 실제 배포 시 주석 해제
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인이 필요합니다.");
-        // }
-        // String userId = loginMember.getUserid();
-        // String userEmail = (String) session.getAttribute("email");
+    	String userId = (String) session.getAttribute("userid");
+        String userEmail = (String) session.getAttribute("email");
 
         // 테스트용 하드코딩
-        String userId = "test1";
-        String userEmail = "test1@example.com";
+        //String userId = "test1"; 하드코딩 테스트용
+        //String userEmail = "test1@example.com";하드코딩 테스트용
 
         // 보내는 사람 정보 세팅
         dto.setSenderId(userId);
@@ -945,20 +888,15 @@ public class MailController {
     ) {
         ModelAndView model = new ModelAndView();
 
-        // 실제 배포 시 주석 해제
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserId();
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-        //if (userId == null) {
-        //    return new ModelAndView("redirect:/login/login");
-        //}
         
-        String userId = "test1"; // 테스트용
-        String name = "테스트";
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+        if (userId == null) {
+            return new ModelAndView("redirect:/login/login");
+        }
+        
+        //String userId = "test1"; //하드코딩 테스트용
+        //String name = "테스트";//하드코딩 테스트용
 
         Page<MailDto> mailPage;
 
@@ -1013,15 +951,11 @@ public class MailController {
     // 임시보관함 전체삭제 (휴지통 이동)
     @PostMapping("/maildrafts/deleteAllToTrash")
     public String deleteAllDraftsToTrash(HttpSession session) {
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return "redirect:/login";
-        // }
-        // String userId = loginMember.getUserid();
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-    	String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
+      
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+    	//String userId ="test1";  //하드코딩 테스트용
+    	//String name ="테스트";  //하드코딩 테스트용
 
         mailService.moveAllDraftsToTrash(userId);
         return "redirect:/mail/mailtrash";
@@ -1030,19 +964,14 @@ public class MailController {
     //임시보관함 메일쓰기
     @GetMapping("/maildrafts/reply/{mailno}")
     public ModelAndView editReplyDraft(@PathVariable Long mailno, HttpSession session) {
-        // 실제 배포 시 세션 처리 주석 해제
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserid();
-       /* String name = (String) session.getAttribute("name");
+      
+        String name = (String) session.getAttribute("name");
         String userId = (String) session.getAttribute("userid");
         if (userId == null) {
             return new ModelAndView("redirect:/login/login");
-        }*/
+        }
 
-        String userId = "test1"; // 테스트용
+        // String userId = "test1"; // //하드코딩 테스트용
 
         MailDto draft = mailService.findByIdAndSenderId(mailno, userId);
  
@@ -1060,15 +989,11 @@ public class MailController {
     @PostMapping("/block/{blockedId}")
     public String blockUser(@PathVariable String blockedId, HttpSession session) {
         // 실제 배포 시 세션 처리 주석 해제
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return "redirect:/login";
-        // }
-        // String userId = loginMember.getUserid();
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
+      
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
 
-        String userId = "test1"; // 테스트용 하드코딩
+        //String userId = "test1"; // 테스트용 하드코딩
 
         mailService.blockUser(userId, blockedId);
 
@@ -1080,15 +1005,11 @@ public class MailController {
     @PostMapping("/unblock/{blockedId}")
     public String unblockUser(@PathVariable String blockedId, HttpSession session) {
         // 실제 배포 시 세션에서 로그인 사용자 ID 가져오기
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return "redirect:/login";
-        // }
-        // String userId = loginMember.getUserid();
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
+       
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
 
-        String userId = "test1"; // 테스트용 하드코딩
+        //String userId = "test1"; // 테스트용 하드코딩
 
         mailService.unblockUser(userId, blockedId);
 
@@ -1099,15 +1020,11 @@ public class MailController {
     @PostMapping("/unblock/selected")
     public ResponseEntity<?> unblockSelected(@RequestParam List<Long> mailIds, HttpSession session) {
         // 실제 배포 시 세션에서 로그인 사용자 ID 가져오기
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        // }
-        // String userId = loginMember.getUserid();
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
+     
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
 
-        String userId = "test1"; // 테스트용
+        //String userId = "test1"; // //하드코딩 테스트용
 
         try {
             for(Long mailno : mailIds) {
@@ -1125,15 +1042,11 @@ public class MailController {
 	    @PostMapping("/unblock/all")
 	    public ResponseEntity<?> unblockAll(HttpSession session) {
 	        // 실제 배포 시 세션 처리 주석 해제
-	        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-	        // if (loginMember == null) {
-	        //     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-	        // }
-	        // String userId = loginMember.getUserid();
-	        //String name = (String) session.getAttribute("name");
-	        //String userId = (String) session.getAttribute("userid");
-	    	String userId ="test1"; // 임시아이디 
-	    	String name ="테스트"; // 임시이름
+	      
+	        String name = (String) session.getAttribute("name");
+	        String userId = (String) session.getAttribute("userid");
+	    	//String userId ="test1"; // //하드코딩 테스트용 
+	    	//String name ="테스트"; // //하드코딩 테스트용
 	
 	        try {
 	            mailService.unblockAll(userId);
@@ -1169,16 +1082,12 @@ public class MailController {
         ModelAndView model = new ModelAndView();
 
         // 실제 배포 시 주석 해제
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserId();
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
+     
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
 
-        String userId = "test1"; // 테스트용
-        String name = "테스트";
+        //String userId = "test1"; //하드코딩 테스트용
+        //String name = "테스트";////하드코딩 테스트용
 
         Page<MailDto> mailPage;
 
@@ -1219,18 +1128,14 @@ public class MailController {
                               HttpSession session) {
     	
     	   // 실제 배포 시 세션 처리 주석 해제
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     return new ModelAndView("redirect:/login");
-        // }
-        // String userId = loginMember.getUserid();
-       // String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-    	String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
-        //if (userId == null) {
-        //    return new ModelAndView("redirect:/login/login");
-        //}
+      
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+    	//String userId ="test1"; //하드코딩 테스트용 
+    	//String name ="테스트";  //하드코딩 테스트용
+        if (userId == null) {
+            return new ModelAndView("redirect:/login/login");
+        }
         
 
         // 아이디 => 이메일 주소 변환 로직 (필요시)
@@ -1257,22 +1162,13 @@ public class MailController {
     public ModelAndView openDraftMailForm(@PathVariable Long mailno, HttpSession session) {
         ModelAndView mv = new ModelAndView();
 
-        // 세션에서 로그인한 사용자 ID (배포 시 주석 해제)
-        // MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
-        // if (loginMember == null) {
-        //     mv.setViewName("redirect:/login");
-        //     return mv;
-        // }
-        // String userId = loginMember.getUserid();
-        String userId ="test1"; // 임시아이디 
-    	String name ="테스트"; // 임시이름
-        //String name = (String) session.getAttribute("name");
-        //String userId = (String) session.getAttribute("userid");
-        //if (userId == null) {
-        //    return new ModelAndView("redirect:/login/login");
-        //}
-
-        //String userId = "test1"; // 테스트용 하드코딩
+        //String userId ="test1";  //하드코딩 테스트용
+    	//String name ="테스트"; //하드코딩 테스트용
+        String name = (String) session.getAttribute("name");
+        String userId = (String) session.getAttribute("userid");
+        if (userId == null) {
+            return new ModelAndView("redirect:/login/login");
+        }
 
         MailDto mail = mailService.getMailById(mailno);
 
@@ -1293,8 +1189,8 @@ public class MailController {
     @GetMapping("/searchUser")
     @ResponseBody
     public List<UserDto> searchUsers(@RequestParam String query, HttpSession session) {
-        // String userId = (String) session.getAttribute("userId");
-        String userId = "test1";
+         String userId = (String) session.getAttribute("userId");
+        //String userId = "test1"; 하드코딩 테스트용 
 
         List<UserDto> result = new ArrayList<>();
 
