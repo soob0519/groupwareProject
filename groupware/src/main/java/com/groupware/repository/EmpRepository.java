@@ -17,6 +17,10 @@ public interface EmpRepository extends JpaRepository<EmpDto,Integer> {
 	
 	// 다연
 	Optional<EmpDto> findByUserid(String userid);
+	// 다연
+	List<EmpDto> findByNameContaining(String query);
+	// 다연
+	List<EmpDto> findByDept(String dept);
 
 	// 이름검색
 	Page<EmpDto> findByNameContainingIgnoreCase(String name, Pageable pageable);

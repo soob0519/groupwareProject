@@ -1,6 +1,7 @@
 package com.groupware.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,12 @@ public interface CodeRepository extends JpaRepository<CodeDto,String> {
 	// 부서 목록 가져오기
 	@Query("SELECT c FROM CodeDto c WHERE c.pcode = 'B200' ORDER BY c.dorder ASC")
 	List<CodeDto> findAllActiveDepartments();
+	
+	//부서코드로 부서명찾기 (다연)
+	Optional<CodeDto> findByNcode(String ncode);
+	//부서명 자동완성 (다연)
+	List<CodeDto> findByNcodeContainingAndState(String ncode, String state);
+	
+	
 	
 }

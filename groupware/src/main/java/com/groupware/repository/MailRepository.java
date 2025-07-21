@@ -12,26 +12,32 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.groupware.dto.MailListDto;
-import com.groupware.entity.MailDto;
+import com.Pro.dto.MailListDto;
+import com.Pro.entity.MailDto;
 
 import jakarta.transaction.Transactional;
 
 
 
 public interface MailRepository extends JpaRepository<MailDto, Long>{
-		// 전체 메일 리스트 조회 (삭제, 차단 안 된 내 메일 최신순)
+	
+	
+		// 전체 메일 리스트 조회 (삭제, 차단 안 된 내 메일 + 부서 대표메일 포함)
 		@Query("SELECT m FROM MailDto m " +
 		       "WHERE (" +
 		       "  (m.senderId = :userId AND m.mailDeleteSender = 'N' AND m.mailFullyDeletedSender = 'N') " +
 		       "  OR " +
 		       "  (m.receiverId = :userId AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N' " +
-		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId))" +
+		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId)) " +
+		       "  OR " +
+		       "  (m.receiverId IN :deptEmails AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N')" +
 		       ") " +
 		       "AND m.mailDraft = 'N' " +
 		       "AND NOT (m.senderId = :userId AND m.receiverId = :userId) " +
 		       "ORDER BY m.sentAt DESC")
-		Page<MailDto> findByUserInvolvedWithNoDeleteNoBlock(@Param("userId") String userId, Pageable pageable);
+		Page<MailDto> findByUserInvolvedWithNoDeleteNoBlockWithDept(@Param("userId") String userId,
+		                                                           @Param("deptEmails") List<String> deptEmails,
+		                                                           Pageable pageable);
 	
 		// 전체메일 - 제목 검색
 		@Query("SELECT m FROM MailDto m " +
@@ -39,15 +45,18 @@ public interface MailRepository extends JpaRepository<MailDto, Long>{
 		       "  (m.senderId = :userId AND m.mailDeleteSender = 'N' AND m.mailFullyDeletedSender = 'N') " +
 		       "  OR " +
 		       "  (m.receiverId = :userId AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N' " +
-		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId))" +
+		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId)) " +
+		       "  OR " +
+		       "  (m.receiverId IN :deptEmails AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N')" +
 		       ") " +
 		       "AND m.mailDraft = 'N' " +
 		       "AND m.subject LIKE %:keyword% " +
 		       "AND NOT (m.senderId = :userId AND m.receiverId = :userId) " +
 		       "ORDER BY m.sentAt DESC")
-		Page<MailDto> findByUserAndSubjectContaining(@Param("userId") String userId,
-		                                             @Param("keyword") String keyword,
-		                                             Pageable pageable);
+		Page<MailDto> findByUserAndSubjectContainingWithDept(@Param("userId") String userId,
+		                                                    @Param("deptEmails") List<String> deptEmails,
+		                                                    @Param("keyword") String keyword,
+		                                                    Pageable pageable);
 	
 		// 전체메일 - 발신자명 검색
 		@Query("SELECT m FROM MailDto m LEFT JOIN EmpDto e ON m.senderId = e.userid " +
@@ -55,15 +64,18 @@ public interface MailRepository extends JpaRepository<MailDto, Long>{
 		       "  (m.senderId = :userId AND m.mailDeleteSender = 'N' AND m.mailFullyDeletedSender = 'N') " +
 		       "  OR " +
 		       "  (m.receiverId = :userId AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N' " +
-		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId))" +
+		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId)) " +
+		       "  OR " +
+		       "  (m.receiverId IN :deptEmails AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N')" +
 		       ") " +
 		       "AND m.mailDraft = 'N' " +
 		       "AND LOWER(COALESCE(e.name, m.senderId)) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
 		       "AND NOT (m.senderId = :userId AND m.receiverId = :userId) " +
 		       "ORDER BY m.sentAt DESC")
-		Page<MailDto> searchBySenderName(@Param("userId") String userId,
-		                                 @Param("keyword") String keyword,
-		                                 Pageable pageable);
+		Page<MailDto> searchBySenderNameWithDept(@Param("userId") String userId,
+		                                        @Param("deptEmails") List<String> deptEmails,
+		                                        @Param("keyword") String keyword,
+		                                        Pageable pageable);
 	
 		// 전체메일 - 수신자명 검색
 		@Query("SELECT m FROM MailDto m LEFT JOIN EmpDto e ON m.receiverId = e.userid " +
@@ -71,15 +83,18 @@ public interface MailRepository extends JpaRepository<MailDto, Long>{
 		       "  (m.senderId = :userId AND m.mailDeleteSender = 'N' AND m.mailFullyDeletedSender = 'N') " +
 		       "  OR " +
 		       "  (m.receiverId = :userId AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N' " +
-		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId))" +
+		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId)) " +
+		       "  OR " +
+		       "  (m.receiverId IN :deptEmails AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N')" +
 		       ") " +
 		       "AND m.mailDraft = 'N' " +
 		       "AND LOWER(COALESCE(e.name, m.receiverId)) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
 		       "AND NOT (m.senderId = :userId AND m.receiverId = :userId) " +
 		       "ORDER BY m.sentAt DESC")
-		Page<MailDto> searchByReceiverName(@Param("userId") String userId,
-		                                   @Param("keyword") String keyword,
-		                                   Pageable pageable);
+		Page<MailDto> searchByReceiverNameWithDept(@Param("userId") String userId,
+		                                          @Param("deptEmails") List<String> deptEmails,
+		                                          @Param("keyword") String keyword,
+		                                          Pageable pageable);
 	
 		// 전체메일 - 날짜 검색
 		@Query("SELECT m FROM MailDto m " +
@@ -87,16 +102,19 @@ public interface MailRepository extends JpaRepository<MailDto, Long>{
 		       "  (m.senderId = :userId AND m.mailDeleteSender = 'N' AND m.mailFullyDeletedSender = 'N') " +
 		       "  OR " +
 		       "  (m.receiverId = :userId AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N' " +
-		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId))" +
+		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId)) " +
+		       "  OR " +
+		       "  (m.receiverId IN :deptEmails AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N')" +
 		       ") " +
 		       "AND m.mailDraft = 'N' " +
 		       "AND m.sentAt BETWEEN :start AND :end " +
 		       "AND NOT (m.senderId = :userId AND m.receiverId = :userId) " +
 		       "ORDER BY m.sentAt DESC")
-		Page<MailDto> findByUserAndSentAtBetween(@Param("userId") String userId,
-		                                         @Param("start") LocalDateTime start,
-		                                         @Param("end") LocalDateTime end,
-		                                         Pageable pageable);
+		Page<MailDto> findByUserAndSentAtBetweenWithDept(@Param("userId") String userId,
+		                                                @Param("deptEmails") List<String> deptEmails,
+		                                                @Param("start") LocalDateTime start,
+		                                                @Param("end") LocalDateTime end,
+		                                                Pageable pageable);
 	
 		// 전체메일 기본 검색 (내용 기준)
 		@Query("SELECT m FROM MailDto m " +
@@ -104,15 +122,19 @@ public interface MailRepository extends JpaRepository<MailDto, Long>{
 		       "  (m.senderId = :userId AND m.mailDeleteSender = 'N' AND m.mailFullyDeletedSender = 'N') " +
 		       "  OR " +
 		       "  (m.receiverId = :userId AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N' " +
-		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId))" +
+		       "   AND m.senderId NOT IN (SELECT b.blockedId FROM BlockDto b WHERE b.blockerId = :userId)) " +
+		       "  OR " +
+		       "  (m.receiverId IN :deptEmails AND m.mailDeleteReceiver = 'N' AND m.mailFullyDeletedReceiver = 'N')" +
 		       ") " +
 		       "AND m.mailDraft = 'N' " +
 		       "AND m.content LIKE %:keyword% " +
 		       "AND NOT (m.senderId = :userId AND m.receiverId = :userId) " +
 		       "ORDER BY m.sentAt DESC")
-		Page<MailDto> findByUserAndContentContaining(@Param("userId") String userId,
-		                                             @Param("keyword") String keyword,
-		                                             Pageable pageable);
+		Page<MailDto> findByUserAndContentContainingWithDept(@Param("userId") String userId,
+		                                                    @Param("deptEmails") List<String> deptEmails,
+		                                                    @Param("keyword") String keyword,
+		                                                    Pageable pageable);
+
 
     	// 사용자가 발신자 휴지통이동
     	@Modifying
@@ -551,6 +573,7 @@ public interface MailRepository extends JpaRepository<MailDto, Long>{
 	    Optional<MailDto> findByMailnoAndSenderId(Long mailno, String senderId);
 
 	
+	    
 
 
 

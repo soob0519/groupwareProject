@@ -14,15 +14,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.groupware.dto.MailListDto;
-import com.groupware.entity.BlockDto;
-import com.groupware.entity.CodeDto;
-import com.groupware.entity.EmpDto;
-import com.groupware.entity.MailDto;
-import com.groupware.repository.BlockRepository;
-import com.groupware.repository.CodeRepository;
-import com.groupware.repository.EmpRepository;
-import com.groupware.repository.MailRepository;
+import com.Pro.dto.MailListDto;
+import com.Pro.entity.BlockDto;
+import com.Pro.entity.CodeDto;
+import com.Pro.entity.EmpDto;
+import com.Pro.entity.MailDto;
+import com.Pro.entity.TeamMailDto;
+import com.Pro.repository.BlockRepository;
+import com.Pro.repository.CodeRepository;
+import com.Pro.repository.EmpRepository;
+import com.Pro.repository.MailRepository;
+import com.Pro.repository.TeamMailRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -34,16 +36,23 @@ public class MailService {
     private final EmpRepository empRepository;
     private final CodeRepository codeRepository;
     private final BlockRepository blockRepository;
+    private final TeamMailRepository teamMailRepository;
 
 
-    public MailService(MailRepository mailRepository,CodeRepository codeRepository, EmpRepository empRepository,BlockRepository blockRepository) {
+    public MailService(MailRepository mailRepository,
+    		CodeRepository codeRepository,
+    		EmpRepository empRepository,
+    		BlockRepository blockRepository,
+    		TeamMailRepository teamMailRepository
+    		) {
         this.mailRepository = mailRepository;
         this.codeRepository = codeRepository;
         this.empRepository = empRepository;
         this.blockRepository = blockRepository; 
+        this.teamMailRepository = teamMailRepository;
     }
     
-    // 발신,수신,이름(부서) 변환
+   // 발신, 수신, 이름(부서) 변환 (부서전체메일시 ex) @영업부 표시)
     public Page<MailListDto> convertToMailListDto(Page<MailDto> mailPage, String loginUserId) {
         return mailPage.map(mail -> {
             MailListDto dto = new MailListDto();
@@ -55,83 +64,103 @@ public class MailService {
             dto.setDirection(isSender ? "발신" : "수신");
 
             String targetId = isSender ? mail.getReceiverId() : mail.getSenderId();
+            String targetEmail = isSender ? mail.getMailReceiver() : mail.getMailSender();
 
             try {
-                EmpDto emp = empRepository.findByUserid(targetId).orElse(null);
-                if (emp != null && emp.getName() != null) {
-                    String deptName = "-";
-                    if (emp.getDept() != null) {
-                        CodeDto code = codeRepository.findById(emp.getDept()).orElse(null);
-                        if (code != null && "Y".equals(code.getState()) && code.getNcode() != null) {
-                            deptName = code.getNcode();
+                // 1. 내부 그룹메일 형태: @dept:영업부 or @영업부
+                if (targetId != null && targetId.startsWith("@")) {
+                    String deptCode = targetId.startsWith("@dept:") ? targetId.substring(6) : targetId.substring(1);
+                    CodeDto code = codeRepository.findById(deptCode).orElse(null);
+                    if (code != null && "Y".equals(code.getState())) {
+                        dto.setName( code.getNcode()); 
+                    } else {
+                        dto.setName(targetId); // fallback
+                    }
+
+                // 2. 내부 대표메일일 경우: sales@example.com → @영업부
+                } else if (targetEmail != null) {
+                    TeamMailDto team = teamMailRepository.findByTeamMail(targetEmail).orElse(null);
+                    if (team != null) {
+                        dto.setName( team.getTeamName()); // ex) @영업부
+                    } else {
+                        // 3. 일반 사용자: name (부서명)
+                        EmpDto emp = empRepository.findByUserid(targetId).orElse(null);
+                        if (emp != null && emp.getName() != null) {
+                            String deptName = "-";
+                            if (emp.getDept() != null) {
+                                CodeDto code = codeRepository.findById(emp.getDept()).orElse(null);
+                                if (code != null && "Y".equals(code.getState()) && code.getNcode() != null) {
+                                    deptName = code.getNcode();
+                                }
+                            }
+                            dto.setName(emp.getName() + " (" + deptName + ")");
+                        } else {
+                            // 4. 외부 이메일 주소 그대로
+                            dto.setName(targetEmail);
                         }
                     }
-                    dto.setName(emp.getName() + " (" + deptName + ")");
                 } else {
-                    // emp 정보 없으면 메일 주소 보여주기
-                	String emailToShow = isSender ? mail.getMailReceiver() : mail.getMailSender();
-                	dto.setName(emailToShow != null ? emailToShow : "");
-
+                    dto.setName(""); // fallback
                 }
+
             } catch (Exception e) {
                 System.out.println("에러 발생: " + e.getMessage());
-                dto.setName("오류발생"); // 에러났을 때 임시 이름
+                dto.setName("오류발생");
             }
 
             return dto;
         });
     }
 
-
-
-    // 전체 메일 리스트 조회
-    public Page<MailDto> listWithName(String loginUserId, int page, int size) {
+ // 전체 메일 리스트 조회 (삭제, 차단 안 된 내 메일 + 부서 대표메일 포함)
+    public Page<MailDto> listWithName(String loginUserId, List<String> deptEmails, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").descending());
-        return mailRepository.findByUserInvolvedWithNoDeleteNoBlock(loginUserId, pageable);
+        return mailRepository.findByUserInvolvedWithNoDeleteNoBlockWithDept(loginUserId, deptEmails, pageable);
     }
 
     // 전체메일 - 제목 검색
-    public Page<MailDto> searchBySubject(String userId, String keyword, int page, int size) {
+    public Page<MailDto> searchBySubject(String userId, List<String> deptEmails, String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").descending());
-        return mailRepository.findByUserAndSubjectContaining(userId, keyword, pageable);
+        return mailRepository.findByUserAndSubjectContainingWithDept(userId, deptEmails, keyword, pageable);
     }
 
     // 전체메일 - 내용 검색
-    public Page<MailDto> searchByContent(String userId, String keyword, int page, int size) {
+    public Page<MailDto> searchByContent(String userId, List<String> deptEmails, String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").descending());
-        return mailRepository.findByUserAndContentContaining(userId, keyword, pageable);
+        return mailRepository.findByUserAndContentContainingWithDept(userId, deptEmails, keyword, pageable);
     }
 
     // 전체메일 - 발신자명 검색
-    public Page<MailDto> searchBySenderName(String userId, String keyword, int page, int size) {
+    public Page<MailDto> searchBySenderName(String userId, List<String> deptEmails, String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").descending());
-        return mailRepository.searchBySenderName(userId, keyword, pageable);
+        return mailRepository.searchBySenderNameWithDept(userId, deptEmails, keyword, pageable);
     }
 
     // 전체메일 - 수신자명 검색
-    public Page<MailDto> searchByReceiverName(String userId, String keyword, int page, int size) {
+    public Page<MailDto> searchByReceiverName(String userId, List<String> deptEmails, String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").descending());
-        return mailRepository.searchByReceiverName(userId, keyword, pageable);
+        return mailRepository.searchByReceiverNameWithDept(userId, deptEmails, keyword, pageable);
     }
 
-    // 전체메일 - 날짜 검색 (YYYY-MM-DD 형식)
-    public Page<MailDto> searchByDate(String userId, String keyword, int page, int size) {
+    // 전체메일 - 날짜 검색
+    public Page<MailDto> searchByDate(String userId, List<String> deptEmails, String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").descending());
         try {
             LocalDate date = LocalDate.parse(keyword);
             LocalDateTime start = date.atStartOfDay();
             LocalDateTime end = date.plusDays(1).atStartOfDay();
-            return mailRepository.findByUserAndSentAtBetween(userId, start, end, pageable);
+            return mailRepository.findByUserAndSentAtBetweenWithDept(userId, deptEmails, start, end, pageable);
         } catch (DateTimeParseException e) {
             return Page.empty(pageable);
         }
     }
 
     // 전체메일 기본 검색 (내용 기준)
-    public Page<MailDto> search(String userId, String keyword, int page, int size) {
+    public Page<MailDto> search(String userId, List<String> deptEmails, String keyword, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("sentAt").descending());
-        return mailRepository.findByUserAndContentContaining(userId, keyword, pageable);
+        return mailRepository.findByUserAndContentContainingWithDept(userId, deptEmails, keyword, pageable);
     }
+
     
     //메일 디테일 
     public MailDto findByIdAndUserId(Long mailno, String userId) {
@@ -669,26 +698,13 @@ public class MailService {
 	     @Transactional
 	     public void blockUser(String blockerId, String blockedId) {
 	         if (!blockRepository.existsByBlockerIdAndBlockedId(blockerId, blockedId)) {
-	             // 1. 차단 정보 저장
 	             BlockDto block = new BlockDto();
 	             block.setBlockerId(blockerId);
 	             block.setBlockedId(blockedId);
 	             blockRepository.save(block);
-
-	             // 2. (내가 받은) 차단 대상이 보낸 메일만 차단메일함(예: deleteReceiver='Y')으로 이동
-	             mailRepository.updateMailDeleteReceiverToY(blockerId, List.of(blockedId));
-
-	             // ❌ 3. 발신자는 그대로 두기 → 삭제 금지 (너가 보낸 기록은 유지해야 하니까)
-	             // mailRepository.updateMailDeleteSenderToY(blockerId, List.of(blockedId)); <-- 주석처리 또는 제거
 	         }
 	     }
 
-
-
-
-	     
-	     
-	     
 
 	     // 차단 목록 조회
 	     public List<BlockDto> getBlockList(String blockerId) {
@@ -746,9 +762,25 @@ public class MailService {
 
      //임시보관함 -> 메일쓰기 -> 기존내용 업데이트
      @Transactional
-     public void updateMail(MailDto mail) {
-         mailRepository.save(mail);
+     public void sendFromDraft(MailDto mailDto) {
+         // mailno가 있으면 기존 임시저장 메일 업데이트 + 발송 처리
+         Optional<MailDto> existing = mailRepository.findByMailnoAndSenderId(mailDto.getMailno(), mailDto.getSenderId());
+
+         if (existing.isPresent()) {
+             MailDto mailToUpdate = existing.get();
+             mailToUpdate.setReceiverId(mailDto.getReceiverId());
+             mailToUpdate.setMailReceiver(mailDto.getMailReceiver());
+             mailToUpdate.setSubject(mailDto.getSubject());
+             mailToUpdate.setContent(mailDto.getContent());
+             mailToUpdate.setMailDraft("N");       // 발송 상태로 변경
+             mailToUpdate.setSentAt(LocalDateTime.now());
+             mailRepository.save(mailToUpdate);
+         } else {
+             // 없으면 새로 저장
+             mailRepository.save(mailDto);
+         }
      }
+
 
 }
 
