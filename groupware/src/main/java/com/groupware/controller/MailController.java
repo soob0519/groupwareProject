@@ -627,7 +627,7 @@ public class MailController {
                            HttpSession session,
                            @RequestParam(required = false) Boolean sendToSelf) throws IOException {
 
-         String userId = (String) session.getAttribute("userId");
+         String userId = (String) session.getAttribute("userid");
         //String userId = "test1";  // 하드코딩 테스트용
         String senderEmail = userId + "@example.com"; 
 
