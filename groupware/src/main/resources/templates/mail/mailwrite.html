@@ -18,54 +18,57 @@
     <section class="contents">
       <div class="mail-wrapper">
         <div class="mail-header">메일쓰기</div>
-			<form action="/mail/send" method="post" enctype="multipart/form-data">    
+		  <form action="/mail/send" method="post" enctype="multipart/form-data">    
 			<div class="form-row" style="position: relative;">
-			  <label for="receiverDisplay">받는사람</label>
-			 <!-- 사용자 화면에 보이는 입력창 (@이름 또는 이메일 직접 입력 가능, 여러 명 콤마 구분) -->
-			<input type="text" id="receiverDisplay"
-			       th:value="${draft.receiverId}" 
-			       th:disabled="${replyMode}" 
-			       style="width: 100%;" />
-			
-			<!-- 서버로 실제 전송되는 값 (콤마로 구분된 이메일 주소들) -->
-			<input type="hidden" id="receiver" name="receiverId"
-			       th:value="${draft.receiverId}" 
-			       th:if="${!replyMode}" />
-			
-			<!-- 답장 모드일 땐 기존 hidden input 유지 -->
-			<input type="hidden" name="receiverId" th:value="${draft.receiverId}" th:if="${replyMode}" />
+			    <label for="receiverDisplay">받는사람</label>
+			    <div style="position: relative; width: 100%;">
+					<!-- 사용자 화면에 보이는 입력창 (@이름 또는 이메일 직접 입력 가능, 여러 명 콤마 구분) -->
+					<input type="text" id="receiverDisplay"
+					       th:value="${draft.receiverId}" 
+					       th:disabled="${replyMode}"/>
+					<!-- 자동완성 리스트 -->
+				    <ul id="autocomplete-list" style="
+					    border: 1px solid #ccc;
+					    max-height: 150px;
+					    overflow-y: auto;
+					    position: absolute;
+					    background: white;
+					    z-index: 1000;
+					    display: none;
+					    width: 100%;
+					    top: 100%;
+					    left: 0;
+					    list-style-type: none;
+					    padding: 0;
+					    margin: 0;
+					    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+					    font-size: 14px;
+					    border-radius: 4px;">
+				    </ul>
+				</div>
+				
+				<!-- 서버로 실제 전송되는 값 (콤마로 구분된 이메일 주소들) -->
+				<input type="hidden" id="receiver" name="receiverId"
+				       th:value="${draft.receiverId}" 
+				       th:if="${!replyMode}" />
+				
+				<!-- 답장 모드일 땐 기존 hidden input 유지 -->
+				<input type="hidden" name="receiverId" th:value="${draft.receiverId}" th:if="${replyMode}" />
 			
 			  
 			  
 			
-			  <!-- 자동완성 리스트 -->
-			  <ul id="autocomplete-list" style="
-			    border: 1px solid #ccc;
-			    max-height: 150px;
-			    overflow-y: auto;
-			    position: absolute;
-			    background: white;
-			    z-index: 1000;
-			    width: 100%;
-			    top: 100%;
-			    left: 0;
-			    list-style-type: none;
-			    padding: 0;
-			    margin: 0;
-			    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-			    font-size: 14px;
-			    border-radius: 4px;
-			  "></ul>
-			<!-- ★ 로그인된 유저 이메일 세션에서 주입할 것 ★ -->
-			<!-- <input type="hidden" id="loggedInEmail" value="test1@example.com" /> -->
-			<!-- 실제 배포 시에는 아래처럼 서버에서 세션 유저 이메일 넣어줘야 함 -->
-			<!-- 세션에서 userid 꺼내서 이메일 주소 구성 -->
-			<input type="hidden" id="loggedInEmail" th:value="${session.userid + '@example.com'}" />
+			    
+				<!-- ★ 로그인된 유저 이메일 세션에서 주입할 것 ★ -->
+				<!-- <input type="hidden" id="loggedInEmail" value="test1@example.com" /> -->
+				<!-- 실제 배포 시에는 아래처럼 서버에서 세션 유저 이메일 넣어줘야 함 -->
+				<!-- 세션에서 userid 꺼내서 이메일 주소 구성 -->
+				<input type="hidden" id="loggedInEmail" th:value="${session.userid + '@example.com'}" />
 			
-			  <div class="send-to-self-wrapper" th:if="${!replyMode}" style="width: 6%; text-align: right;">
-			    <input type="checkbox" id="sendToSelf" name="sendToSelf" />
-			    내게보내기
-			  </div>
+			    <div class="send-to-self-wrapper" th:if="${!replyMode}" style="width: 100px; text-align: right;">
+			        <input type="checkbox" id="sendToSelf" name="sendToSelf" />
+			        내게보내기
+			    </div>
 			</div>
 			<!-- HTML 부분은 그대로 두고, 스크립트 부분만 수정 -->
 			<script>
@@ -227,11 +230,10 @@
 			            ></textarea>
 			          </div>
 			
-			          <div class="button-row">
+			          <div class="btn_frame2">
 			            <button
 			              type="button"
 			              class="cancle-button button2"
-			              style="margin-right: 5px"
 			            >
 			              취소
 			            </button>

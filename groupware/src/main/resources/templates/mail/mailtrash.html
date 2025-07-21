@@ -110,34 +110,36 @@
 					      <!-- 상단 바 -->
 						<div class="top_bar">
 							<div>
+								<div class="btn_frame2">
 
-								<!-- 선택삭제 -->
-								<form id="deleteSelectedForm" th:action="@{/trash/deleteSelected}" method="post" style="display:inline;">
-								  <input type="hidden" name="mailIds" id="deleteSelectedIds" />
-								  <button class="button1" id="deleteSelected" type="button" onclick="return submitSelectedIds('deleteSelectedIds')">선택삭제</button>
-								</form>
-								
-								<!-- 선택복구 -->
-								<form id="restoreSelectedForm" th:action="@{/mail/trash/restoreSelected}" method="post" style="display:inline;">
-								  <input type="hidden" name="mailIds" id="restoreSelectedIds" />
-								  <button class="button1" id="restoreSelected" type="button" onclick="return submitSelectedIds('restoreSelectedIds')">선택복구</button>
-								</form>
-
-								<!-- 전체삭제 -->
-								<form id="deleteAllForm" th:action="@{/mail/trash/deleteAllPermanent}" method="post" style="display:inline;">
-								  <input type="hidden" name="keyword" th:value="${keyword}" />
-								  <input type="hidden" name="searchType" th:value="${searchType}" />
-								  <input type="hidden" name="indexpage" th:value="${indexpage}" />
-								  <button class="button1" type="submit" onclick="return confirmDeleteAll()">전체삭제</button>
-								</form>
-								
-								<!-- 전체복구 -->
-								<form id="restoreAllForm" th:action="@{/mail/trash/restoreAll}" method="post" style="display:inline;">
-								  <input type="hidden" name="keyword" th:value="${keyword}" />
-								  <input type="hidden" name="searchType" th:value="${searchType}" />
-								  <input type="hidden" name="indexpage" th:value="${indexpage}" />
-								  <button class="button1" type="submit" onclick="return confirmRestoreAll()">전체복구</button>
-								</form>
+									<!-- 선택삭제 -->
+									<form id="deleteSelectedForm" th:action="@{/trash/deleteSelected}" method="post" style="display:inline;">
+									  <input type="hidden" name="mailIds" id="deleteSelectedIds" />
+									  <button class="button1" id="deleteSelected" type="button" onclick="return submitSelectedIds('deleteSelectedIds')">선택삭제</button>
+									</form>
+									
+									<!-- 선택복구 -->
+									<form id="restoreSelectedForm" th:action="@{/mail/trash/restoreSelected}" method="post" style="display:inline;">
+									  <input type="hidden" name="mailIds" id="restoreSelectedIds" />
+									  <button class="button1" id="restoreSelected" type="button" onclick="return submitSelectedIds('restoreSelectedIds')">선택복구</button>
+									</form>
+	
+									<!-- 전체삭제 -->
+									<form id="deleteAllForm" th:action="@{/mail/trash/deleteAllPermanent}" method="post" style="display:inline;">
+									  <input type="hidden" name="keyword" th:value="${keyword}" />
+									  <input type="hidden" name="searchType" th:value="${searchType}" />
+									  <input type="hidden" name="indexpage" th:value="${indexpage}" />
+									  <button class="button1" type="submit" onclick="return confirmDeleteAll()">전체삭제</button>
+									</form>
+									
+									<!-- 전체복구 -->
+									<form id="restoreAllForm" th:action="@{/mail/trash/restoreAll}" method="post" style="display:inline;">
+									  <input type="hidden" name="keyword" th:value="${keyword}" />
+									  <input type="hidden" name="searchType" th:value="${searchType}" />
+									  <input type="hidden" name="indexpage" th:value="${indexpage}" />
+									  <button class="button1" type="submit" onclick="return confirmRestoreAll()">전체복구</button>
+									</form>
+								</div>
 								
 
 								<div class="search">

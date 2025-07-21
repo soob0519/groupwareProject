@@ -24,7 +24,7 @@
 .sub {display: none;}
 .sub li {margin-bottom: 5px;}
 .sub li a {display: block; height: 30px; line-height: 30px; padding-left: 15px; width: 100%;}
-.sub li a::after {content: " "; background: #f5a301; position: relative; bottom: 1px; display: block; width: 100%; height: 1px; transform: scaleX(0); transform-origin: left; transition: ease-in-out .3s;}
+.sub li a::after {content: " "; background: #777; position: relative; bottom: 1px; display: block; width: 100%; height: 1px; transform: scaleX(0); transform-origin: left; transition: ease-in-out .3s;}
 .sub li a:hover::after {transform: scaleX(1);}
 
 
