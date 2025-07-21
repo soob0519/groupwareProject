@@ -113,6 +113,7 @@ button {border-radius: 5px !important; font-size: 1.5rem; transition: .2s; curso
 .sel_month {padding: 10px; margin-top: 10px;}
 
 .sub_con_item {box-shadow: none !important; height: 100% !important;}
+.calendar {table-layout: fixed; width: 100%;}
 .sub_calendar td {height: 100px;}
 .calendar td {padding: 0 10px;}
 .calendar td:hover {background: #f9f9f9;}
@@ -135,7 +136,7 @@ button {border-radius: 5px !important; font-size: 1.5rem; transition: .2s; curso
 .form_list textarea {height: 130px;}
 .form_rightbox, .form_leftbox {display: flex; justify-content: space-between; align-items: center; width: 50%;}
 #modal_1, #modal_2, #modal_3 {position: absolute; top: 200px; left: 50%; transform: translateX(-50%); z-index: 1000;}
-.scheList {z-index: 100; display: block; cursor: pointer; width: 80%;}
+.scheList {z-index: 100; display: block; cursor: pointer; width: 90%; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;}
 .scheList:hover {background: #e1e1e1;}
 
 

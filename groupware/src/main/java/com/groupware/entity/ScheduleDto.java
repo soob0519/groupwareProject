@@ -1,8 +1,10 @@
 package com.groupware.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,11 +41,13 @@ public class ScheduleDto {
     @Column(length = 4000)
     private String schecont;
 
-    @Column(length = 20)
-    private String startdate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column
+    private LocalDate startdate;
 
-    @Column(length = 20)
-    private String enddate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column
+    private LocalDate enddate;
 
     @Column(length = 20)
     private String starttime;
@@ -65,7 +69,7 @@ public class ScheduleDto {
     private Integer sharer;
 }							
 							
-							
+							 
 							
 							
 							

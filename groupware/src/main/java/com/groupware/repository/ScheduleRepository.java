@@ -1,5 +1,6 @@
 package com.groupware.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,8 @@ import com.groupware.entity.ScheduleDto;
 import jakarta.transaction.Transactional;
 
 public interface ScheduleRepository extends JpaRepository<ScheduleDto,Integer> {
+	
+	List<ScheduleDto> findByStartdateBetween(LocalDate start, LocalDate end);
 
 	@Query(value=" select    scheno		\r\n"
 			+ "				,sche_chk	\r\n"

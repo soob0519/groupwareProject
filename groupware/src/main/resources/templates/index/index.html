@@ -7,15 +7,17 @@
         <link rel="stylesheet" href="/css/jquery-ui.css">
         <script src="/js/jquery-3.6.0.min.js"></script>
         <script src="/js/script.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
         
         <script>
 	    	$(document).ready(function(){
-	    		$("#btn_submit").click(function(e){
+	    		$('#frm').submit(function(e) {
 	    			e.preventDefault();
-	    			if($("#schetitle").val() == "") {
-	    				alert("제목을 입력하세요.");
-	    				$("#schetitle").focus();
-	    				return false;
+
+	    			if($('#schetitle').val() == '') {
+	    			    alert('제목을 입력하세요.');
+	    			    $('#schetitle').focus();
+	    			    return;
 	    			}
 	    			
 	    			let form = $("#frm").serialize();
@@ -107,18 +109,8 @@
                                     <span id="span_month" th:text="${mm+1}"></span>월
                                     <button type="button" onclick="fn_next(2)"  class="button1">다음</button>
                                     <button type="button" onclick="location='/index'" class="button1">오늘</button>
-                                    <button type="button" id="testbtn">test</button>
                                 </div>
                                 <table class="calendar">
-	                                <colgroup>
-	                                    <col width="14.444%">
-	                                    <col width="14.444%">
-	                                    <col width="14.444%">
-	                                    <col width="14.444%">
-	                                    <col width="14.444%">
-	                                    <col width="14.444%">
-	                                    <col width="14.444%">
-	                                </colgroup>
                                     <tr>
                                         <th>일</th>
                                         <th>월</th>
@@ -139,7 +131,7 @@
                                     	<!-- 반복문(날짜출력) -->
 					        			<td th:each="dd:${#numbers.sequence(1,lastDay)}"
 					        				th:onClick="|fn_action(${yy},${mm},${dd})|"
-					        				class="date_click">
+					        				class="schedule_write">
 					        			
 					        				<th:block th:if="${(tyy>yy) || 
 					        								   (tyy==yy && tmm>mm) || 
@@ -168,16 +160,15 @@
 				
 											<div style="font-size:10px;text-align:left;height:60px;">
 												<!-- 예약일 포함하여 예약정보 목록 -->
-												<th:block th:each="result : ${list}"
-														  th:with="num1=${#numbers.formatInteger(result.dd,2)},
-																   num2=${#numbers.formatInteger(dd,2)}">
-													<th:block th:if="${num1==num2}">
-														<ul>
-													   		<li th:utext="${result.schetitle} + ${result.schecont}" class="scheList"></li>
-													   	</ul>
-													</th:block> 
+												<th:block th:each="result : ${list}">
+												    <th:block th:if="${result.startdate != null and result.startdate.dayOfMonth == dd}">
+												        <ul>
+												            <li th:text="${result.schetitle}" th:attr="data-scheno=${result.scheno}" class="scheList"></li>
+												        </ul>
+												    </th:block>
 												</th:block>
 											</div>
+											
 					        				
 					        				<!-- 한줄(7칸) 다 채웠을 경우 세팅 -->
 					        				<th:block th:if="${(dd+cnt)%7 == 0}" th:utext="${newline}"></th:block>
@@ -190,7 +181,6 @@
                                     </tr>
                                     
                                 </table>
-                                
                             </div>
                         </div>
                     </div>
