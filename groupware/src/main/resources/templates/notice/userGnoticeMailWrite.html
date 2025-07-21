@@ -18,128 +18,285 @@
     <section class="contents">
       <div class="mail-wrapper">
         <div class="mail-header">메일쓰기</div>
-
-        <form id="mailForm" method="post" action="/mail/send">
-          <div class="form-row">
-            <label for="receiver">받는사람</label>
-            <input
-              type="text"
-              id="receiver"
-              name="receiverId"
-              th:value="${draft.receiverId}"
-              th:disabled="${replyMode}"
-            />
-            <!-- 답장 모드일 때 disabled 때문에 안 넘어가는 receiverId를 hidden으로 따로 전송 -->
-            <input
-              type="hidden"
-              name="receiverId"
-              th:value="${draft.receiverId}"
-              th:if="${replyMode}"/>
-            <div class="send-to-self-wrapper" th:if="${!replyMode}" style="width: 6%;text-align: right;">
-              <input type="checkbox" id="sendToSelf" name="sendToSelf" />
-                내게보내기
-            </div>
-          </div>
-		 <input type="hidden" name="mailno" th:value="${draft.mailno}" />
-
-          <div class="form-row">
-            <label for="subject">제목</label>
-
-            <input
-              type="text"
-              id="subject"
-              name="subject"
-              th:value="${draft.subject}"
-            />
-          </div>
-
-          <div class="form-row">
-            <label for="file">파일첨부</label>
-            <input type="file" id="file" name="file" class="file-upload" />
-          </div>
-
-          <div class="form-row">
-            <label for="content">내용</label>
-            <textarea
-              id="content"
-              name="content"
-              th:text="${dto.gntcct}"
-            ></textarea>
-          </div>
-
-          <div class="button-row">
-            <button
-              type="button"
-              class="cancle-button button2"
-              style="margin-right: 5px"
-            >
-              취소
-            </button>
-          <!-- thymeleaf -->
-			<th:block th:if="${!replyMode}">
-			 <button type="button" id="saveDraftBtn" class="button2" style="margin-right: 5px">임시저장</button>
-			</th:block>
-          
-            <!-- 원래 전송 버튼 -->
-			<button type="submit" class="send-button button1" style="margin-right: 5px">보내기</button>
-
-			<!-- 공지사항 목록으로 가는 버튼 -->
-			<button type="button" class="button2" id="btn_List">목록으로</button>
-          </div>
-        </form>
-      </div>
-    </section>
-  </div>
-
-  <script>
-  	
-  	$(function() {$("#btn_List").click(function() {location = "/Gnotice/UserList";});});
-
-  
-  	document.addEventListener("DOMContentLoaded", () => {
-    const checkbox = document.getElementById("sendToSelf");
-    const receiverInput = document.getElementById("receiver");
-
-    if (checkbox && receiverInput) {
-      checkbox.addEventListener("change", () => {
-        receiverInput.disabled = checkbox.checked;
-        if (checkbox.checked) receiverInput.value = "";
-      });
-    }
-
-    const saveBtn = document.getElementById("saveDraftBtn");
-    if (saveBtn) {
-      saveBtn.addEventListener("click", (e) => {
-        e.preventDefault(); // 폼 제출 막기
-
-        const subjectInput = document.getElementById("subject");
-        const contentInput = document.getElementById("content");
-        const receiverInput = document.getElementById("receiver");
-
-        const dto = {
-          subject: subjectInput ? subjectInput.value : "",
-          content: contentInput ? contentInput.value : "",
-          receiverId: receiverInput ? receiverInput.value : ""
-        };
-
-        fetch("/mail/draft", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dto)
-        })
-          .then((response) => {
-            if (response.ok) {
-              alert("임시저장을 완료하였습니다.");
-              window.location.href = "/mail/maildrafts";
-            } else {
-              alert("임시저장을 실패하였습니다.");
-            }
-          })
-          .catch(() => alert("서버 오류 발생!"));
-      });
-    }
-  });
-</script>
-  
+			<form action="/mail/send" method="post" enctype="multipart/form-data">    
+			<div class="form-row" style="position: relative;">
+			  <label for="receiverDisplay">받는사람</label>
+			 <!-- 사용자 화면에 보이는 입력창 (@이름 또는 이메일 직접 입력 가능, 여러 명 콤마 구분) -->
+			<input type="text" id="receiverDisplay"
+			       th:value="${draft.receiverId}" 
+			       th:disabled="${replyMode}" 
+			       style="width: 100%;" />
+			
+			<!-- 서버로 실제 전송되는 값 (콤마로 구분된 이메일 주소들) -->
+			<input type="hidden" id="receiver" name="receiverId"
+			       th:value="${draft.receiverId}" 
+			       th:if="${!replyMode}" />
+			
+			<!-- 답장 모드일 땐 기존 hidden input 유지 -->
+			<input type="hidden" name="receiverId" th:value="${draft.receiverId}" th:if="${replyMode}" />
+			
+			  
+			  
+			
+			  <!-- 자동완성 리스트 -->
+			  <ul id="autocomplete-list" style="
+			    border: 1px solid #ccc;
+			    max-height: 150px;
+			    overflow-y: auto;
+			    position: absolute;
+			    background: white;
+			    z-index: 1000;
+			    width: 100%;
+			    top: 100%;
+			    left: 0;
+			    list-style-type: none;
+			    padding: 0;
+			    margin: 0;
+			    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			    font-size: 14px;
+			    border-radius: 4px;
+			  "></ul>
+			<!-- ★ 로그인된 유저 이메일 세션에서 주입할 것 ★ -->
+			<input type="hidden" id="loggedInEmail" value="test1@example.com" />
+			<!-- 실제 배포 시에는 아래처럼 서버에서 세션 유저 이메일 넣어줘야 함 -->
+			<!-- <input type="hidden" id="loggedInEmail" th:value="${session.user.email}" /> -->
+			
+			  <div class="send-to-self-wrapper" th:if="${!replyMode}" style="width: 6%; text-align: right;">
+			    <input type="checkbox" id="sendToSelf" name="sendToSelf" />
+			    내게보내기
+			  </div>
+			</div>
+			<!-- HTML 부분은 그대로 두고, 스크립트 부분만 수정 -->
+			<script>
+			$(function() {
+			  const $displayInput = $("#receiverDisplay");
+			  const $hiddenInput = $("#receiver");
+			  const $autocompleteList = $("#autocomplete-list");
+			  const $sendToSelf = $("#sendToSelf");
+			
+			  // ✅ 로그인된 사용자 이메일 (개발용은 주석 처리해두기!)
+			  // const selfEmail = "test1@example.com"; // ← 개발 중 임시용
+			  const selfEmail = $("#loggedInEmail").val(); // ← 실제 배포 시 사용
+			
+			  // 선택된 토큰(화면 표시명) -> 실제 이메일(또는 부서 이메일)
+			  let selectionMap = {};
+			
+			  function cleanTokens(tokens) {
+			    return tokens.map(t => t.trim()).filter(t => t !== "");
+			  }
+			
+			  function setCaretToEnd(el) {
+			    if (typeof el.selectionStart == "number") {
+			      el.selectionStart = el.selectionEnd = el.value.length;
+			    } else if (typeof el.createTextRange != "undefined") {
+			      el.focus();
+			      const range = el.createTextRange();
+			      range.collapse(false);
+			      range.select();
+			    }
+			  }
+			
+			  // ✅ 내게보내기 체크박스 이벤트 처리
+			  $sendToSelf.on("change", function() {
+			    if ($(this).is(":checked")) {
+			      $displayInput.val("").prop("disabled", true);   // 표시용
+			      $hiddenInput.val(selfEmail); // 실제 전송용
+			      $autocompleteList.empty().hide();
+			    } else {
+			      $displayInput.prop("disabled", false).val(""); // 표시 초기화
+			      $hiddenInput.val(""); // 값 초기화
+			    }
+			  });
+			
+			  // 자동완성 처리
+			  $displayInput.on("input", function() {
+			    if ($sendToSelf.is(":checked")) {
+			      $autocompleteList.empty().hide();
+			      return;
+			    }
+			
+			    let val = $(this).val();
+			    let tokens = val.split(",");
+			    tokens = cleanTokens(tokens);
+			
+			    let lastToken = tokens.length > 0 ? tokens[tokens.length - 1] : "";
+			
+			    if (!lastToken.startsWith("@")) {
+			      $autocompleteList.empty().hide();
+			      return;
+			    }
+			
+			    const keyword = lastToken.substring(1);
+			    $.ajax({
+			      url: "/mail/searchUser?query=" + encodeURIComponent(keyword),
+			      type: "GET",
+			      success: function(data) {
+			        if (!data.length) {
+			          $autocompleteList.empty().hide();
+			          return;
+			        }
+			
+			        let listHtml = "";
+			        data.forEach(item => {
+			          const email = item.email || item.teamEmail || "";
+			          listHtml += `<li class="autocomplete-item" style="padding:8px 12px; cursor:pointer;"
+			              data-name="@${item.name}" data-email="${email}">@${item.name}${email ? " &lt;" + email + "&gt;" : ""}</li>`;
+			        });
+			
+			        $autocompleteList.html(listHtml).show();
+			
+			        $(".autocomplete-item").off("click").on("click", function() {
+			          const nameText = $(this).data("name");
+			          const email = $(this).data("email");
+			
+			          tokens[tokens.length - 1] = nameText;
+			          const newDisplayVal = tokens.join(", ");
+			          $displayInput.val(newDisplayVal);
+			
+			          setCaretToEnd($displayInput[0]);
+			
+			          selectionMap[nameText] = email;
+			
+			          const emailList = [];
+			          tokens.forEach(t => {
+			            t = t.trim();
+			            if (selectionMap[t]) {
+			              emailList.push(selectionMap[t]);
+			            } else {
+			              if (t.includes("@")) {
+			                emailList.push(t);
+			              } else {
+			                emailList.push(t + "@example.com");
+			              }
+			            }
+			          });
+			
+			          const uniqueEmails = [...new Set(emailList.filter(e => e))];
+			          $hiddenInput.val(uniqueEmails.join(", "));
+			
+			          $autocompleteList.empty().hide();
+			        });
+			      },
+			      error: function() {
+			        $autocompleteList.empty().hide();
+			      }
+			    });
+			  });
+			
+			  $("form").on("submit", function() {
+			    if (!$hiddenInput.val().trim()) {
+			      alert("수신자 이메일을 확인해주세요.");
+			      return false;
+			    }
+			  });
+			
+			  $(document).on("click", function(e) {
+			    if (!$(e.target).closest("#receiverDisplay, #autocomplete-list").length) {
+			      $autocompleteList.hide();
+			    }
+			  });
+			});
+			</script>
+			
+					 <input type="hidden" name="mailno" th:value="${draft.mailno}" />
+			
+			          <div class="form-row">
+			            <label for="subject">제목</label>
+			
+			            <input
+			              type="text"
+			              id="subject"
+			              name="subject"
+			              th:value="${draft.subject}"
+			            />
+			          </div>
+			
+			          <div class="form-row">
+			            <label for="file">파일첨부</label>
+			            <input type="file" id="file" name="file" class="file-upload" />
+			          </div>
+			
+			          <div class="form-row">
+			            <label for="content">내용</label>
+			            <textarea
+			              id="content"
+			              name="content"
+			              th:text="${dto.gntcct}"
+			            ></textarea>
+			          </div>
+			
+			          <div class="button-row">
+			            <button
+			              type="button"
+			              class="cancle-button button2"
+			            >
+			              취소
+			            </button>
+			            
+			            <!-- 공지사항 목록으로 가는 버튼 -->
+						<button type="button" class="button2" id="btn_List" style="margin-right: 5px">목록으로</button>
+			          
+			          <!-- thymeleaf -->
+						<th:block th:if="${!replyMode}">
+						 <button type="button" id="saveDraftBtn" class="button2">임시저장</button>
+						 
+						</th:block>
+			          
+			            <!-- 원래 전송 버튼 -->
+			            <button type="submit" class="send-button button1">보내기</button>
+			          </div>
+			        </form>
+			      </div>
+			    </section>
+			  </div>
+			
+			  <script>
+			  $(function() {$("#btn_List").click(function() {location = "/Gnotice/UserList";});});
+			  
+			  document.addEventListener("DOMContentLoaded", () => {
+			    const checkbox = document.getElementById("sendToSelf");
+			    const receiverInput = document.getElementById("receiver");
+			
+			    if (checkbox && receiverInput) {
+			      checkbox.addEventListener("change", () => {
+			        receiverInput.disabled = checkbox.checked;
+			        if (checkbox.checked) receiverInput.value = "";
+			      });
+			    }
+			
+			    const saveBtn = document.getElementById("saveDraftBtn");
+			    if (saveBtn) {
+			      saveBtn.addEventListener("click", (e) => {
+			        e.preventDefault(); // 폼 제출 막기
+			
+			        const subjectInput = document.getElementById("subject");
+			        const contentInput = document.getElementById("content");
+			        const receiverInput = document.getElementById("receiver");
+			
+			        const dto = {
+			          subject: subjectInput ? subjectInput.value : "",
+			          content: contentInput ? contentInput.value : "",
+			          receiverId: receiverInput ? receiverInput.value : ""
+			        };
+			
+			        fetch("/mail/draft", {
+			          method: "POST",
+			          headers: { "Content-Type": "application/json" },
+			          body: JSON.stringify(dto)
+			        })
+			          .then((response) => {
+			            if (response.ok) {
+			              alert("임시저장을 완료하였습니다.");
+			              window.location.href = "/mail/maildrafts";
+			            } else {
+			              alert("임시저장을 실패하였습니다.");
+			            }
+			          })
+			          .catch(() => alert("서버 오류 발생!"));
+			      });
+			    }
+			  });
+			</script>
+			  
 </body>
 </html>
