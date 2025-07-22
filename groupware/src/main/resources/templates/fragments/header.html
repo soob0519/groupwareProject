@@ -1,33 +1,32 @@
 <header class="header flex_between">
-<script>
-function fn_logout() {
-	if (confirm("로그아웃 하시겠습니까?")) {
-		// 로그아웃 요청 전송1
-		fetch("/login/logout")
-			.then(() => {
-			alert("로그아웃 되었습니다.");
-			location.href = "/login/login";
-		});
-	}
-}
-</script>
+	<script>
+		function fn_logout() {
+			if (confirm("로그아웃 하시겠습니까?")) {
+				// 로그아웃 요청 전송1
+				fetch("/login/logout")
+					.then(() => {
+					alert("로그아웃 되었습니다.");
+					location.href = "/login/login";
+				});
+			}
+		}
+	</script>
 
     <div class="logo">
-        <h1><a th:href="@{/index}">logo</a></h1>
-        <span class="blind"></span>
-    </div>
-    <div th:if="${session.userid != null}" style="margin-left:600px;">
-    	<font size="3">
-    		<span th:text="${session.name}"></span> 
-    		</span> 님 환영합니다!
-    	</font>
+        <h1><a th:href="@{/index}"></a></h1>
+        <span class="blind">로고입니다</span>
     </div>
     <div class="header_cate">
         <ul class="category_list flex_end">
+		    <li th:if="${session.userid != null}">
+		    	<font size="3" color="#fff">
+		    		<span th:text="${session.name}" style="font-weight: bold;"></span> 
+		    		<span>님 환영합니다!</span> 
+		    	</font>
+		    </li>
             <li>
-                <button type="button" class="button1" onClick="location='/emp/empOrgani'">조직도</button>
-                <button type="button" class="button1">출/퇴근</button>
-                <button type="button" class="button1" onclick="fn_logout();">로그아웃</button>
+                <button type="button" class="button2" onClick="location='/emp/empOrgani'">조직도</button>
+                <button type="button" class="button2" onclick="fn_logout();">로그아웃</button>
             </li>
         </ul>
     </div>

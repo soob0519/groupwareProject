@@ -7,9 +7,10 @@
 
 
 /* header */
-.header {height: 80px; background: #fff; border: 1px solid #d1d1d1; line-height: 80px; padding-left: 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 101;}
-.logo {width: 150px;}
-.category_list {gap: 80px; padding-right: 20px;}
+.header {height: 80px; background: #fff; line-height: 80px; padding-left: 20px; position: fixed; top: 0; left: 0; right: 0; z-index: 101; background: #7e7c7d;}
+.logo {position: relative;}
+.logo a {background: url(../images/GroupWareLOGO_1.jpg) no-repeat left center / cover; width: 135px; height: 80px; display: block; position: absolute; top: 50%; transform: translateY(-50%);}
+.category_list {gap: 50px; padding-right: 20px;}
 
 
 /* 아코디언메뉴 */
@@ -46,10 +47,10 @@
 .calendar th {height: 40px; border: 1px solid #d1d1d1; border-bottom: none; background: #f9f9f9; text-align: center; font-weight: bold;}
 .calendar td {height: 70px; border: 1px solid #d1d1d1;}
 
-.con_box1 {width: 100%; display: flex; flex-direction: column; gap: 10px;}
-.approve {height: 290px; overflow: hidden; display: flex; flex-direction: column;}
+.con_box1 {width: 100%; display: flex; flex-direction: column; gap: 10px; height: 100%;}
+.approve {height: 290px; overflow: hidden; display: flex; flex-direction: column; height: 50%;}
 .approve .scroll_inner {overflow-y: auto; box-sizing: content-box;}
-.notice {height: 200px; overflow-y: auto; display: flex; flex-direction: column;}
+.notice {height: 200px; overflow-y: auto; display: flex; flex-direction: column; height: 50%;}
 .notice .scroll_inner {overflow-y: auto; box-sizing: content-box;}
 .scroll_inner {padding-right: 10px;}
 
