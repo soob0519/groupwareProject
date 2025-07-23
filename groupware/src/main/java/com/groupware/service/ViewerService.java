@@ -27,5 +27,8 @@ public class ViewerService {
 	public List<ViewerDto> findByEmpno(int empno) {
         return viewerRepository.findByEmpno(empno);
     }
+	public void deleteByEdsmno(int edsmno) {
+		viewerRepository.deleteByEdsmno(edsmno);
+	}
 	
 }

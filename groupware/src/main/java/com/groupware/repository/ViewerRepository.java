@@ -12,4 +12,6 @@ public interface ViewerRepository extends JpaRepository<ViewerDto,Integer> {
 	
 	//1
 	List<ViewerDto> findByEmpno(int empno);
+	
+	void deleteByEdsmno(int edsmno);
 }
