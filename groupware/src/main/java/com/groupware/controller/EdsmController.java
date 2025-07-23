@@ -639,7 +639,8 @@ public class EdsmController {
 	    edsmlineService.deleteByEdsmno(edsmno);
 	    // 문서 삭제
 	    edsmService.deleteDraft(edsmno);
-
+	    // 공유자 삭제
+	    viewerService.deleteByEdsmno(edsmno);
 	    return ResponseEntity.ok("삭제 완료");
 	}
 	
