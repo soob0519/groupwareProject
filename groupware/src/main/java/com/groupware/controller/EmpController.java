@@ -173,15 +173,12 @@ public class EmpController {
 		if (dept == null || !dept.equals("B20003")) {
 	        return new ModelAndView("redirect:/login/login");
 	    }
-		
+
 		if (empno == null) {
 	        return new ModelAndView("redirect:/login/login");
 	    }
 		EmpDto emp = empService.findById(empno);
-	    if (emp == null || "N".equals(emp.getState())) {
-	        session.invalidate();
-	        return new ModelAndView("redirect:/login/login");
-	    }
+	    
 		ModelAndView model = new ModelAndView();
 		EmpDto dto = empService.getFindById(empno);
 		model.setViewName("/admin/empModify");
