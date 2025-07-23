@@ -187,99 +187,71 @@
                     <div class="con_box1">
 
                         <div class="approve con_item">
-                            <div class="scroll_inner">
-                                <div class="flex_center">
-                                    <div class="table_frame">
-                                        <div class="btn_frame1">
-                                            <h5>전자결재</h5>
-                                        </div>
-                                        <table class="board_table1">
-                                            <colgroup>
-                                                <col width="10%">
-                                                <col width="*">
-                                                <col width="8%">
-                                                <col width="8%">
-                                                <col width="10%">
-                                                <col width="5%">
-                                                <col width="10%">
-                                            </colgroup>
-                                            <tr>
-                                                <th>날짜</th>
-                                                <th>제목</th>
-                                                <th>작성자</th>
-                                                <th>결재자</th>
-                                                <th>진행상태</th>
-                                                <th>결재</th>
-                                                <th>비고</th>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
-                                                <td>3</td>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>6</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
-                                                <td>3</td>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>6</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
-                                                <td>3</td>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>6</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
-                                                <td>3</td>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>6</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
-                                                <td>3</td>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>6</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
-                                                <td>3</td>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>6</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td class="tbl_sub_tit"><a href="#">제목이 길어지면 짧아지게 만들기~ 기능구현을 위해 끄적거리는 중입니다</a></td>
-                                                <td>3</td>
-                                                <td>4</td>
-                                                <td>5</td>
-                                                <td>6</td>
-                                                <td>7</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+						  <div class="scroll_inner">
+						    <div class="flex_center">
+						      <div class="table_frame">
+						        <div class="btn_frame1">
+						          <h5 style="margin-bottom:6px;">전자결재</h5>
+						        </div>
+						
+						        <!-- 내 결재 차례 -->
+						        <h6 style="margin:4px 0 2px;">내 결재 차례</h6>
+						        <table class="board_table1" style="margin-bottom:12px;">
+						          <colgroup>
+						            <col width="18%">
+						            <col width="*">
+						            <col width="22%">
+						          </colgroup>
+						          <tr>
+						            <th>작성일</th>
+						            <th>제목</th>
+						            <th>기안자</th>
+						          </tr>
+						          <tr th:each="doc : ${myTurnDocs}">
+						            <td th:text="${#temporals.format(doc.wdate.toLocalDateTime(),'MM-dd')}"></td>
+						            <td class="tbl_sub_tit">
+						              <a th:href="|/edsm/edsmDetail/${doc.edsmno}|"
+						                 th:text="${doc.edtitle}"
+						                 style="display:inline-block; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></a>
+						            </td>
+						            <td th:text="${empNameMap != null ? empNameMap[doc.empno] : doc.empno}"></td>
+						          </tr>
+						          <tr th:if="${#lists.isEmpty(myTurnDocs)}">
+						            <td colspan="3">현재 결재할 문서 없음</td>
+						          </tr>
+						        </table>
+						
+						        <!-- 진행 중 문서 목록 -->
+						        <h6 style="margin:4px 0 2px;">진행 중 문서</h6>
+						        <table class="board_table1">
+						          <colgroup>
+						            <col width="18%">
+						            <col width="*">
+						            <col width="22%">
+						          </colgroup>
+						          <tr>
+						            <th>작성일</th>
+						            <th>제목</th>
+						            <th>기안자</th>
+						          </tr>
+						          <tr th:each="doc : ${approveList}">
+						            <td th:text="${#temporals.format(doc.wdate.toLocalDateTime(),'MM-dd')}"></td>
+						            <td class="tbl_sub_tit">
+						              <a th:href="|/edsm/edsmDetail/${doc.edsmno}|"
+						                 th:text="${doc.edtitle}"
+						                 style="display:inline-block; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></a>
+						            </td>
+						            <td th:text="${empNameMap != null ? empNameMap[doc.empno] : doc.empno}"></td>
+						          </tr>
+						          <tr th:if="${#lists.isEmpty(approveList)}">
+						            <td colspan="3">진행 중 문서 없음</td>
+						          </tr>
+						        </table>
+						
+						      </div>
+						    </div>
+						  </div>
+						</div>
 
                         <div class="notice con_item">
                             <div class="scroll_inner">

@@ -1,13 +1,20 @@
 package com.groupware.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,10 +24,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.groupware.entity.EdsmDto;
+import com.groupware.entity.EdsmlineDto;
+import com.groupware.entity.EmpDto;
 import com.groupware.entity.InoticeDto;
 import com.groupware.entity.ScheduleDto;
+import com.groupware.entity.ViewerDto;
+import com.groupware.service.CodeService;
+import com.groupware.service.EdsmService;
+import com.groupware.service.EdsmlineService;
+import com.groupware.service.EmpService;
 import com.groupware.service.InoticeService;
 import com.groupware.service.ScheduleService;
+import com.groupware.service.ViewerService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/index")
@@ -28,10 +46,25 @@ public class MainpageController {
 	
 	public final ScheduleService scheduleService;
 	private final InoticeService inoticeService;
+	private final EdsmService edsmService;
+	private final EdsmlineService edsmlineService;
+	private final ViewerService viewerService;
+	private final EmpService empService;
+	private final CodeService codeService;
 	public MainpageController(ScheduleService scheduleService,
-								InoticeService inoticeService) {
+								InoticeService inoticeService,
+								EdsmService edsmService,
+								EdsmlineService edsmlineService,
+								ViewerService viewerService,
+								EmpService empService,
+								CodeService codeService) {
 		this.scheduleService = scheduleService;
 		this.inoticeService = inoticeService;
+		this.edsmService = edsmService;
+		this.edsmlineService = edsmlineService;
+		this.viewerService = viewerService;
+		this.empService = empService;
+		this.codeService = codeService;
 	}
 	
 	
@@ -42,8 +75,13 @@ public class MainpageController {
 	public ModelAndView index(String year, String month
 							,@RequestParam(defaultValue = "1") int indexpage, 
 		 	 				  @RequestParam(defaultValue =  "") String search,
-		 	 				  @RequestParam(defaultValue =  "") String deptno) {
-	    ModelAndView model = new ModelAndView();
+		 	 				  @RequestParam(defaultValue =  "") String deptno
+		 	 				,HttpSession session) {
+	    
+		// 세션 추가
+		int empno = (int) session.getAttribute("empno");
+		
+		ModelAndView model = new ModelAndView();
 
 	    Calendar cal = Calendar.getInstance();
 
@@ -70,6 +108,87 @@ public class MainpageController {
  		int pageData = 10;  
  	    Page<InoticeDto> page = inoticeService.list(indexpage -1, pageData, search, deptno);
  		int startPageRownum = (int)(page.getTotalElements() - page.getNumber() * pageData);
+ 		
+ 		/**
+		 * 메인화면 결재목록 띄우기 시작
+		 */
+        Page<EdsmDto> basePage = edsmService
+                .findDocsByEmpno(empno, null, null, null,
+                        PageRequest.of(0, 200, Sort.by("wdate").descending()));
+        List<EdsmDto> baseDocs = new ArrayList<>(basePage.getContent());
+        
+        List<EdsmlineDto> myLinesAll = edsmlineService.findByEmpno(empno);
+        Set<Integer> myLineDocIds = new HashSet<>();
+        for (EdsmlineDto l : myLinesAll) {
+            myLineDocIds.add(l.getEdsmno());
+        }
+
+        List<ViewerDto> myViewerList = viewerService.findByEmpno(empno);
+        Set<Integer> viewerDocIds = new HashSet<>();
+        for (ViewerDto v : myViewerList) {
+            viewerDocIds.add(v.getEdsmno());
+        }
+
+        Set<Integer> docIdSet = new HashSet<>();
+        for (EdsmDto d : baseDocs) docIdSet.add(d.getEdsmno());
+        docIdSet.addAll(myLineDocIds);
+        docIdSet.addAll(viewerDocIds);
+
+        List<EdsmDto> allDocs = docIdSet.stream()
+                .map(id -> edsmService.findById(id))
+                .filter(Objects::nonNull)
+                .toList();
+
+        List<EdsmDto> inProgressDocs = allDocs.stream()
+                .filter(d -> "F60001".equals(d.getEdst()) || "F60002".equals(d.getEdst()))
+                .sorted((a, b) -> b.getWdate().compareTo(a.getWdate()))
+                .toList();
+
+        List<Integer> inProgressIds = inProgressDocs.stream()
+                .map(EdsmDto::getEdsmno)
+                .toList();
+        List<EdsmlineDto> linesForInProgress = inProgressIds.isEmpty()
+                ? List.of()
+                : edsmlineService.findByEdsmnos(inProgressIds);
+
+        List<EdsmDto> myTurnDocs = inProgressDocs.stream()
+                .filter(doc -> {
+                    int docId = doc.getEdsmno();
+                    List<EdsmlineDto> docLines = linesForInProgress.stream()
+                            .filter(l -> l.getEdsmno() == docId)
+                            .toList();
+
+                    List<EdsmlineDto> waiting = docLines.stream()
+                            .filter(l -> "C30001".equals(l.getEdst()))
+                            .toList();
+                    if (waiting.isEmpty()) return false;
+
+                    int minEdpro = waiting.stream()
+                            .mapToInt(EdsmlineDto::getEdpro)
+                            .min().orElse(Integer.MAX_VALUE);
+
+                    return waiting.stream()
+                            .anyMatch(l -> l.getEmpno() == empno && l.getEdpro() == minEdpro);
+                })
+                .sorted((a, b) -> b.getWdate().compareTo(a.getWdate()))
+                .toList();
+        
+        // 내가 기안하고 진행중인거 필터
+        List<EdsmDto> myDraftInProgress = inProgressDocs.stream()
+                .filter(d -> d.getEmpno() == empno)
+                .toList();
+        
+        List<EmpDto> empList = empService.findAll();
+        Map<Integer,String> empNameMap = empList.stream()
+            .collect(Collectors.toMap(EmpDto::getEmpno, EmpDto::getName));
+        
+        model.addObject("approveList", myDraftInProgress);
+        model.addObject("myTurnDocs", myTurnDocs);
+        model.addObject("empNameMap", empNameMap);
+		/**
+		 * 메인화면 결재목록 띄우기 끝
+		 */
+		
  		
  		model.setViewName("/index/index");
  		
