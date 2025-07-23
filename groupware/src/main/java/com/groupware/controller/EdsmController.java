@@ -521,6 +521,7 @@ public class EdsmController {
 		if (empno == null) {
 	        return new ModelAndView("redirect:/login/login");
 	    }
+		System.out.println("현재 로그인 empno: " + empno);
 		EmpDto emp = empService.findById(empno);
 	    if (emp == null || "N".equals(emp.getState())) {
 	        session.invalidate();
@@ -560,7 +561,7 @@ public class EdsmController {
 	    model.addObject("empNameMap", empNameMap);
 	    model.addObject("loginEmpno", empno);
 	    model.addObject("isCurrentApprover", isCurrentApprover);
-
+	    System.out.println("edsm.edst: " + edsm.getEdst());
 	    return model;
 	}
 	
